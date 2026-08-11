@@ -193,6 +193,34 @@ const PARADIGMS = {
   }
 };
 
+/* ---- Greek verbs: present active indicative ---- */
+const VERBS = {
+  baino: {
+    label: "Verb βαίνω",
+    title: 'The Verb <span class="gk">βαίνω</span>',
+    subtitle: "‘I go / I am going / I do go’ — present active indicative, the thematic (-ω) pattern.",
+    stem: "βαίν-",
+    forms: [
+      {p:"1 s.",  d:"first person singular",  e:"ω",       f:"βαίνω",       m:"‘I go’, ‘I am going’"},
+      {p:"2 s.",  d:"second person singular", e:"εις",     f:"βαίνεις",     m:"‘you go’, ‘you are going’"},
+      {p:"3 s.",  d:"third person singular",  e:"ει",      f:"βαίνει",      m:"‘he/she/it goes’"},
+      {p:"1 pl.", d:"first person plural",    e:"ομεν",    f:"βαίνομεν",    m:"‘we go’"},
+      {p:"2 pl.", d:"second person plural",   e:"ετε",     f:"βαίνετε",     m:"‘you (pl.) go’"},
+      {p:"3 pl.", d:"third person plural",    e:"ουσι(ν)", f:"βαίνουσι(ν)", m:"‘they go’"}
+    ],
+    tips: [
+      'The ending does the work English does with pronouns: <span class="gk">βαίνομεν</span> already means “<em>we</em> go” — no separate word for “we” is needed.',
+      'Learn the endings as a unit — <span class="gk">-ω, -εις, -ει, -ομεν, -ετε, -ουσι(ν)</span> — and they carry over to every regular <span class="gk">-ω</span> verb in the present active.',
+      'The vowel before the ending is the <em>thematic vowel</em>: <strong>ο</strong> before μ and ν (<span class="gk">-ομεν</span>, <span class="gk">-ουσι</span>), <strong>ε</strong> everywhere else (<span class="gk">-εις, -ει, -ετε</span>). The 1 s. <span class="gk">-ω</span> is that vowel lengthened.',
+      'The ν in <span class="gk">-ουσι(ν)</span> is a <em>movable nu</em>: it appears before a word starting with a vowel or at a pause, and is dropped otherwise.',
+      'The Greek present covers three English presents at once — “I go,” “I am going,” “I do go.” Don’t assume progressive force just because you translate it that way.',
+      'Watch the two “you” forms: English hides the difference, Greek doesn’t. <span class="gk">βαίνεις</span> is one person, <span class="gk">βαίνετε</span> is a group.'
+    ]
+  }
+};
+const PERSONS = i => VERBS.baino.forms[i].p;
+const normNu = s => s.replace(/[()]/g,"").replace(/ν$/,"");
+
 function cellsOf(p){
   const out=[];
   NUMS.forEach(n=>p.rows[n].forEach(c=>GEN.forEach((g,i)=>{
@@ -238,6 +266,7 @@ function sameForm(a,b,strict){
 /* ================= shell / navigation ================= */
 let curLang = "greek", curP = "article", curMode = "study", curHT = "vowels", curHM = "chart";
 const MODES = [["study","Study"],["fill","Fill the Grid"],["type","Type It"],["quiz","Quick Quiz"],["spot","Spot It"]];
+const VMODES = [["vstudy","Study"],["vfill","Fill the Endings"],["vtype","Type It"],["vquiz","Quick Quiz"]];
 const HMODES = [["chart","Chart"],["hquiz","Quiz"],["hcards","Flashcards"]];
 
 $("#langNav").innerHTML = `<button data-l="greek">Greek</button><button data-l="hebrew">Hebrew</button>`;
@@ -252,12 +281,25 @@ function render(){
   $("#langNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.l===curLang));
   if(curLang === "hebrew") return renderHebrew();
 
+  const isVerb = !!VERBS[curP];
+  const modes = isVerb ? VMODES : MODES;
+  if(curP !== "vocab" && !modes.some(m=>m[0]===curMode)) curMode = modes[0][0];
+
   $("#paraNav").innerHTML = Object.entries(PARADIGMS)
     .map(([k,v])=>`<button data-p="${k}">${v.label}</button>`).join("")
+    + Object.entries(VERBS).map(([k,v])=>`<button data-p="${k}">${v.label}</button>`).join("")
     + `<button data-p="vocab">Vocabulary</button>`;
-  $("#modeNav").innerHTML = MODES.map(([k,v])=>`<button data-m="${k}">${v}</button>`).join("");
+  $("#modeNav").innerHTML = modes.map(([k,v])=>`<button data-m="${k}">${v}</button>`).join("");
   $("#paraNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.p===curP));
   $("#modeNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.m===curMode));
+
+  if(isVerb){
+    $("#modeNav").style.display = "";
+    const v = VERBS[curP];
+    $("#title").innerHTML = v.title;
+    $("#subtitle").textContent = v.subtitle;
+    return ({vstudy:renderVStudy, vfill:renderVFill, vtype:renderVType, vquiz:renderVQuiz})[curMode](v);
+  }
 
   if(curP === "vocab"){
     $("#modeNav").style.display = "none";
@@ -526,6 +568,210 @@ function renderSpot(p){
       ? `${wrong} wrong, ${missed} missed — green cells are the full answer.` : "Perfect.";
   };
   $("#nextSpot").onclick = ()=>renderSpot(p);
+}
+
+/* ================= Greek verbs ================= */
+function vTable(v, cellFn, cols){
+  return `<table>
+    <tr><th style="width:15%">Person</th><th style="width:14%">Stem</th><th style="width:24%">Ending</th>
+      ${cols?`<th style="width:24%">Full form</th>`:""}<th style="text-align:left">Meaning</th></tr>
+    ${v.forms.map((f,i)=>`<tr>
+      <th class="rowh" style="width:auto">${f.p}</th>
+      <td class="gkcell" style="color:var(--muted)">${v.stem}</td>
+      ${cellFn(f,i)}
+      <td style="text-align:left;font-size:14px">${f.m}</td></tr>`).join("")}
+  </table>`;
+}
+
+function renderVStudy(v){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Present active indicative <button class="btn ghost hidebtn" id="toggleRef">Hide</button></h2>
+      <div id="refTables">${vTable(v,(f)=>
+        `<td class="gkcell">-${f.e}</td><td class="gkcell">${f.f}</td>`, true)}</div>
+    </div>
+    <div class="panel">
+      <h2>Patterns worth noticing</h2>
+      <ul class="tips">${v.tips.map(t=>`<li>${t}</li>`).join("")}</ul>
+    </div>`;
+  $("#toggleRef").onclick = e=>{
+    const t=$("#refTables"), hid = t.style.visibility==="hidden";
+    t.style.visibility = hid?"visible":"hidden";
+    e.target.textContent = hid?"Hide":"Show";
+  };
+}
+
+function renderVFill(v){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Fill the Endings</h2>
+      <p class="hint">Six endings, six slots — one tile each. Click a slot, then a tile; click a filled slot to send its tile back.</p>
+      <div id="vfTable">${vTable(v,(f,i)=>`<td class="cell" data-i="${i}"></td>`,false)}</div>
+      <div class="bank" id="vfBank"></div>
+      <div class="row">
+        <button class="btn" id="vfCheck">Check</button>
+        <button class="btn ghost" id="vfReveal">Reveal</button>
+        <button class="btn ghost" id="vfReset">Reset</button>
+        <span class="score" id="vfScore"></span>
+      </div>
+    </div>`;
+  let tiles = shuffle(v.forms.map((f,ix)=>({id:ix, form:f.e, used:false})));
+  let sel = null;
+  const bankEl = $("#vfBank"), scoreEl = $("#vfScore");
+  function drawBank(){
+    bankEl.innerHTML = tiles.map(t=>
+      `<button data-id="${t.id}" class="${t.used?"spent":""}">-${t.form}</button>`).join("");
+    bankEl.querySelectorAll("button").forEach(b=> b.onclick = ()=>{
+      const t = tiles.find(x=>x.id===+b.dataset.id);
+      if(!sel){ scoreEl.textContent = "Pick a slot first."; return; }
+      sel.textContent = "-"+t.form; sel.dataset.tile = t.id; t.used = true;
+      sel.classList.remove("sel","ok","no");
+      const list = [...$("#vfTable").querySelectorAll(".cell")];
+      const nxt = list.slice(list.indexOf(sel)+1).find(td=>!td.textContent);
+      sel = null; if(nxt){ nxt.classList.add("sel"); sel = nxt; }
+      drawBank();
+    });
+    const left = tiles.filter(t=>!t.used).length;
+    scoreEl.textContent = left ? `${left} ending${left>1?"s":""} left` : "All placed — hit Check.";
+  }
+  $("#vfTable").querySelectorAll(".cell").forEach(td=>{
+    td.onclick = ()=>{
+      td.classList.remove("ok","no");
+      if(td.textContent){
+        const t = tiles.find(x=>x.id===+td.dataset.tile); if(t) t.used=false;
+        td.textContent=""; delete td.dataset.tile; drawBank(); return;
+      }
+      $("#vfTable").querySelectorAll(".sel").forEach(x=>x.classList.remove("sel"));
+      td.classList.add("sel"); sel = td;
+    };
+  });
+  $("#vfCheck").onclick = ()=>{
+    let ok=0;
+    $("#vfTable").querySelectorAll(".cell").forEach(td=>{
+      td.classList.remove("ok","no","sel");
+      if(!td.textContent) return;
+      const right = td.textContent === "-"+v.forms[+td.dataset.i].e;
+      td.classList.add(right?"ok":"no"); if(right) ok++;
+    });
+    scoreEl.textContent = `${ok} / ${v.forms.length} correct`;
+  };
+  $("#vfReveal").onclick = ()=>{
+    $("#vfTable").querySelectorAll(".cell").forEach(td=>{
+      td.textContent = "-"+v.forms[+td.dataset.i].e;
+      td.classList.remove("no","sel"); td.classList.add("ok");
+    });
+    tiles.forEach(t=>t.used=true); drawBank(); scoreEl.textContent = "Answers shown.";
+  };
+  $("#vfReset").onclick = ()=>renderVFill(v);
+  drawBank();
+}
+
+let vTypeWhole = true;
+function renderVType(v){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Type It</h2>
+      <p class="hint">Type each form from memory — Latin letters convert to Greek as you go.
+      Movable nu is optional: <span class="gk">βαίνουσι</span> and <span class="gk">βαίνουσιν</span> both count.</p>
+      <div class="legend">
+        <div><code>a b g d e z h q i k l m n c o p r s t u f x y w</code> &rarr;
+          <span class="gk">α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ τ υ φ χ ψ ω</span></div>
+        <div><code>(</code> rough &middot; <code>)</code> smooth &middot; <code>/</code> acute &middot;
+          <code>\\</code> grave &middot; <code>=</code> circumflex &middot; <code>|</code> iota subscript &middot;
+          <code>_</code> macron &nbsp;— so <code>bai/nomen</code> &rarr; <span class="gk">βαίνομεν</span></div>
+      </div>
+      <div id="vtTable">${vTable(v,(f,i)=>
+        `<td class="inp" data-i="${i}"><input type="text" spellcheck="false" autocapitalize="off" autocomplete="off"></td>`,false)}</div>
+      <div class="row">
+        <button class="btn" id="vtCheck">Check</button>
+        <button class="btn ghost" id="vtReveal">Reveal</button>
+        <button class="btn ghost" id="vtReset">Reset</button>
+        <label class="chk"><input type="checkbox" id="vtWhole" ${vTypeWhole?"checked":""}> type the whole form (not just the ending)</label>
+        <label class="chk"><input type="checkbox" id="vtStrict" ${strictAccents?"checked":""}> require accents</label>
+        <span class="score" id="vtScore"></span>
+      </div>
+    </div>`;
+  const want = i => vTypeWhole ? v.forms[i].f : v.forms[i].e;
+  $("#vtTable").querySelectorAll("input").forEach(inp=>{
+    inp.placeholder = vTypeWhole ? "" : "ending only";
+    inp.addEventListener("input", ()=>{
+      const pos = inp.selectionStart, before = inp.value, conv = toGreek(before);
+      if(conv!==before){ inp.value = conv; const d = conv.length-before.length; inp.setSelectionRange(pos+d,pos+d); }
+      inp.parentElement.classList.remove("ok","no");
+    });
+  });
+  $("#vtWhole").onchange = e=>{ vTypeWhole = e.target.checked; renderVType(v); };
+  $("#vtStrict").onchange = e=>{ strictAccents = e.target.checked; };
+  $("#vtCheck").onclick = ()=>{
+    let ok=0, blank=0;
+    $("#vtTable").querySelectorAll("td.inp").forEach(td=>{
+      const inp = td.querySelector("input"), i = +td.dataset.i;
+      td.classList.remove("ok","no");
+      const val = inp.value.trim().replace(/^-/,"");
+      if(!val){ blank++; return; }
+      const right = sameForm(normNu(val), normNu(want(i)), strictAccents);
+      td.classList.add(right?"ok":"no"); if(right) ok++;
+    });
+    $("#vtScore").textContent = `${ok} / ${v.forms.length} correct` + (blank?` · ${blank} blank`:"");
+  };
+  $("#vtReveal").onclick = ()=>{
+    $("#vtTable").querySelectorAll("td.inp").forEach(td=>{
+      td.querySelector("input").value = want(+td.dataset.i);
+      td.classList.remove("no"); td.classList.add("ok");
+    });
+    $("#vtScore").textContent = "Answers shown.";
+  };
+  $("#vtReset").onclick = ()=>renderVType(v);
+}
+
+const vqState = {r:0,t:0,s:0};
+function renderVQuiz(v){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Quick Quiz</h2>
+      <p class="hint">Person and number, form, and meaning — asked in every direction.</p>
+      <div class="prompt" id="vqPrompt"></div>
+      <div class="choices" id="vqChoices"></div>
+      <div class="fb" id="vqFb"></div>
+      <div class="row"><button class="btn ghost" id="vqNext">Next &rarr;</button>
+        <span class="score" id="vqScore"></span></div>
+    </div>`;
+  let lock=false, timer=null;
+  const show = ()=> $("#vqScore").textContent = `${vqState.r} correct / ${vqState.t} · streak ${vqState.s}`;
+  function newQ(){
+    if(!$("#vqPrompt")) return;
+    clearTimeout(timer); lock=false;
+    $("#vqFb").textContent=""; $("#vqFb").className="fb";
+    const f = rand(v.forms);
+    const kind = rand(["d2f","f2d","m2f","f2m"]);
+    let answer, opts, greekOpts, promptHtml;
+    if(kind==="d2f"){ promptHtml = `<b>${f.d}</b> — which form?`;
+      answer = f.f; opts = v.forms.map(x=>x.f); greekOpts = true; }
+    else if(kind==="f2d"){ promptHtml = `<span class="gk" style="font-size:30px">${f.f}</span> — parse it.`;
+      answer = f.d; opts = v.forms.map(x=>x.d); greekOpts = false; }
+    else if(kind==="m2f"){ promptHtml = `Which form means <b>${f.m}</b>?`;
+      answer = f.f; opts = v.forms.map(x=>x.f); greekOpts = true; }
+    else { promptHtml = `<span class="gk" style="font-size:30px">${f.f}</span> — what does it mean?`;
+      answer = f.m; opts = v.forms.map(x=>x.m); greekOpts = false; }
+    $("#vqPrompt").innerHTML = promptHtml;
+    const four = shuffle([answer, ...shuffle(opts.filter(o=>o!==answer)).slice(0,3)]);
+    $("#vqChoices").innerHTML = four.map(o=>`<button class="${greekOpts?"":"txt"}">${o}</button>`).join("");
+    const btns = [...$("#vqChoices").children];
+    btns.forEach(b=> b.onclick = ()=>{
+      if(lock) return; lock=true; vqState.t++;
+      const ok = b.textContent===answer;
+      b.classList.add(ok?"ok":"no");
+      if(!ok) btns.find(x=>x.textContent===answer).classList.add("ok");
+      if(ok){ vqState.r++; vqState.s++; } else vqState.s=0;
+      $("#vqFb").className = "fb " + (ok?"ok":"no");
+      $("#vqFb").innerHTML = ok ? "Correct."
+        : `<span class="gk" style="font-size:20px">${f.f}</span> — ${f.d}, ${f.m}`;
+      show(); timer = setTimeout(newQ, ok?650:2200);
+    });
+    show();
+  }
+  $("#vqNext").onclick = newQ;
+  newQ();
 }
 
 /* ================= Greek vocabulary ================= */
