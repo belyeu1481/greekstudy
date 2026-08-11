@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Greek Drill — Paradigms &amp; Vocabulary</title>
+<title>Greek &amp; Hebrew Drill</title>
 <style>
   :root{
     --ink:#1c1c1e; --muted:#6b6b73; --line:#d8dae6; --panel:#fff;
@@ -13,18 +13,23 @@
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-    line-height:1.5;padding:24px 16px 60px}
+    line-height:1.5;padding:22px 16px 60px}
   .wrap{max-width:900px;margin:0 auto}
   h1{font-size:22px;margin:0 0 4px}
   .sub{color:var(--muted);font-size:14px;margin:0 0 18px}
   .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,"Times New Roman",serif}
+  .he{font-family:"SBL Hebrew","Ezra SIL","Taamey Frank CLM","Times New Roman",serif;
+    direction:rtl;unicode-bidi:isolate;line-height:1.35}
   nav{display:flex;gap:6px;flex-wrap:wrap}
+  nav.lang{margin-bottom:10px}
   nav.para{margin-bottom:10px}
   nav.mode{margin-bottom:18px;padding-top:10px;border-top:1px solid var(--line)}
   nav button{border:1px solid var(--line);background:var(--panel);color:var(--ink);
     padding:8px 14px;border-radius:999px;cursor:pointer;font-size:14px}
+  nav.lang button{font-weight:600;padding:9px 22px}
   nav.para button{font-size:15px;padding:9px 18px}
   nav button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  nav.lang button.on{background:var(--ink);border-color:var(--ink)}
   .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px}
   .panel h2{font-size:16px;margin:0 0 12px}
   .hint{color:var(--muted);font-size:13px;margin:0 0 14px}
@@ -57,6 +62,8 @@
   .choices button{font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:23px;
     padding:14px;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer}
   .choices button.txt{font-family:inherit;font-size:15px}
+  .choices button.hb{font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;font-size:40px;
+    direction:rtl;unicode-bidi:isolate;padding:10px}
   .choices button:hover{border-color:var(--accent)}
   .choices button.ok{background:var(--good-bg);border-color:var(--good);color:var(--good)}
   .choices button.no{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
@@ -85,24 +92,31 @@
   .chips button small{opacity:.65;margin-left:4px}
   .opts{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin:14px 0 4px}
   .opts fieldset{border:none;padding:0;margin:0;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-  .opts legend{display:none}
   .opts .lbl{font-size:13px;color:var(--muted);margin-right:2px}
   .opts select{font-size:13px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#fff}
   .card{text-align:center;padding:26px 16px 20px}
   .card .q{font-size:30px;margin-bottom:6px}
   .card .q.gk{font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:38px}
+  .card .q.he{font-size:78px;margin:4px 0 10px}
   .card .meta{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
   .card .a{font-size:22px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line);color:var(--accent)}
   .card .a.gk{font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:30px}
+  .card .a.he{font-size:64px}
   .card .a.hidden{visibility:hidden}
   .bigin{font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:26px;text-align:center;
     padding:10px 14px;border:1px solid var(--line);border-radius:10px;width:100%;max-width:340px;outline:none}
   .bigin:focus{border-color:var(--accent);background:var(--accent-soft)}
   .missed{font-size:14px;margin-top:10px}
   .missed li{margin-bottom:4px}
-  .missed .gk{font-size:18px}
+  .missed .gk{font-size:18px} .missed .he{font-size:24px}
   .barwrap{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:14px}
   .bar{height:100%;background:var(--accent);width:0;transition:width .25s}
+  td.hecell{font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;font-size:36px;
+    direction:rtl;unicode-bidi:isolate;width:22%}
+  td.name{font-weight:600;font-size:15px;width:30%}
+  td.snd{font-size:14px;text-align:left;color:var(--muted)}
+  .blur{filter:blur(6px);transition:filter .12s;cursor:pointer}
+  .blur:hover{filter:none}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
   @media(max-width:660px){.grid2{grid-template-columns:1fr}}
   .hidebtn{font-size:13px;margin-left:8px;padding:4px 10px}
@@ -113,6 +127,7 @@
   <h1 id="title"></h1>
   <p class="sub" id="subtitle"></p>
 
+  <nav class="lang" id="langNav"></nav>
   <nav class="para" id="paraNav"></nav>
   <nav class="mode" id="modeNav"></nav>
 
@@ -120,9 +135,15 @@
 </div>
 
 <script>
-/* ---------------- data ---------------- */
+/* ================= helpers ================= */
+const $ = s=>document.querySelector(s);
+const shuffle = a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
+const rand = a=>a[Math.floor(Math.random()*a.length)];
+
+/* ================= Greek paradigms ================= */
 const GEN = ["m.","f.","n."];
 const GENNAME = {"m.":"masculine","f.":"feminine","n.":"neuter"};
+const NUMS = ["Singular","Plural"];
 
 const PARADIGMS = {
   article: {
@@ -167,12 +188,11 @@ const PARADIGMS = {
       'Masc. and neut. use 2nd-declension endings (<span class="gk">-ος -ον -ου -ῳ</span>); fem. uses 1st-declension (<span class="gk">-η -ην -ης -ῃ</span>).',
       'Compare the article ending-for-ending: <span class="gk">τῷ / καλῷ</span>, <span class="gk">τῆς / καλῆς</span>, <span class="gk">τοῖς / καλοῖς</span>, <span class="gk">τῶν / καλῶν</span>. The article is essentially this paradigm with the stem stripped away.',
       'The only separate vocative is masculine singular <span class="gk">καλέ</span>; fem. and neut. vocatives are identical to their nominatives.',
-      'Accent stays on the ending (<span class="gk">-ός</span> type), and follows the article’s accent pattern: circumflex in gen./dat., acute elsewhere.'
+      'Accent stays on the ending, following the article’s pattern: circumflex in gen./dat., acute elsewhere.'
     ]
   }
 };
 
-const NUMS = ["Singular","Plural"];
 function cellsOf(p){
   const out=[];
   NUMS.forEach(n=>p.rows[n].forEach(c=>GEN.forEach((g,i)=>{
@@ -181,11 +201,7 @@ function cellsOf(p){
   })));
   return out;
 }
-const $ = s=>document.querySelector(s);
-const shuffle = a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
-const rand = a=>a[Math.floor(Math.random()*a.length)];
 const label = c=>`${c.cs.toLowerCase()} ${GENNAME[c.g]} ${c.num.toLowerCase()}`;
-
 function table(p,num,cellFn){
   let h = `<table><caption>${num}</caption><tr><th></th>`;
   GEN.forEach(g=>h+=`<th>${g}</th>`); h+="</tr>";
@@ -197,11 +213,7 @@ function table(p,num,cellFn){
   });
   return h+"</table>";
 }
-function tables(p,cellFn){ return NUMS.map(n=>table(p,n,cellFn)).join(""); }
-
-/* ---------------- shell ---------------- */
-let curP = "article", curMode = "study";
-const MODES = [["study","Study"],["fill","Fill the Grid"],["type","Type It"],["quiz","Quick Quiz"],["spot","Spot It"]];
+const tables = (p,fn)=> NUMS.map(n=>table(p,n,fn)).join("");
 
 /* --------- Greek typing: Latin keys -> polytonic Greek --------- */
 const GK_LETTERS = {a:"α",b:"β",g:"γ",d:"δ",e:"ε",z:"ζ",h:"η",q:"θ",i:"ι",k:"κ",l:"λ",m:"μ",
@@ -223,32 +235,44 @@ function sameForm(a,b,strict){
   return strict ? a===b : bare(a)===bare(b);
 }
 
-$("#paraNav").innerHTML = Object.entries(PARADIGMS)
-  .map(([k,v])=>`<button data-p="${k}">${v.label}</button>`).join("")
-  + `<button data-p="vocab">Vocabulary</button>`;
-$("#modeNav").innerHTML = MODES.map(([k,v])=>`<button data-m="${k}">${v}</button>`).join("");
-$("#paraNav").onclick = e=>{ if(e.target.dataset.p){ curP=e.target.dataset.p; render(); } };
-$("#modeNav").onclick = e=>{ if(e.target.dataset.m){ curMode=e.target.dataset.m; render(); } };
+/* ================= shell / navigation ================= */
+let curLang = "greek", curP = "article", curMode = "study", curHT = "vowels", curHM = "chart";
+const MODES = [["study","Study"],["fill","Fill the Grid"],["type","Type It"],["quiz","Quick Quiz"],["spot","Spot It"]];
+const HMODES = [["chart","Chart"],["hquiz","Quiz"],["hcards","Flashcards"]];
+
+$("#langNav").innerHTML = `<button data-l="greek">Greek</button><button data-l="hebrew">Hebrew</button>`;
+$("#langNav").onclick = e=>{ const b=e.target.closest("button"); if(!b) return;
+  curLang = b.dataset.l; render(); };
+$("#paraNav").onclick = e=>{ const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.p){ curP=b.dataset.p; } if(b.dataset.ht){ curHT=b.dataset.ht; } render(); };
+$("#modeNav").onclick = e=>{ const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.m){ curMode=b.dataset.m; } if(b.dataset.hm){ curHM=b.dataset.hm; } render(); };
 
 function render(){
+  $("#langNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.l===curLang));
+  if(curLang === "hebrew") return renderHebrew();
+
+  $("#paraNav").innerHTML = Object.entries(PARADIGMS)
+    .map(([k,v])=>`<button data-p="${k}">${v.label}</button>`).join("")
+    + `<button data-p="vocab">Vocabulary</button>`;
+  $("#modeNav").innerHTML = MODES.map(([k,v])=>`<button data-m="${k}">${v}</button>`).join("");
   $("#paraNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.p===curP));
+  $("#modeNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.m===curMode));
+
   if(curP === "vocab"){
     $("#modeNav").style.display = "none";
-    $("#title").innerHTML = "Vocabulary";
+    $("#title").innerHTML = "Greek Vocabulary";
     $("#subtitle").textContent = `Mounce, Basics of Biblical Greek — ${VOCAB.reduce((n,w)=>n+w.items.length,0)} words across ${VOCAB.length} weeks.`;
-    renderVocab();
-    return;
+    return renderVocab();
   }
   $("#modeNav").style.display = "";
   const p = PARADIGMS[curP];
   $("#title").innerHTML = p.title;
   $("#subtitle").textContent = p.subtitle;
-  $("#paraNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.p===curP));
-  $("#modeNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.m===curMode));
   ({study:renderStudy, fill:renderFill, type:renderType, quiz:renderQuiz, spot:renderSpot})[curMode](p);
 }
 
-/* ---------------- study ---------------- */
+/* ================= Greek: study ================= */
 function renderStudy(p){
   $("#content").innerHTML = `
     <div class="panel">
@@ -266,14 +290,14 @@ function renderStudy(p){
   };
 }
 
-/* ---------------- fill the grid ---------------- */
+/* ================= Greek: fill the grid ================= */
 function renderFill(p){
   $("#content").innerHTML = `
     <div class="panel">
       <h2>Fill the Grid</h2>
       <p class="hint">The bank holds <em>exactly</em> the tiles the grid needs — one per cell, duplicates included.
       Every tile must be used, so you have to know how many times each form repeats. Click a cell, then a tile;
-      click a filled cell to send its tile back.</p>
+      click a filled cell to send its tile back. The bank reshuffles on reset.</p>
       <div class="grid2" id="fillTables">${tables(p,(n,c,i)=>
         `<td class="cell" data-n="${n}" data-c="${c}" data-i="${i}"></td>`)}</div>
       <div class="bank" id="bank"></div>
@@ -288,8 +312,8 @@ function renderFill(p){
   const cells = cellsOf(p);
   let tiles = shuffle(cells.map((c,ix)=>({id:ix, form:c.val, used:false})));
   let sel = null;
-
   const bankEl = $("#bank"), scoreEl = $("#fillScore");
+
   function drawBank(){
     bankEl.innerHTML = tiles.map(t=>
       `<button data-id="${t.id}" class="${t.used?"spent":""}">${t.form}</button>`).join("");
@@ -300,8 +324,7 @@ function renderFill(p){
   function place(id){
     const t = tiles.find(x=>x.id===id);
     if(!sel){ scoreEl.textContent = "Pick a cell first."; return; }
-    sel.textContent = t.form; sel.dataset.tile = id;
-    t.used = true;
+    sel.textContent = t.form; sel.dataset.tile = id; t.used = true;
     sel.classList.remove("sel","ok","no");
     const list = [...$("#fillTables").querySelectorAll(".cell")];
     const next = list.slice(list.indexOf(sel)+1).find(td=>!td.textContent);
@@ -345,7 +368,7 @@ function renderFill(p){
   drawBank();
 }
 
-/* ---------------- type it ---------------- */
+/* ================= Greek: type it ================= */
 let strictAccents = false;
 function renderType(p){
   $("#content").innerHTML = `
@@ -380,13 +403,9 @@ function renderType(p){
 
   $("#typeTables").querySelectorAll("input").forEach(inp=>{
     inp.addEventListener("input", ()=>{
-      const pos = inp.selectionStart, before = inp.value;
-      const conv = toGreek(before);
-      if(conv !== before){
-        inp.value = conv;
-        const delta = conv.length - before.length;
-        inp.setSelectionRange(pos+delta, pos+delta);
-      }
+      const pos = inp.selectionStart, before = inp.value, conv = toGreek(before);
+      if(conv !== before){ inp.value = conv; const d = conv.length - before.length;
+        inp.setSelectionRange(pos+d, pos+d); }
       inp.parentElement.classList.remove("ok","no");
     });
   });
@@ -415,7 +434,7 @@ function renderType(p){
   $("#resetType").onclick = ()=>renderType(p);
 }
 
-/* ---------------- quick quiz ---------------- */
+/* ================= Greek: quick quiz ================= */
 const qState = {article:{r:0,t:0,s:0}, kalos:{r:0,t:0,s:0}};
 function renderQuiz(p){
   $("#content").innerHTML = `
@@ -455,8 +474,7 @@ function renderQuiz(p){
       opts = [answer, ...shuffle(wrong).slice(0,3)];
     }
     opts = shuffle(opts);
-    $("#qChoices").innerHTML = opts.map(o=>
-      `<button class="${isGreek?"":"txt"}">${o}</button>`).join("");
+    $("#qChoices").innerHTML = opts.map(o=>`<button class="${isGreek?"":"txt"}">${o}</button>`).join("");
     $("#qChoices").querySelectorAll("button").forEach(b=> b.onclick = ()=>{
       if(lock) return; lock=true; st.t++;
       const right = b.textContent===answer;
@@ -474,7 +492,7 @@ function renderQuiz(p){
   newQ();
 }
 
-/* ---------------- spot it ---------------- */
+/* ================= Greek: spot it ================= */
 function renderSpot(p){
   const cells = cellsOf(p);
   const forms = [...new Set(cells.map(c=>c.val))];
@@ -492,11 +510,8 @@ function renderSpot(p){
         <span class="score" id="sFb"></span>
       </div>
     </div>`;
-  function wire(){
-    $("#spotTables").querySelectorAll(".cell").forEach(td=>
-      td.onclick = ()=>{ td.classList.remove("ok","no"); td.classList.toggle("pick"); });
-  }
-  wire();
+  $("#spotTables").querySelectorAll(".cell").forEach(td=>
+    td.onclick = ()=>{ td.classList.remove("ok","no"); td.classList.toggle("pick"); });
   $("#checkSpot").onclick = ()=>{
     let wrong=0, missed=0;
     $("#spotTables").querySelectorAll(".cell").forEach(td=>{
@@ -513,7 +528,7 @@ function renderSpot(p){
   $("#nextSpot").onclick = ()=>renderSpot(p);
 }
 
-/* ---------------- vocabulary ---------------- */
+/* ================= Greek vocabulary ================= */
 const VOCAB = [{"week":1,"src":"Mounce 4","items":[{"t":"ἄγγελος, -ου, ὁ","g":"messenger; angel"},{"t":"ἀμήν","g":"verily, truly, amen, so let it be"},{"t":"ἄνθρωπος, -ου, ὁ","g":"man, mankind, person, people, humankind, human being"},{"t":"ἀπόστολος, -ου, ὁ","g":"apostle, envoy, messenger"},{"t":"γραφή, -ῆς, ἡ","g":"writing; Scripture"},{"t":"δόξα, -ης, ἡ","g":"glory, majesty, fame"},{"t":"ἔσχατος, -η, -ον","g":"last"},{"t":"ζωή, -ῆς, ἡ","g":"life"},{"t":"θεός, -οῦ, ὁ","g":"God, god"},{"t":"καί","g":"and, even, also, namely"},{"t":"καρδία, -ας, ἡ","g":"heart; inner self"},{"t":"κόσμος, -ου, ὁ","g":"world, universe; mankind"},{"t":"λόγος, -ου, ὁ","g":"word, Word; statement, message"},{"t":"πνεῦμα, -ατος, τό","g":"spirit, Spirit; wind, breath; inner life"},{"t":"προφήτης, -ου, ὁ","g":"prophet"},{"t":"σάββατον, -ου, τό","g":"Sabbath; week"},{"t":"φωνή, -ῆς, ἡ","g":"sound, noise; voice"},{"t":"χριστός, -οῦ, ὁ","g":"anointed one (Greek trans. for מְשִיַח)"}]},{"week":2,"src":"Mounce 6 & 7","items":[{"t":"ἀγάπη, -ης, ἡ","g":"love"},{"t":"βασιλεία, -ας, ἡ","g":"kingdom"},{"t":"ἐν","g":"dat: in; on; among"},{"t":"ἔργον, -ου, τό","g":"work; deed, action"},{"t":"καιρός, -οῦ, ὁ","g":"appointed time; time; season"},{"t":"νῦν","g":"adv. —now; noun — the present"},{"t":"ὅτι","g":"that; since; because"},{"t":"ὥρα, -ας, ἡ","g":"hour, occasion, moment"},{"t":"ἁμαρτία, -ας, ἡ","g":"sin"},{"t":"ἀρχή, -ῆς, ἡ","g":"beginning; ruler"},{"t":"εἰς","g":"acc: into, in, to, toward"},{"t":"ἐξουσία, -ας, ἡ","g":"authority, power"},{"t":"κύριος, -ου, ὁ","g":"lord, master, sir; the Lord"},{"t":"οὐρανός, -οῦ, ὁ","g":"sky, heaven"},{"t":"υἱός, -οῦ, ὁ","g":"son, descendant"}]},{"week":3,"src":"Mounce 8","items":[{"t":"ἀλλά","g":"but, yet; rather"},{"t":"ἀπό","g":"gen: (away) from"},{"t":"διά","g":"gen: through; acc: because of"},{"t":"ἐκ","g":"gen: from, out of"},{"t":"ἡμέρα, -ας, ἡ","g":"day"},{"t":"θάλασσα, -ης, ἡ","g":"sea, lake"},{"t":"θάνατος, -ου, ὁ","g":"death"},{"t":"ἵνα","g":"in order that; so that"},{"t":"μετά","g":"gen: with; acc: after"},{"t":"οἰκία, -ας, ἡ","g":"house, home"},{"t":"οἶκος, -ου, ὁ","g":"house, home"},{"t":"ὄχλος, -ου, ὁ","g":"crowd, multitude"},{"t":"παρά","g":"gen: from; dat: beside; acc: alongside"},{"t":"παραβολή, -ῆς, ἡ","g":"comparison; parable (in NT)"},{"t":"πρός","g":"acc: to, towards; with"},{"t":"ὑπό","g":"gen: by; acc: under"}]},{"week":4,"src":"Mounce 9","items":[{"t":"ἀγαθός, -ή, -όν","g":"good; noble; useful"},{"t":"ἀγαπητός, -ή, -όν","g":"beloved"},{"t":"ἅγιος, -ία, -ιον","g":"adjective: holy; plural noun: holy ones, i.e. saints"},{"t":"αἰώνιος, -ον","g":"eternal"},{"t":"ἀλλήλων","g":"one another (always in the plural form)"},{"t":"δοῦλος, -ου, ὁ","g":"slave; servant"},{"t":"ἐάν","g":"if; when (Introduces a dependent clause)"},{"t":"ἐντολή, -ῆς, ἡ","g":"order, command, commandment"},{"t":"καθώς","g":"as, even as"},{"t":"κακός, -ή, -όν","g":"bad, evil"},{"t":"νεκρός, -ά, -όν","g":"adjective: dead; noun: dead body, corpse"},{"t":"πιστός, -ή, -όν","g":"faithful, believing"},{"t":"πονηρός, -ά, -όν","g":"evil, bad"},{"t":"πρῶτος, -η, -ον","g":"first; earlier"},{"t":"τρίτος, -η, -ον","g":"third"}]},{"week":5,"src":"Mounce 10","items":[{"t":"εἰ","g":"if"},{"t":"εἰ μή","g":"except; if not"},{"t":"εἷς (ms), μία (fs), ἕν (ns)","g":"one"},{"t":"ἤδη","g":"now, already"},{"t":"ὄνομα, -ατος, τό","g":"name; reputation"},{"t":"οὐδείς (ms), οὐδεμία (fs), οὐδέν (ns)","g":"no one; nothing (neut. οὐδέν)"},{"t":"πᾶς (ms), πᾶσα (fs), πᾶν (ns)","g":"singular: each, every; plural: all"},{"t":"περί","g":"gen: concerning, about; acc: around"},{"t":"σάρξ, σαρκός, ἡ","g":"flesh; body"},{"t":"σύν","g":"dat: with"},{"t":"σῶμα, -ατος, τό","g":"body"},{"t":"τέκνον, -ου, τό","g":"child; descendant"}]},{"week":6,"src":"Mounce 11","items":[{"t":"ἀδελφός, -οῦ, ὁ","g":"brother"},{"t":"ἀνήρ, ἀνδρός, ὁ","g":"male, husband; man"},{"t":"ἐκκλησία, -ας, ἡ","g":"assembly, congregation; a church, (the) Church"},{"t":"ἐλπίς, -ίδος, ἡ","g":"hope, expectation"},{"t":"ἔξω","g":"adverb: without; preposition (gen): outside"},{"t":"ἐπί","g":"gen: on, over, when; dat: on the basis of, at; acc: on, to, against"},{"t":"ἡμεῖς","g":"we"},{"t":"θέλημα, θελήματος, τό","g":"will, desire"},{"t":"ἴδε","g":"See! Behold!"},{"t":"ἰδού","g":"See! Behold!"},{"t":"καλός, -ή, -όν","g":"good; beautiful"},{"t":"μήτηρ, μητρός, ἡ","g":"mother"},{"t":"οὐδέ","g":"and not, not even; neither, nor"},{"t":"πατήρ, πατρός, ὁ","g":"father"},{"t":"πίστις, πίστεως, ἡ","g":"faith, belief; trust; teaching"},{"t":"ὕδωρ, ὕδατος, τό","g":"water"},{"t":"ὑμεῖς","g":"you (plural)"},{"t":"φῶς, φωτός, τό","g":"light"},{"t":"χάρις, χάριτος, ἡ","g":"grace, favor, kindness"},{"t":"ὧδε","g":"here"}]},{"week":7,"src":"Mounce 12","items":[{"t":"αἰών, -ῶνος, ὁ","g":"age, eternity"},{"t":"διδάσκαλος, -ου, ὁ","g":"teacher"},{"t":"εὐθύς","g":"immediately"},{"t":"ἕως","g":"conj: until; preposition (gen): as far as"},{"t":"μαθητής, -οῦ, ὁ","g":"student; disciple"},{"t":"μόνος, -η, -ον","g":"alone, only"},{"t":"ὅπως","g":"how; (in order) that"},{"t":"ὅσος, -η, -ον","g":"as great as, as many as"},{"t":"οὖν","g":"therefore, accordingly"},{"t":"ὀφθαλμός, -οῦ, ὁ","g":"eye, sight"},{"t":"πάλιν","g":"again"},{"t":"πούς, ποδός, ὁ","g":"foot"},{"t":"ὑπέρ","g":"gen: on behalf of; acc: above"}]},{"week":8,"src":"Mounce 13","items":[{"t":"γυνή, γυναικός, ἡ","g":"woman; wife"},{"t":"δικαιοσύνη, -ης, ἡ","g":"righteousness"},{"t":"δώδεκα","g":"twelve (indeclinable)"},{"t":"ἐκεῖνος, -η, -ο","g":"that (far deixis)"},{"t":"ἤ","g":"or; than"},{"t":"μακάριος, -ία, -ιον","g":"happy, blessed (meaning happy)"},{"t":"μέγας, μεγάλη, μέγα","g":"large, great"},{"t":"πόλις, -εως, ἡ","g":"city, town"},{"t":"πολύς, πολλή, πολύ","g":"much, many; adverb: often"},{"t":"πῶς","g":"how?"},{"t":"σημεῖον, -ου, τό","g":"sign, miracle"}]},{"week":9,"src":"Mounce 14","items":[{"t":"ἀλήθεια, -ας, ἡ","g":"truth"},{"t":"εἰρήνη, -ης, ἡ","g":"peace"},{"t":"ἐνώπιον","g":"gen: before (spatial)"},{"t":"ἐπαγγελία, -ας, ἡ","g":"promise"},{"t":"ἑπτά","g":"seven (indeclinable)"},{"t":"θρόνος, -ου, ὁ","g":"throne"},{"t":"κατά (κατ ᾿, καθ ᾿)","g":"gen: down from, against; acc: according to, throughout, during"},{"t":"κεφαλή, -ῆς, ἡ","g":"head"},{"t":"ὁδός, -οῦ, ἡ","g":"way, road; journey; conduct"},{"t":"ὅτε","g":"when"},{"t":"οὕτως","g":"in this way, in this manner; thus"},{"t":"πλοῖον, -ου, τό","g":"ship, boat"},{"t":"ῥῆμα, -ατος, τό","g":"word, saying"},{"t":"χείρ, χειρός, ἡ","g":"hand"},{"t":"ψυχή, -ῆς, ἡ","g":"life; soul; self"}]},{"week":10,"src":"Mounce 16","items":[{"t":"ἀκούω","g":"I hear"},{"t":"βλέπω","g":"I see, look at"},{"t":"ἔχω","g":"I have, hold"},{"t":"λέγω","g":"I say, speak"},{"t":"λύω","g":"I loose, untie; destroy"},{"t":"νόμος, -ου, ὁ","g":"law; principle; custom"},{"t":"ὅπου","g":"where (indef. Relative); wherever (with subjunc.)"},{"t":"πιστεύω","g":"I believe, have faith (in), trust"},{"t":"πρόσωπον, -ου, τό","g":"face; appearance"},{"t":"τότε","g":"then; thereafter"},{"t":"τυφλός, -ή, -όν","g":"blind"},{"t":"χαρά, -ᾶς, ἡ","g":"joy, delight"}]},{"week":11,"src":"Mounce 17","items":[{"t":"ἀγαπάω","g":"I love, cherish"},{"t":"δαιμόνιον, -ου, τό","g":"demon"},{"t":"ζητέω","g":"I seek, desire, try to obtain"},{"t":"καλέω","g":"I call, name, invite"},{"t":"λαλέω","g":"I speak, say"},{"t":"οἶδα","g":"I know, understand"},{"t":"ὅταν","g":"whenever (ὅτε + ἄν) Introduces a dependent clause"},{"t":"πλείων, πλεῖον","g":"larger, more"},{"t":"πληρόω","g":"I fill, complete, fulfill"},{"t":"ποιέω","g":"I do, make"},{"t":"τηρέω","g":"I keep, guard, observe"}]},{"week":12,"src":"Mounce 18","items":[{"t":"ἀποκρίνομαι","g":"I answer"},{"t":"δεῖ","g":"it is necessary"},{"t":"δύναμαι","g":"I am able, am powerful"},{"t":"ἔρχομαι","g":"I come; go"},{"t":"νύξ, νυκτός, ἡ","g":"night"},{"t":"ὅστις, ἥτις, ὅτι","g":"whoever, whichever, whatever"},{"t":"πορεύομαι","g":"I go, proceed; live (metaphorically going = living)"},{"t":"συνάγω","g":"I gather together, bring together; lead"},{"t":"τόπος, -ου, ὁ","g":"place; location"},{"t":"ὡς","g":"as, like; that; approximately; when, after"}]},{"week":13,"src":"Mounce 19","items":[{"t":"βασιλεύς, -έως, ὁ","g":"king"},{"t":"γεννάω","g":"I beget, give birth to; produce"},{"t":"ζάω","g":"I live"},{"t":"Ἰουδαία, -ας, ἡ","g":"Judea"},{"t":"Ἰουδαῖος, -αία, -αῖον","g":"adj: Jewish; noun: Jew, Judean"},{"t":"Ἰσραήλ, ὁ","g":"Israel (indeclinable)"},{"t":"καρπός, -οῦ, ὁ","g":"fruit, crop; result"},{"t":"μείζων, -ον","g":"greater, larger"},{"t":"ὅλος, -η, -ον","g":"adj: whole, complete; adv: entirely"},{"t":"προσκυνέω","g":"I greet, prostrate myself, worship"}]},{"week":14,"src":"Mounce 20","items":[{"t":"αἴρω","g":"I raise, take up, take away"},{"t":"ἀποκτείνω","g":"I kill"},{"t":"ἀποστέλλω","g":"I send (away)"},{"t":"βαπτίζω","g":"I dip, immerse; baptize"},{"t":"γινώσκω","g":"I know, come to know, realize, learn"},{"t":"γλῶσσα, -ης, ἡ","g":"tongue, language"},{"t":"ἐγείρω","g":"I raise up, wake"},{"t":"ἐκβάλλω","g":"I cast out, send out"},{"t":"ἐκεῖ","g":"there, in that place"},{"t":"κρίνω","g":"I judge, decide, prefer"},{"t":"λαός, -οῦ, ὁ","g":"people, crowd"},{"t":"μένω","g":"I remain, live (i.e., remain alive)"},{"t":"ὁράω","g":"I see, notice, experience"},{"t":"σοφία, -ας, ἡ","g":"wisdom"},{"t":"στόμα, -ατος, τό","g":"mouth"},{"t":"σῴζω","g":"I save, deliver, rescue"}]}];
 const V = { weeks:new Set([1]), dir:"g2e", fmt:"mc", deck:[], i:0, right:0, wrong:0,
             missed:[], started:false, answered:false, showList:false };
@@ -601,7 +616,7 @@ function drawQ(){
   if(V.i >= V.deck.length) return drawSummary();
   const item = V.deck[V.i];
   const dir = V.dir==="mix" ? (Math.random()<0.5?"g2e":"e2g") : V.dir;
-  V.curDir = dir; V.answered = false;
+  V.answered = false;
   const pool = vocabPool();
   const pct = Math.round(V.i/V.deck.length*100);
   const statusBar = `
@@ -688,9 +703,8 @@ function drawQ(){
     $("#vSkip").onclick = ()=>{ if(V.answered) return; V.answered=true;
       $("#vFb").className="fb no";
       $("#vFb").innerHTML = `Answer: <span class="gk" style="font-size:20px">${item.t}</span>`;
-      score(false,item,""); setTimeout(next,2200); };
+      score(false,item,""); setTimeout(next,2600); };
     inp.onkeydown = e=>{ if(e.key==="Enter"){ e.preventDefault(); V.answered ? next() : submit(); } };
-    V.submit = submit;
   }
 }
 
@@ -722,16 +736,235 @@ function drawSummary(){
   };
 }
 
+/* ================= Hebrew ================= */
+const HEB_VOWELS = [
+  {n:"Patach",        f:"אַ",  s:'short "ah" as in l<u>a</u>h',        cls:"A-class", len:"short"},
+  {n:"Kamets",        f:"אָ",  s:'long "awe" as in <u>awe</u>some',    cls:"A-class", len:"long"},
+  {n:"Patach Yod",    f:"אַי", s:'long "ai" as in <u>ai</u>sle',       cls:"A-class", len:"long"},
+  {n:"Segol",         f:"אֶ",  s:'short "eh" as in p<u>e</u>t',        cls:"E-class", len:"short"},
+  {n:"Tsere",         f:"אֵ",  s:'long "ay" as in h<u>ay</u>',         cls:"E-class", len:"long"},
+  {n:"Tsere Yod",     f:"אֵי", s:'long "ay" as in h<u>ay</u>',         cls:"E-class", len:"long"},
+  {n:"Chirek",        f:"אִ",  s:'short "ih" as in s<u>i</u>t',        cls:"I-class", len:"short"},
+  {n:"Chirek Yod",    f:"אִי", s:'long "ee" as in s<u>ee</u>',         cls:"I-class", len:"long"},
+  {n:"Cholem",        f:"אֹ",  s:'long "oh" as in r<u>o</u>w',         cls:"O-class", len:"long"},
+  {n:"Cholem Vav",    f:"אוֹ", s:'long "oh" as in r<u>o</u>w',         cls:"O-class", len:"long"},
+  {n:"Cholem Yod",    f:"אֹי", s:'long "oi" as in b<u>oy</u>',         cls:"O-class", len:"long"},
+  {n:"Kibuts",        f:"אֻ",  s:'short "uh" as in b<u>oo</u>k',       cls:"U-class", len:"short"},
+  {n:"Shurek",        f:"אוּ", s:'long "ooh" as in b<u>oo</u>t',       cls:"U-class", len:"long"},
+  {n:"Sheva",         f:"אְ",  s:'the smallest sound you can make — like th<u>e</u> or <u>a</u>bout; sometimes silent', cls:"Reduced", len:"reduced"},
+  {n:"Chateph Patach",f:"אֲ",  s:'short "ah"',                          cls:"Reduced", len:"reduced"},
+  {n:"Chateph Segol", f:"אֱ",  s:'short "eh"',                          cls:"Reduced", len:"reduced"},
+  {n:"Chateph Kamets",f:"אֳ",  s:'long "oh" as in pill<u>o</u>w',       cls:"Reduced", len:"reduced"}
+];
+const HEB_CLASSES = ["A-class","E-class","I-class","O-class","U-class","Reduced"];
+const HEB_TOPICS = { vowels: { label:"Vowels", title:"Hebrew Vowels",
+  subtitle:"The 17 vowel signs and the sounds they make. א is only a placeholder — the vowel attaches to whatever consonant it follows." } };
+
+function renderHebrew(){
+  $("#paraNav").innerHTML = Object.entries(HEB_TOPICS)
+    .map(([k,v])=>`<button data-ht="${k}">${v.label}</button>`).join("");
+  $("#modeNav").innerHTML = HMODES.map(([k,v])=>`<button data-hm="${k}">${v}</button>`).join("");
+  $("#modeNav").style.display = "";
+  $("#paraNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.ht===curHT));
+  $("#modeNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.hm===curHM));
+  const t = HEB_TOPICS[curHT];
+  $("#title").textContent = t.title;
+  $("#subtitle").textContent = t.subtitle;
+  ({chart:hebChart, hquiz:hebQuiz, hcards:hebCards})[curHM]();
+}
+
+function hebChart(){
+  const rows = HEB_CLASSES.map(c=>{
+    const list = HEB_VOWELS.filter(v=>v.cls===c);
+    return `<tr><th colspan="3" style="text-align:left;background:var(--accent-soft);color:var(--ink)">${c}</th></tr>` +
+      list.map(v=>`<tr>
+        <td class="hecell">${v.f}</td>
+        <td class="name maskname">${v.n}</td>
+        <td class="snd masksound">${v.s}</td></tr>`).join("");
+  }).join("");
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Vowel chart</h2>
+      <p class="hint">Click any blurred cell to peek at it. Hide a column and read down the chart to test yourself.</p>
+      <div class="row" style="margin-top:0">
+        <button class="btn ghost" id="hideNames">Hide names</button>
+        <button class="btn ghost" id="hideSounds">Hide sounds</button>
+      </div>
+      <table style="margin-top:14px">
+        <tr><th style="width:22%">Vowel</th><th style="width:30%">Name</th><th style="text-align:left">Sound</th></tr>
+        ${rows}
+      </table>
+    </div>
+    <div class="panel">
+      <h2>Worth noticing</h2>
+      <ul class="tips">
+        <li>Most vowels sit <em>under</em> the consonant; cholem sits above it, and shurek/cholem vav use a ו next to it.</li>
+        <li>A yod (י) after a vowel usually lengthens it: chirek &rarr; chirek yod (“ih” &rarr; “ee”), tsere &rarr; tsere yod, patach &rarr; patach yod.</li>
+        <li>The four <strong>reduced</strong> vowels all contain a sheva (the two vertical dots). A plain sheva is the tiny “uh”; a chateph is a sheva paired with another vowel sign, giving a very short version of that vowel.</li>
+        <li>Two dots side by side under a letter is <em>tsere</em> (“ay”); three dots in a triangle is <em>segol</em> (“eh”); three dots on a diagonal is <em>kibuts</em> (“uh”).</li>
+        <li>Kamets (ָ) and patach (ַ) look alike — kamets has the little tail hanging down from the bar.</li>
+      </ul>
+    </div>`;
+  const toggle = (sel,btn,onTxt,offTxt)=>{
+    let hidden = false;
+    $(btn).onclick = ()=>{
+      hidden = !hidden;
+      document.querySelectorAll(sel).forEach(el=>{
+        el.classList.toggle("blur", hidden);
+        el.onclick = hidden ? ()=>el.classList.toggle("blur") : null;
+      });
+      $(btn).textContent = hidden ? offTxt : onTxt;
+    };
+  };
+  toggle(".maskname","#hideNames","Hide names","Show names");
+  toggle(".masksound","#hideSounds","Hide sounds","Show sounds");
+}
+
+const hq = {r:0,t:0,s:0,kind:"mix"};
+function hebQuiz(){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Vowel quiz</h2>
+      <div class="opts" style="margin-top:0">
+        <fieldset><span class="lbl">Ask me</span>
+          <select id="hKind">
+            <option value="mix">Mixed</option>
+            <option value="sym2name">Vowel &rarr; name</option>
+            <option value="name2sym">Name &rarr; vowel</option>
+            <option value="sym2snd">Vowel &rarr; sound</option>
+            <option value="snd2sym">Sound &rarr; vowel</option>
+          </select></fieldset>
+        <span class="score" id="hScore"></span>
+      </div>
+      <div id="hArea"></div>
+    </div>`;
+  $("#hKind").value = hq.kind;
+  $("#hKind").onchange = e=>{ hq.kind = e.target.value; hNew(); };
+  hNew();
+}
+function hNew(){
+  const area = $("#hArea"); if(!area) return;
+  const kind = hq.kind==="mix" ? rand(["sym2name","name2sym","sym2snd","snd2sym"]) : hq.kind;
+  const v = rand(HEB_VOWELS);
+  let promptHtml, answer, key, optClass, meta;
+  if(kind==="sym2name"){ promptHtml=`<div class="q he">${v.f}</div>`; key="n"; optClass="txt"; meta="What is this vowel called?"; }
+  else if(kind==="name2sym"){ promptHtml=`<div class="q">${v.n}</div>`; key="f"; optClass="hb"; meta="Which sign is it?"; }
+  else if(kind==="sym2snd"){ promptHtml=`<div class="q he">${v.f}</div>`; key="s"; optClass="txt"; meta="What sound does it make?"; }
+  else { promptHtml=`<div class="q" style="font-size:22px">${v.s}</div>`; key="f"; optClass="hb"; meta="Which vowel makes this sound?"; }
+  answer = v[key];
+  const wrong = shuffle(HEB_VOWELS.filter(x=>x[key]!==answer)
+    .filter((x,i,arr)=>arr.findIndex(y=>y[key]===x[key])===i)).slice(0,3).map(x=>x[key]);
+  const opts = shuffle([answer,...wrong]);
+  area.innerHTML = `
+    <div class="card"><div class="meta">${meta}</div>${promptHtml}</div>
+    <div class="choices" id="hChoices">${opts.map(o=>`<button class="${optClass}">${o}</button>`).join("")}</div>
+    <div class="fb" id="hFb"></div>
+    <div class="row"><button class="btn ghost" id="hNext">Next &rarr;</button></div>`;
+  let lock=false;
+  const btns=[...area.querySelectorAll("#hChoices button")];
+  btns.forEach(b=> b.onclick = ()=>{
+    if(lock) return; lock=true; hq.t++;
+    const ok = b.innerHTML===answer;
+    b.classList.add(ok?"ok":"no");
+    if(!ok) btns.find(x=>x.innerHTML===answer).classList.add("ok");
+    if(ok){ hq.r++; hq.s++; } else hq.s=0;
+    $("#hFb").className = "fb " + (ok?"ok":"no");
+    $("#hFb").innerHTML = ok ? "Correct."
+      : `<span class="he" style="font-size:26px">${v.f}</span> is <strong>${v.n}</strong> — ${v.s}`;
+    $("#hScore").textContent = `${hq.r} correct / ${hq.t} · streak ${hq.s}`;
+    setTimeout(hNew, ok?700:2400);
+  });
+  $("#hNext").onclick = hNew;
+  $("#hScore").textContent = `${hq.r} correct / ${hq.t} · streak ${hq.s}`;
+}
+
+const HC = {deck:[],i:0,right:0,wrong:0,missed:[],dir:"sym2name"};
+function hebCards(){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Flashcards</h2>
+      <div class="opts" style="margin-top:0">
+        <fieldset><span class="lbl">Front of card</span>
+          <select id="hcDir">
+            <option value="sym2name">The vowel sign</option>
+            <option value="name2sym">The vowel name</option>
+            <option value="snd2sym">The sound</option>
+          </select></fieldset>
+        <button class="btn" id="hcStart">Shuffle &amp; start</button>
+      </div>
+      <div id="hcArea"></div>
+    </div>`;
+  $("#hcDir").value = HC.dir;
+  $("#hcDir").onchange = e=>{ HC.dir=e.target.value; hcStart(); };
+  $("#hcStart").onclick = hcStart;
+  hcStart();
+}
+function hcStart(){
+  HC.deck = shuffle(HEB_VOWELS.slice()); HC.i=0; HC.right=0; HC.wrong=0; HC.missed=[];
+  hcDraw();
+}
+function hcDraw(){
+  const area = $("#hcArea"); if(!area) return;
+  if(HC.i >= HC.deck.length){
+    const uniq=[...new Set(HC.missed.map(m=>m.n))];
+    area.innerHTML = `<div style="padding-top:14px">
+      <h2>Round complete</h2>
+      <p>${HC.right} of ${HC.right+HC.wrong} known.</p>
+      ${uniq.length?`<p class="hint" style="margin-bottom:6px">Review these:</p>
+        <ul class="missed">${HC.missed.filter((m,i,a)=>a.findIndex(x=>x.n===m.n)===i)
+          .map(m=>`<li><span class="he">${m.f}</span> &nbsp;<strong>${m.n}</strong> — ${m.s}</li>`).join("")}</ul>`
+        :`<p class="hint">All of them. Nice.</p>`}
+      <div class="row"><button class="btn" id="hcAgain">Go again</button>
+      ${uniq.length?`<button class="btn ghost" id="hcDrill">Drill missed (${uniq.length})</button>`:""}</div></div>`;
+    $("#hcAgain").onclick = hcStart;
+    if(uniq.length) $("#hcDrill").onclick = ()=>{
+      HC.deck = shuffle(HC.missed.filter((m,i,a)=>a.findIndex(x=>x.n===m.n)===i));
+      HC.i=0;HC.right=0;HC.wrong=0;HC.missed=[];hcDraw();
+    };
+    return;
+  }
+  const v = HC.deck[HC.i];
+  const frontHe = HC.dir==="sym2name";
+  const front = frontHe ? v.f : (HC.dir==="name2sym" ? v.n : v.s);
+  const back  = frontHe ? `<strong>${v.n}</strong><div style="font-size:15px;color:var(--muted);margin-top:6px">${v.s}</div>`
+                        : `<span class="he">${v.f}</span><div style="font-size:15px;color:var(--muted);margin-top:6px">${HC.dir==="name2sym"?v.s:v.n}</div>`;
+  const pct = Math.round(HC.i/HC.deck.length*100);
+  area.innerHTML = `
+    <div class="card">
+      <div class="q ${frontHe?"he":""}" style="${frontHe?"":"font-size:24px"}">${front}</div>
+      <div class="a hidden" id="hcBack">${back}</div>
+    </div>
+    <div class="row"><button class="btn" id="hcShow">Show answer <span style="opacity:.7">(space)</span></button>
+      <span id="hcRate" style="display:none">
+        <button class="btn ghost" id="hcMiss">Missed it (1)</button>
+        <button class="btn" id="hcKnew">Knew it (2)</button></span>
+      <span class="score">card ${HC.i+1} of ${HC.deck.length} · ${HC.right} known</span></div>
+    <div class="barwrap"><div class="bar" style="width:${pct}%"></div></div>`;
+  const reveal = ()=>{ $("#hcBack").classList.remove("hidden");
+    $("#hcShow").style.display="none"; $("#hcRate").style.display="inline"; };
+  $("#hcShow").onclick = reveal;
+  HC.reveal = reveal;
+  $("#hcMiss").onclick = ()=>{ HC.wrong++; HC.missed.push(v); HC.deck.push(v); HC.i++; hcDraw(); };
+  $("#hcKnew").onclick = ()=>{ HC.right++; HC.i++; hcDraw(); };
+}
+
+/* ================= keyboard ================= */
 document.addEventListener("keydown", e=>{
+  if(e.target.tagName === "INPUT") return;
+  if(curLang==="hebrew"){
+    if(curHM!=="hcards") return;
+    if(e.code==="Space"){ e.preventDefault(); if($("#hcShow") && $("#hcShow").style.display!=="none") HC.reveal(); }
+    if(e.key==="1" && $("#hcMiss")) $("#hcMiss").click();
+    if(e.key==="2" && $("#hcKnew")) $("#hcKnew").click();
+    return;
+  }
   if(curP!=="vocab" || !V.started) return;
-  if(e.target.tagName === "INPUT" && V.fmt==="type") return;
   if(V.fmt==="card"){
-    if(e.code==="Space"){ e.preventDefault();
-      $("#vShow") && $("#vShow").style.display!=="none" ? V.reveal() : null; }
+    if(e.code==="Space"){ e.preventDefault(); if($("#vShow") && $("#vShow").style.display!=="none") V.reveal(); }
     if(e.key==="1" && $("#vMiss")) $("#vMiss").click();
     if(e.key==="2" && $("#vKnew")) $("#vKnew").click();
   }
-  if(V.fmt==="mc" && "1234".includes(e.key)) V.keyPick(+e.key-1);
+  if(V.fmt==="mc" && "1234".includes(e.key) && V.keyPick) V.keyPick(+e.key-1);
 });
 
 render();
