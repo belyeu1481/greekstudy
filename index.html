@@ -191,6 +191,47 @@ const PARADIGMS = {
       'Accent stays on the ending, following the article’s pattern: circumflex in gen./dat., acute elsewhere.'
     ]
   },
+  present: {
+    label: "Present active",
+    title: 'The Present Active <span class="gk">λύω, βαίνω</span>',
+    subtitle: "An ordinary -ω verb: indicative and imperative. This is the pattern every contract verb is built on.",
+    cols: ["end","λυ","βαιν"],
+    colHeads: ['<span style="white-space:nowrap">Ending</span>',
+               '<span class="gk" style="white-space:nowrap">λύ-ω</span><br><span style="font-weight:400;white-space:nowrap">‘loose, untie’</span>',
+               '<span class="gk" style="white-space:nowrap">βαίν-ω</span><br><span style="font-weight:400;white-space:nowrap">‘go, walk’</span>'],
+    groups: ["Present indicative", "Imperative"],
+    rows: {
+      "Present indicative": ["1st s.","2nd s.","3rd s.","1st pl.","2nd pl.","3rd pl."],
+      "Imperative": ["s.","pl."]
+    },
+    data: {
+      "Present indicative": {
+        "1st s.":  ["-ω","λύω","βαίνω"],
+        "2nd s.":  ["-εις","λύεις","βαίνεις"],
+        "3rd s.":  ["-ει","λύει","βαίνει"],
+        "1st pl.": ["-ομεν","λύομεν","βαίνομεν"],
+        "2nd pl.": ["-ετε","λύετε","βαίνετε"],
+        "3rd pl.": ["-ουσι","λύουσι","βαίνουσι"]
+      },
+      "Imperative": {
+        "s.":  ["-ε","λῦε","βαῖνε"],
+        "pl.": ["-ετε","λύετε","βαίνετε"]
+      }
+    },
+    labelFn: c => (c.gi === 0)
+      ? (c.num === "Imperative" ? `the imperative ${c.cs} ending` : `the ${c.cs} present ending`)
+      : (c.num === "Imperative" ? `imperative ${c.cs} of ${PRESNAMES[c.gi]}`
+                                : `${c.cs} present of ${PRESNAMES[c.gi]}`),
+    tips: [
+      'The stem never moves: <span class="gk">λύ-</span>, <span class="gk">βαίν-</span>. Everything that changes is the ending, and both verbs take exactly the same set — learn it once.',
+      'Person and number live entirely in the ending: <span class="gk">-ς</span> = you (s.), nothing = he/she/it, <span class="gk">-μεν</span> = we, <span class="gk">-τε</span> = you (pl.), <span class="gk">-σι(ν)</span> = they.',
+      'The vowel in front of the personal ending alternates <span class="gk">ο</span> before <span class="gk">μ</span> and <span class="gk">ν</span>, <span class="gk">ε</span> elsewhere: <span class="gk">-ομεν</span>, <span class="gk">-ετε</span>, <span class="gk">-ουσι</span>. That vowel is what the contract verbs collide with.',
+      'Compare the contract table: <span class="gk">ὁρῶμεν</span> is nothing but <span class="gk">ὁρά</span> + <span class="gk">-ομεν</span> fused, and <span class="gk">ποιεῖτε</span> is <span class="gk">ποιέ</span> + <span class="gk">-ετε</span>. Same endings, merged vowels.',
+      '3rd pl. often adds a movable <span class="gk">ν</span> before a vowel or a pause: <span class="gk">λύουσι</span> or <span class="gk">λύουσιν</span>, both correct.',
+      'The plural imperative is identical to the 2nd pl. indicative — <span class="gk">βαίνετε</span> is both ‘you go’ and ‘go!’. The contract verbs inherit this ambiguity.',
+      'Verb accent is <em>recessive</em>: it slides back as far as the last syllable allows. That is why the imperative is <span class="gk">λῦε</span> with a circumflex but <span class="gk">λύετε</span> with an acute.'
+    ]
+  },
   contract: {
     label: "Contract verbs",
     title: 'Contract Verbs <span class="gk">ὁράω, ποιέω, δηλόω</span>',
@@ -261,6 +302,7 @@ const PARADIGMS = {
 };
 
 const VERBNAMES = ["ὁράω ‘see’", "ποιέω ‘do/make’", "δηλόω ‘show’"];
+const PRESNAMES = ["the ending", "λύω ‘loose’", "βαίνω ‘go’"];
 
 /* A paradigm is a set of tables: groups (captions) x rows x cols.
    Nominal paradigms use gender columns; verb/adverb paradigms supply their own. */
@@ -322,7 +364,7 @@ let curLang = "greek", curP = "article", curMode = "study", curHT = "vowels", cu
 const MODES = [["study","Study"],["fill","Fill the Grid"],["type","Type It"],["quiz","Quick Quiz"],
   ["spot","Spot It"],["lab","Contract Lab"],["trans","Translate"],["accent","Accent Trap"],["vmath","Vowel Math"]];
 const DEFAULT_MODES = ["study","fill","type","quiz","spot"];
-const HMODES = [["chart","Chart"],["hquiz","Quiz"],["hcards","Flashcards"]];
+const HMODES = [["chart","Chart"],["hquiz","Quiz"],["hcards","Flashcards"],["hname","Type the Name"]];
 
 $("#langNav").innerHTML = `<button data-l="greek">Greek</button><button data-l="hebrew">Hebrew</button>`;
 $("#langNav").onclick = e=>{ const b=e.target.closest("button"); if(!b) return;
@@ -1197,7 +1239,7 @@ function renderHebrew(){
   const t = HEB_TOPICS[curHT];
   $("#title").textContent = t.title;
   $("#subtitle").textContent = t.subtitle;
-  ({chart:hebChart, hquiz:hebQuiz, hcards:hebCards})[curHM]();
+  ({chart:hebChart, hquiz:hebQuiz, hcards:hebCards, hname:hebName})[curHM]();
 }
 
 function hebChart(){
@@ -1373,6 +1415,131 @@ function hcDraw(){
   HC.reveal = reveal;
   $("#hcMiss").onclick = ()=>{ HC.wrong++; HC.missed.push(v); HC.deck.push(v); HC.i++; hcDraw(); };
   $("#hcKnew").onclick = ()=>{ HC.right++; HC.i++; hcDraw(); };
+}
+
+/* ---------- Hebrew: look at the vowel, type its name ---------- */
+/* Transliteration is a free-for-all, so fold the common spellings together
+   before grading. Every alias maps to the spelling used in HEB_VOWELS. */
+const HEBALIAS = {
+  patach:"patach", patah:"patach", pathach:"patach", patakh:"patach", pattah:"patach", pattach:"patach",
+  kamets:"kamets", kametz:"kamets", kamatz:"kamets", kamats:"kamets", kames:"kamets",
+  qamets:"kamets", qametz:"kamets", qamatz:"kamets", qamats:"kamets",
+  segol:"segol", seghol:"segol", seghol:"segol", segol1:"segol",
+  tsere:"tsere", tzere:"tsere", sere:"tsere", tsereh:"tsere", tseire:"tsere", tzeire:"tsere", cere:"tsere",
+  chirek:"chirek", chireq:"chirek", chiriq:"chirek", chirik:"chirek", hireq:"chirek", hiriq:"chirek",
+  hirek:"chirek", hirik:"chirek", khirik:"chirek",
+  cholem:"cholem", cholam:"cholem", cholim:"cholem", holem:"cholem", holam:"cholem", kholam:"cholem",
+  kibuts:"kibuts", kibbuts:"kibuts", kibbutz:"kibuts", kibutz:"kibuts", kubuts:"kibuts", kubbutz:"kibuts",
+  qibbuts:"kibuts", qibbus:"kibuts", qubbuts:"kibuts",
+  shurek:"shurek", shureq:"shurek", shuruk:"shurek", shuruq:"shurek",
+  sheva:"sheva", shewa:"sheva", shva:"sheva", schwa:"sheva", shwa:"sheva",
+  chateph:"chateph", chatef:"chateph", chataph:"chateph", chataf:"chateph", chatuph:"chateph",
+  hateph:"chateph", hatef:"chateph", hataph:"chateph", hataf:"chateph", khataf:"chateph",
+  yod:"yod", yodh:"yod", yud:"yod", jod:"yod",
+  vav:"vav", waw:"vav", vov:"vav", wav:"vav"
+};
+function hebKey(s){
+  return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .replace(/[^a-z]+/g," ").trim().split(/\s+/).filter(Boolean)
+    .map(t => HEBALIAS[t] || t).sort().join(" ");
+}
+const HN = {deck:[], i:0, right:0, wrong:0, missed:[], hint:false, answered:false};
+function hebName(){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Type the Name</h2>
+      <p class="hint">Look at the sign and type what it is called. Spelling is forgiving —
+      <em>qamets</em>, <em>kametz</em> and <em>kamats</em> all count, and so do <em>hateph</em> for
+      <em>chateph</em> and <em>waw</em> for <em>vav</em>. The deck is all 17 signs; anything you miss comes back.</p>
+      <div class="opts" style="margin-top:0">
+        <label class="chk"><input type="checkbox" id="hnHint" ${HN.hint?"checked":""}> show the sound as a hint</label>
+        <button class="btn ghost" id="hnRestart">Shuffle &amp; restart</button>
+        <span class="score" id="hnScore"></span>
+      </div>
+      <div id="hnArea"></div>
+    </div>`;
+  $("#hnHint").onchange = e=>{ HN.hint = e.target.checked; hnDraw(); };
+  $("#hnRestart").onclick = hnStart;
+  if(!HN.deck.length || HN.i >= HN.deck.length) hnStart(); else hnDraw();
+}
+function hnStart(){
+  HN.deck = shuffle(HEB_VOWELS.slice());
+  HN.i = 0; HN.right = 0; HN.wrong = 0; HN.missed = []; HN.answered = false;
+  hnDraw();
+}
+function hnDraw(){
+  const area = $("#hnArea"); if(!area) return;
+  const scoreEl = $("#hnScore");
+  if(scoreEl) scoreEl.textContent = `${HN.right} right · ${HN.wrong} missed`;
+
+  if(HN.i >= HN.deck.length){
+    const uniq = HN.missed.filter((m,i,a)=>a.findIndex(x=>x.n===m.n)===i);
+    area.innerHTML = `<div style="padding-top:16px">
+      <h2>Round complete</h2>
+      <p style="font-size:15px">${HN.right} of ${HN.right+HN.wrong} named correctly
+        <span style="color:var(--muted)">(${HN.right+HN.wrong?Math.round(HN.right/(HN.right+HN.wrong)*100):0}%)</span></p>
+      ${uniq.length ? `<p class="hint" style="margin-bottom:6px">Names to work on:</p>
+        <ul class="missed">${uniq.map(m=>`<li><span class="he">${m.f}</span> &nbsp;<strong>${m.n}</strong> — ${m.s}</li>`).join("")}</ul>`
+        : `<p class="hint">All 17, no misses.</p>`}
+      <div class="row"><button class="btn" id="hnAgain">Go again</button>
+        ${uniq.length?`<button class="btn ghost" id="hnDrill">Drill missed (${uniq.length})</button>`:""}</div></div>`;
+    $("#hnAgain").onclick = hnStart;
+    if(uniq.length) $("#hnDrill").onclick = ()=>{
+      HN.deck = shuffle(uniq); HN.i=0; HN.right=0; HN.wrong=0; HN.missed=[]; HN.answered=false; hnDraw();
+    };
+    return;
+  }
+
+  const v = HN.deck[HN.i];
+  const pct = Math.round(HN.i / HN.deck.length * 100);
+  area.innerHTML = `
+    <div class="card">
+      <div class="meta">What is this vowel called?</div>
+      <div class="q he">${v.f}</div>
+      ${HN.hint?`<div style="font-size:14px;color:var(--muted);margin-top:2px">${v.s}</div>`:""}
+      <div style="margin-top:18px"><input class="bigin" id="hnIn" style="font-family:inherit;font-size:20px"
+        spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="type the name…"></div>
+    </div>
+    <div class="row"><button class="btn" id="hnGo">Check (enter)</button>
+      <button class="btn ghost" id="hnSkip">Show answer</button>
+      <span class="score">card ${HN.i+1} of ${HN.deck.length}</span></div>
+    <div class="fb" id="hnFb"></div>
+    <div class="barwrap"><div class="bar" style="width:${pct}%"></div></div>`;
+
+  const inp = $("#hnIn"); inp.focus();
+  HN.answered = false;
+  const advance = ms => setTimeout(()=>{ HN.i++; hnDraw(); }, ms);
+  const reveal = (cls, html, ok) => {
+    HN.answered = true;
+    $("#hnFb").className = "fb " + cls;
+    $("#hnFb").innerHTML = html;
+    if(ok){ HN.right++; } else { HN.wrong++; HN.missed.push(v); HN.deck.push(v); }
+    if($("#hnScore")) $("#hnScore").textContent = `${HN.right} right · ${HN.wrong} missed`;
+  };
+  const answerLine = `<span class="he" style="font-size:26px">${v.f}</span> is <strong>${v.n}</strong> — ${v.s}`;
+
+  const go = ()=>{
+    if(HN.answered) return;
+    const val = inp.value.trim();
+    if(!val) return;
+    const got = hebKey(val), want = hebKey(v.n);
+    if(got === want){ reveal("ok", `Correct — <strong>${v.n}</strong>, ${v.s}`, true); return advance(950); }
+    /* right base, missing or wrong modifier (yod / vav / chateph) */
+    const gotSet = new Set(got.split(" ")), wantSet = new Set(want.split(" "));
+    const shared = [...gotSet].filter(t=>wantSet.has(t));
+    if(shared.length && (gotSet.size !== wantSet.size)){
+      const extra = [...wantSet].filter(t=>!gotSet.has(t));
+      reveal("no", extra.length
+        ? `So close — you need <strong>${extra.join(" ")}</strong> as well. ${answerLine}`
+        : `Nearly — that has a word too many. ${answerLine}`, false);
+      return advance(3000);
+    }
+    reveal("no", answerLine, false);
+    advance(2800);
+  };
+  $("#hnGo").onclick = go;
+  $("#hnSkip").onclick = ()=>{ if(HN.answered) return; reveal("no", answerLine, false); advance(2800); };
+  inp.onkeydown = e=>{ if(e.key === "Enter"){ e.preventDefault(); HN.answered ? (HN.i++, hnDraw()) : go(); } };
 }
 
 /* ================= keyboard ================= */
