@@ -37,7 +37,7 @@
   caption{text-align:left;font-style:italic;color:var(--muted);padding-bottom:6px;font-size:14px}
   th,td{border:1px solid var(--line);padding:8px 10px;text-align:center}
   th{background:#f7f8fc;font-weight:600;font-size:13px;color:var(--muted)}
-  th.rowh{text-align:left;font-style:italic;width:104px}
+  th.rowh{text-align:left;font-style:italic;width:104px;white-space:nowrap}
   td.gkcell{font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:19px}
   td.none{background:#fafbfe;color:#c3c6d6}
   td.cell{cursor:pointer;height:44px;font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:19px}
@@ -117,7 +117,7 @@
   td.snd{font-size:14px;text-align:left;color:var(--muted)}
   .blur{filter:blur(6px);transition:filter .12s;cursor:pointer}
   .blur:hover{filter:none}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
   @media(max-width:660px){.grid2{grid-template-columns:1fr}}
   .hidebtn{font-size:13px;margin-left:8px;padding:4px 10px}
 </style>
@@ -190,30 +190,110 @@ const PARADIGMS = {
       'The only separate vocative is masculine singular <span class="gk">καλέ</span>; fem. and neut. vocatives are identical to their nominatives.',
       'Accent stays on the ending, following the article’s pattern: circumflex in gen./dat., acute elsewhere.'
     ]
+  },
+  contract: {
+    label: "Contract verbs",
+    title: 'Contract Verbs <span class="gk">ὁράω, ποιέω, δηλόω</span>',
+    subtitle: "Present indicative active and imperative — Reading Greek §23–27.",
+    modes: ["study","fill","type","quiz","spot","lab","trans","accent","vmath"],
+    cols: ["α","ε","ο"],
+    colHeads: ['<span style="white-space:nowrap">α-contract</span><br><span class="gk" style="font-size:16px;white-space:nowrap">ὁρά-ω ‘see’</span>',
+               '<span style="white-space:nowrap">ε-contract</span><br><span class="gk" style="font-size:16px;white-space:nowrap">ποιέ-ω ‘do/make’</span>',
+               '<span style="white-space:nowrap">ο-contract</span><br><span class="gk" style="font-size:16px;white-space:nowrap">δηλό-ω ‘show’</span>'],
+    groups: ["Present indicative", "Imperative"],
+    rows: {
+      "Present indicative": ["1st s.","2nd s.","3rd s.","1st pl.","2nd pl.","3rd pl."],
+      "Imperative": ["s.","pl."]
+    },
+    data: {
+      "Present indicative": {
+        "1st s.":  ["ὁρῶ","ποιῶ","δηλῶ"],
+        "2nd s.":  ["ὁρᾷς","ποιεῖς","δηλοῖς"],
+        "3rd s.":  ["ὁρᾷ","ποιεῖ","δηλοῖ"],
+        "1st pl.": ["ὁρῶμεν","ποιοῦμεν","δηλοῦμεν"],
+        "2nd pl.": ["ὁρᾶτε","ποιεῖτε","δηλοῦτε"],
+        "3rd pl.": ["ὁρῶσι","ποιοῦσι","δηλοῦσι"]
+      },
+      "Imperative": {
+        "s.":  ["ὅρα","ποίει","δήλου"],
+        "pl.": ["ὁρᾶτε","ποιεῖτε","δηλοῦτε"]
+      }
+    },
+    labelFn: c => (c.num === "Imperative")
+      ? `imperative ${c.cs} of ${VERBNAMES[c.gi]}`
+      : `${c.cs} present of ${VERBNAMES[c.gi]}`,
+    tips: [
+      'The stem is the part that never changes: <span class="gk">ὁρ-</span>, <span class="gk">ποι-</span>, <span class="gk">δηλ-</span>. Everything after it is the contract vowel fused with a perfectly ordinary <span class="gk">-ω</span> ending.',
+      'Compare <span class="gk">βαίνω</span> ending for ending: <span class="gk">βαίν-ω / βαίν-εις / βαίν-ει / βαίν-ομεν / βαίν-ετε / βαίν-ουσι(ν)</span>. Nothing new has been added — the vowels have only merged.',
+      'Person and number live entirely in the ending: <span class="gk">-ς</span> = you (s.), nothing = he/she/it, <span class="gk">-μεν</span> = we, <span class="gk">-τε</span> = you (pl.), <span class="gk">-σι(ν)</span> = they. The stem tells you nothing about who is acting.',
+      'Every 1st s. is <span class="gk">-ῶ</span> and every 3rd pl. is <span class="gk">-ῶσι / -οῦσι</span>: a long vowel always swallows a short one. And an <span class="gk">ι</span> never vanishes — it stays in the diphthong or drops to a subscript.',
+      'The plural imperative is identical to the 2nd pl. indicative: <span class="gk">ὁρᾶτε</span> is both ‘you see’ and ‘see!’. Only context separates them.',
+      'In the singular imperative the accent is the only clue: <span class="gk">ποίει</span> ‘do!’ vs <span class="gk">ποιεῖ</span> ‘he does’; <span class="gk">δήλου</span> ‘show!’ vs <span class="gk">δηλοῖ</span> ‘he shows’.',
+      'The <span class="gk">ο</span>-contract column is the one that breaks your ear: <span class="gk">δηλῶ</span> but <span class="gk">δηλοῖς</span>. In the other two columns 1st s. and 2nd s. look related; here they do not.'
+    ]
+  },
+  adverbs: {
+    label: "Adverbs",
+    title: 'Adverbs in <span class="gk">-ῶς</span>',
+    subtitle: "Adverbs never change form. Take the adjective’s gen. m. pl. and swap the final ν for ς.",
+    modes: ["study","fill","type","quiz"],
+    cols: ["adj","gen","adv"],
+    colHeads: ["Adjective","Gen. m. pl.","Adverb"],
+    groups: ["Section 1E–F"],
+    hideCaption: true,
+    rows: { "Section 1E–F": ["fine, beautiful","bad, evil","clear","deep","accurate"] },
+    data: { "Section 1E–F": {
+      "fine, beautiful": ["καλός","καλῶν","καλῶς"],
+      "bad, evil":       ["κακός","κακῶν","κακῶς"],
+      "clear":           ["σαφής","σαφῶν","σαφῶς"],
+      "deep":            ["βαθύς","βαθέων","βαθέως"],
+      "accurate":        ["ἀκριβής","ἀκριβῶν","ἀκριβῶς"]
+    }},
+    labelFn: c => `‘${c.cs}’ — ${["adjective (m. nom. s.)","genitive m. pl.","adverb"][c.gi]}`,
+    tips: [
+      'The route is always the same: adjective → gen. m. pl. → change <span class="gk">ν</span> to <span class="gk">ς</span>. You never have to remember the adverb separately.',
+      'Because the gen. pl. of these adjectives is accented with a circumflex, almost every adverb ends <span class="gk">-ῶς</span>.',
+      '<span class="gk">βαθύς</span> is the odd one: its gen. pl. is <span class="gk">βαθέων</span>, so the adverb is <span class="gk">βαθέως</span>, not †<span class="gk">βαθῶς</span>. Same rule, different input.',
+      'Adverbs are indeclinable — one form, whatever the sentence does around them.',
+      'They answer <em>how?</em>: <span class="gk">σαφῶς δηλοῖ</span> ‘he shows clearly’; <span class="gk">ἀκριβῶς ὁρῶμεν</span> ‘we see accurately’.'
+    ]
   }
 };
 
+const VERBNAMES = ["ὁράω ‘see’", "ποιέω ‘do/make’", "δηλόω ‘show’"];
+
+/* A paradigm is a set of tables: groups (captions) x rows x cols.
+   Nominal paradigms use gender columns; verb/adverb paradigms supply their own. */
+const colsOf   = p => p.cols   || GEN;
+const groupsOf = p => p.groups || NUMS;
+const headsOf  = p => p.colHeads || colsOf(p);
+
 function cellsOf(p){
   const out=[];
-  NUMS.forEach(n=>p.rows[n].forEach(c=>GEN.forEach((g,i)=>{
+  groupsOf(p).forEach(n=>p.rows[n].forEach(c=>colsOf(p).forEach((g,i)=>{
     const v=p.data[n][c][i];
-    if(v) out.push({num:n,cs:c,gi:i,g:g,val:v});
+    if(v) out.push({num:n,cs:c,gi:i,g:g,val:v,p:p});
   })));
   return out;
 }
-const label = c=>`${c.cs.toLowerCase()} ${GENNAME[c.g]} ${c.num.toLowerCase()}`;
+const label = c => (c.p && c.p.labelFn)
+  ? c.p.labelFn(c)
+  : `${c.cs.toLowerCase()} ${GENNAME[c.g]} ${c.num.toLowerCase()}`;
 function table(p,num,cellFn){
-  let h = `<table><caption>${num}</caption><tr><th></th>`;
-  GEN.forEach(g=>h+=`<th>${g}</th>`); h+="</tr>";
+  const showCap = groupsOf(p).length>1 || !p.hideCaption;
+  let h = `<table>${showCap?`<caption>${num}</caption>`:""}<tr><th></th>`;
+  headsOf(p).forEach(g=>h+=`<th>${g}</th>`); h+="</tr>";
   p.rows[num].forEach(c=>{
     h += `<tr><th class="rowh">${c}</th>`;
-    GEN.forEach((g,i)=> h += (p.data[num][c][i]===null
+    colsOf(p).forEach((g,i)=> h += (p.data[num][c][i]===null
       ? `<td class="none">—</td>` : cellFn(num,c,i)));
     h += "</tr>";
   });
   return h+"</table>";
 }
-const tables = (p,fn)=> NUMS.map(n=>table(p,n,fn)).join("");
+const tables = (p,fn)=> groupsOf(p).map(n=>table(p,n,fn)).join("");
+/* one table fills the width; two or more sit side by side */
+const gridCls = p => groupsOf(p).length>1 ? "grid2" : "";
 
 /* --------- Greek typing: Latin keys -> polytonic Greek --------- */
 const GK_LETTERS = {a:"α",b:"β",g:"γ",d:"δ",e:"ε",z:"ζ",h:"η",q:"θ",i:"ι",k:"κ",l:"λ",m:"μ",
@@ -230,14 +310,18 @@ function toGreek(s){
   return out.normalize("NFC");
 }
 const bare = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/ς/g,"σ");
+/* movable nu: ὁρῶσιν and ὁρῶσι are the same form */
+const movnu = s => s.replace(/σιν$/,"σι").replace(/σι\(ν\)$/,"σι");
 function sameForm(a,b,strict){
-  a = a.normalize("NFC").trim(); b = b.normalize("NFC").trim();
+  a = movnu(a.normalize("NFC").trim()); b = movnu(b.normalize("NFC").trim());
   return strict ? a===b : bare(a)===bare(b);
 }
 
 /* ================= shell / navigation ================= */
 let curLang = "greek", curP = "article", curMode = "study", curHT = "vowels", curHM = "chart";
-const MODES = [["study","Study"],["fill","Fill the Grid"],["type","Type It"],["quiz","Quick Quiz"],["spot","Spot It"]];
+const MODES = [["study","Study"],["fill","Fill the Grid"],["type","Type It"],["quiz","Quick Quiz"],
+  ["spot","Spot It"],["lab","Contract Lab"],["trans","Translate"],["accent","Accent Trap"],["vmath","Vowel Math"]];
+const DEFAULT_MODES = ["study","fill","type","quiz","spot"];
 const HMODES = [["chart","Chart"],["hquiz","Quiz"],["hcards","Flashcards"]];
 
 $("#langNav").innerHTML = `<button data-l="greek">Greek</button><button data-l="hebrew">Hebrew</button>`;
@@ -255,21 +339,25 @@ function render(){
   $("#paraNav").innerHTML = Object.entries(PARADIGMS)
     .map(([k,v])=>`<button data-p="${k}">${v.label}</button>`).join("")
     + `<button data-p="vocab">Vocabulary</button>`;
-  $("#modeNav").innerHTML = MODES.map(([k,v])=>`<button data-m="${k}">${v}</button>`).join("");
   $("#paraNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.p===curP));
-  $("#modeNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.m===curMode));
 
   if(curP === "vocab"){
     $("#modeNav").style.display = "none";
     $("#title").innerHTML = "Greek Vocabulary";
-    $("#subtitle").textContent = `Mounce, Basics of Biblical Greek — ${VOCAB.reduce((n,w)=>n+w.items.length,0)} words across ${VOCAB.length} weeks.`;
+    $("#subtitle").textContent = `${VOCAB.reduce((n,w)=>n+w.items.length,0)} words across ${VOCAB.length} sets.`;
     return renderVocab();
   }
-  $("#modeNav").style.display = "";
   const p = PARADIGMS[curP];
+  const allowed = p.modes || DEFAULT_MODES;
+  if(!allowed.includes(curMode)) curMode = allowed[0];
+  $("#modeNav").innerHTML = MODES.filter(([k])=>allowed.includes(k))
+    .map(([k,v])=>`<button data-m="${k}">${v}</button>`).join("");
+  $("#modeNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.m===curMode));
+  $("#modeNav").style.display = "";
   $("#title").innerHTML = p.title;
   $("#subtitle").textContent = p.subtitle;
-  ({study:renderStudy, fill:renderFill, type:renderType, quiz:renderQuiz, spot:renderSpot})[curMode](p);
+  ({study:renderStudy, fill:renderFill, type:renderType, quiz:renderQuiz, spot:renderSpot,
+    lab:renderLab, trans:renderTrans, accent:renderAccent, vmath:renderVmath})[curMode](p);
 }
 
 /* ================= Greek: study ================= */
@@ -277,7 +365,7 @@ function renderStudy(p){
   $("#content").innerHTML = `
     <div class="panel">
       <h2>Reference <button class="btn ghost hidebtn" id="toggleRef">Hide</button></h2>
-      <div class="grid2" id="refTables">${tables(p,(n,c,i)=>`<td class="gkcell">${p.data[n][c][i]}</td>`)}</div>
+      <div class="${gridCls(p)}" id="refTables">${tables(p,(n,c,i)=>`<td class="gkcell">${p.data[n][c][i]}</td>`)}</div>
     </div>
     <div class="panel">
       <h2>Patterns worth noticing</h2>
@@ -298,7 +386,7 @@ function renderFill(p){
       <p class="hint">The bank holds <em>exactly</em> the tiles the grid needs — one per cell, duplicates included.
       Every tile must be used, so you have to know how many times each form repeats. Click a cell, then a tile;
       click a filled cell to send its tile back. The bank reshuffles on reset.</p>
-      <div class="grid2" id="fillTables">${tables(p,(n,c,i)=>
+      <div class="${gridCls(p)}" id="fillTables">${tables(p,(n,c,i)=>
         `<td class="cell" data-n="${n}" data-c="${c}" data-i="${i}"></td>`)}</div>
       <div class="bank" id="bank"></div>
       <div class="row">
@@ -390,7 +478,7 @@ function renderType(p){
           <code>ta_/s</code> &rarr; <span class="gk">τᾱ́ς</span> &middot;
           <code>kaloi=s</code> &rarr; <span class="gk">καλοῖς</span></div>
       </div>
-      <div class="grid2" id="typeTables">${tables(p,(n,c,i)=>
+      <div class="${gridCls(p)}" id="typeTables">${tables(p,(n,c,i)=>
         `<td class="inp" data-n="${n}" data-c="${c}" data-i="${i}"><input type="text" spellcheck="false" autocapitalize="off" autocomplete="off"></td>`)}</div>
       <div class="row">
         <button class="btn" id="checkType">Check</button>
@@ -435,7 +523,7 @@ function renderType(p){
 }
 
 /* ================= Greek: quick quiz ================= */
-const qState = {article:{r:0,t:0,s:0}, kalos:{r:0,t:0,s:0}};
+const qState = {};
 function renderQuiz(p){
   $("#content").innerHTML = `
     <div class="panel">
@@ -451,7 +539,7 @@ function renderQuiz(p){
     </div>`;
   const cells = cellsOf(p);
   const forms = [...new Set(cells.map(c=>c.val))];
-  const st = qState[curP];
+  const st = (qState[curP] = qState[curP] || {r:0,t:0,s:0});
   let lock = false, timer = null;
   const showScore = ()=> $("#qScore").textContent = `${st.r} correct / ${st.t} · streak ${st.s}`;
 
@@ -502,7 +590,7 @@ function renderSpot(p){
       <h2>Spot It</h2>
       <p class="hint">One form, sometimes several jobs. Click <em>every</em> cell this form can fill, then check.</p>
       <div class="prompt gk" id="sForm" style="font-size:36px">${target}</div>
-      <div class="grid2" id="spotTables">${tables(p,(n,c,i)=>
+      <div class="${gridCls(p)}" id="spotTables">${tables(p,(n,c,i)=>
         `<td class="cell" data-n="${n}" data-c="${c}" data-i="${i}">·</td>`)}</div>
       <div class="row">
         <button class="btn" id="checkSpot">Check</button>
@@ -528,11 +616,350 @@ function renderSpot(p){
   $("#nextSpot").onclick = ()=>renderSpot(p);
 }
 
+/* ================= contract-verb machinery ================= */
+const CVERBS = [
+  {stem:"ὁρ",      t:"α", gloss:"see"},
+  {stem:"τιμ",     t:"α", gloss:"honour"},
+  {stem:"σιγ",     t:"α", gloss:"be silent"},
+  {stem:"νικ",     t:"α", gloss:"win, defeat"},
+  {stem:"ἐξαπατ",  t:"α", gloss:"deceive"},
+  {stem:"ποι",     t:"ε", gloss:"do, make"},
+  {stem:"βοηθ",    t:"ε", gloss:"help, run to help"},
+  {stem:"γαμ",     t:"ε", gloss:"marry"},
+  {stem:"οἰκ",     t:"ε", gloss:"dwell, live"},
+  {stem:"ἀσεβ",    t:"ε", gloss:"commit sacrilege"},
+  {stem:"ἀσθεν",   t:"ε", gloss:"be weak, be ill"},
+  {stem:"νοσ",     t:"ε", gloss:"be sick"},
+  {stem:"δηλ",     t:"ο", gloss:"show, reveal"},
+  {stem:"ἐλευθερ", t:"ο", gloss:"free, set free"}
+];
+const PERSONS = ["1st s.","2nd s.","3rd s.","1st pl.","2nd pl.","3rd pl."];
+const UNC = {
+  "α":["άω","άεις","άει","άομεν","άετε","άουσι"],
+  "ε":["έω","έεις","έει","έομεν","έετε","έουσι"],
+  "ο":["όω","όεις","όει","όομεν","όετε","όουσι"]
+};
+const CON = {
+  "α":["ῶ","ᾷς","ᾷ","ῶμεν","ᾶτε","ῶσι"],
+  "ε":["ῶ","εῖς","εῖ","οῦμεν","εῖτε","οῦσι"],
+  "ο":["ῶ","οῖς","οῖ","οῦμεν","οῦτε","οῦσι"]
+};
+const RULE = {
+  "α":["α + ω = ω","α + ει = ᾳ (the ι goes subscript)","α + ει = ᾳ (the ι goes subscript)","α + ο = ω","α + ε = ᾱ","α + ου = ω"],
+  "ε":["ε + ω = ω","ε + ει = ει","ε + ει = ει","ε + ο = ου","ε + ε = ει","ε + ου = ου"],
+  "ο":["ο + ω = ω","ο + ει = οι","ο + ει = οι","ο + ο = ου","ο + ε = ου","ο + ου = ου"]
+};
+const uncOf = (v,i) => v.stem + UNC[v.t][i];
+const conOf = (v,i) => v.stem + CON[v.t][i];
+const splitUnc = (v,i) => v.stem + UNC[v.t][i][0] + "-" + UNC[v.t][i].slice(1);
+
+const RULEBOX = `
+  <div class="legend">
+    <div><strong style="color:var(--ink)">α</strong> &nbsp; α + ο/ου/ω = <span class="gk">ω</span> &nbsp;·&nbsp;
+      α + ε = <span class="gk">ᾱ</span> &nbsp;·&nbsp; α + ει = <span class="gk">ᾳ</span></div>
+    <div><strong style="color:var(--ink)">ε</strong> &nbsp; ε + ω = <span class="gk">ω</span> &nbsp;·&nbsp;
+      ε + ε/ει = <span class="gk">ει</span> &nbsp;·&nbsp; ε + ο/ου = <span class="gk">ου</span></div>
+    <div><strong style="color:var(--ink)">ο</strong> &nbsp; ο + ω = <span class="gk">ω</span> &nbsp;·&nbsp;
+      ο + ε/ο/ου = <span class="gk">ου</span> &nbsp;·&nbsp; anything with an ι = <span class="gk">οι</span></div>
+  </div>`;
+
+/* ---------- Contract Lab: uncontracted -> contracted ---------- */
+const LB = {fmt:"mc", r:0, t:0, s:0, showRules:true};
+function renderLab(p){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Contract Lab</h2>
+      <p class="hint">The vocabulary list gives you the uncontracted form; a real text gives you the contracted one.
+      Fuse the stem vowel with the ending. (Reading Greek exercise 1E–F: 3.)</p>
+      <div class="opts" style="margin-top:0">
+        <fieldset><span class="lbl">Format</span>
+          <select id="labFmt">
+            <option value="mc">Multiple choice</option>
+            <option value="type">Type the contracted form</option>
+          </select></fieldset>
+        <label class="chk"><input type="checkbox" id="labRules" ${LB.showRules?"checked":""}> show the rules</label>
+        <span class="score" id="labScore"></span>
+      </div>
+      <div id="labArea"></div>
+    </div>
+    <div class="panel" id="labRuleBox" style="${LB.showRules?"":"display:none"}">
+      <h2>The nine contractions this tense needs</h2>${RULEBOX}
+    </div>`;
+  $("#labFmt").value = LB.fmt;
+  $("#labFmt").onchange = e=>{ LB.fmt = e.target.value; labNew(); };
+  $("#labRules").onchange = e=>{ LB.showRules = e.target.checked;
+    $("#labRuleBox").style.display = LB.showRules ? "" : "none"; };
+  labNew();
+}
+function labScore(){
+  const el = $("#labScore");
+  if(el) el.textContent = `${LB.r} correct / ${LB.t} · streak ${LB.s}`;
+}
+function labMark(ok){ LB.t++; if(ok){ LB.r++; LB.s++; } else LB.s = 0; labScore(); }
+function labNew(){
+  const area = $("#labArea"); if(!area) return;
+  const v = rand(CVERBS), i = Math.floor(Math.random()*6);
+  const ans = conOf(v,i), unc = uncOf(v,i), rule = RULE[v.t][i];
+  const meta = `${v.t}-contract &middot; ${PERSONS[i]} &middot; <span style="text-transform:none">‘${v.gloss}’</span>`;
+  const done = ok => {
+    $("#labFb").className = "fb " + (ok?"ok":"no");
+    $("#labFb").innerHTML = ok
+      ? `Correct — ${rule}`
+      : `<span class="gk" style="font-size:20px">${splitUnc(v,i)}</span> &rarr;
+         <span class="gk" style="font-size:20px">${ans}</span> &nbsp; (${rule})`;
+    labMark(ok);
+    setTimeout(labNew, ok?900:2600);
+  };
+
+  if(LB.fmt === "mc"){
+    const others = shuffle([0,1,2,3,4,5].filter(x=>x!==i)).slice(0,2).map(j=>conOf(v,j));
+    const opts = shuffle([...new Set([ans, ...others, unc])]);
+    area.innerHTML = `
+      <div class="card"><div class="meta">${meta}</div>
+        <div class="q gk">${splitUnc(v,i)}</div>
+        <div style="font-size:14px;color:var(--muted);margin-top:4px">contracts to…</div></div>
+      <div class="choices" id="labChoices">${opts.map(o=>`<button>${o}</button>`).join("")}</div>
+      <div class="fb" id="labFb"></div>
+      <div class="row"><button class="btn ghost" id="labNext">Skip &rarr;</button></div>`;
+    let lock = false;
+    const btns = [...area.querySelectorAll("#labChoices button")];
+    btns.forEach(b => b.onclick = ()=>{
+      if(lock) return; lock = true;
+      const ok = b.textContent === ans;
+      b.classList.add(ok?"ok":"no");
+      if(!ok) btns.find(x=>x.textContent===ans).classList.add("ok");
+      done(ok);
+    });
+  } else {
+    area.innerHTML = `
+      <div class="card"><div class="meta">${meta}</div>
+        <div class="q gk">${splitUnc(v,i)}</div>
+        <div style="margin-top:18px"><input class="bigin" id="labIn" spellcheck="false"
+          autocomplete="off" autocapitalize="off" placeholder="contracted form…"></div></div>
+      <div class="row"><button class="btn" id="labGo">Check (enter)</button>
+        <button class="btn ghost" id="labNext">Show answer</button></div>
+      <div class="fb" id="labFb"></div>`;
+    const inp = $("#labIn"); inp.focus();
+    inp.addEventListener("input", ()=>{
+      const pos = inp.selectionStart, before = inp.value, conv = toGreek(before);
+      if(conv !== before){ inp.value = conv; const d = conv.length - before.length;
+        inp.setSelectionRange(pos+d, pos+d); }
+    });
+    let lock = false;
+    const go = ()=>{
+      if(lock || !inp.value.trim()) return; lock = true;
+      const val = inp.value.trim();
+      if(sameForm(val, ans, true)) return done(true);
+      if(sameForm(val, ans, false)){
+        $("#labFb").className = "fb no";
+        $("#labFb").innerHTML = `Right letters, wrong accent — it is
+          <span class="gk" style="font-size:20px">${ans}</span> (${rule})`;
+        labMark(false); setTimeout(labNew, 2600); return;
+      }
+      done(false);
+    };
+    $("#labGo").onclick = go;
+    inp.onkeydown = e=>{ if(e.key==="Enter"){ e.preventDefault(); go(); } };
+  }
+  $("#labNext").onclick = ()=>{ labNew(); };
+  labScore();
+}
+
+/* ---------- Translate: Greek <-> English, one word each way ---------- */
+const TRV = [
+  {stem:"ὁρ",   t:"α", base:"see",   s3:"sees"},
+  {stem:"τιμ",  t:"α", base:"honour",s3:"honours"},
+  {stem:"νικ",  t:"α", base:"win",   s3:"wins"},
+  {stem:"ποι",  t:"ε", base:"make",  s3:"makes"},
+  {stem:"βοηθ", t:"ε", base:"help",  s3:"helps"},
+  {stem:"δηλ",  t:"ο", base:"show",  s3:"shows"}
+];
+const SUBJ = ["I","you (s.)","he/she/it","we","you (pl.)","they"];
+const enOf = (v,i) => `${SUBJ[i]} ${i===2 ? v.s3 : v.base}`;
+const TR = {dir:"g2e", r:0, t:0, s:0};
+function renderTrans(p){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Translate</h2>
+      <p class="hint">One word each way. Greek has no separate progressive, so ‘he makes’ and ‘he is making’
+      are the same form. (Reading Greek exercises 1E–F: 1 and 2.)</p>
+      <div class="opts" style="margin-top:0">
+        <fieldset><span class="lbl">Direction</span>
+          <select id="trDir">
+            <option value="g2e">Greek &rarr; English</option>
+            <option value="e2g">English &rarr; Greek</option>
+            <option value="mix">Mixed</option>
+          </select></fieldset>
+        <span class="score" id="trScore"></span>
+      </div>
+      <div id="trArea"></div>
+    </div>`;
+  $("#trDir").value = TR.dir;
+  $("#trDir").onchange = e=>{ TR.dir = e.target.value; trNew(); };
+  trNew();
+}
+function trNew(){
+  const area = $("#trArea"); if(!area) return;
+  const dir = TR.dir === "mix" ? rand(["g2e","e2g"]) : TR.dir;
+  const v = rand(TRV), i = Math.floor(Math.random()*6);
+  const gk = conOf(v,i), en = enOf(v,i);
+  const askGreek = dir === "g2e";
+  const answer = askGreek ? en : gk;
+  const others = TRV.filter(x=>x.stem!==v.stem);
+  const wrongPersons = shuffle([0,1,2,3,4,5].filter(x=>x!==i)).slice(0,2)
+    .map(j => askGreek ? enOf(v,j) : conOf(v,j));
+  const otherVerb = (w => askGreek ? enOf(w,i) : conOf(w,i))(rand(others));
+  const opts = shuffle([...new Set([answer, ...wrongPersons, otherVerb])]);
+  const note = (i===4)
+    ? ` This form is also the plural imperative — <span class="gk">${gk}</span> can mean ‘${v.base}!’`
+    : "";
+  area.innerHTML = `
+    <div class="card"><div class="meta">${askGreek?"What does this mean?":"Which Greek form?"}</div>
+      <div class="q ${askGreek?"gk":""}" ${askGreek?"":'style="font-size:24px"'}>${askGreek?gk:en}</div></div>
+    <div class="choices" id="trChoices">${opts.map(o=>
+      `<button class="${askGreek?"txt":""}">${o}</button>`).join("")}</div>
+    <div class="fb" id="trFb"></div>
+    <div class="row"><button class="btn ghost" id="trNext">Skip &rarr;</button></div>`;
+  let lock = false;
+  const btns = [...area.querySelectorAll("#trChoices button")];
+  btns.forEach(b => b.onclick = ()=>{
+    if(lock) return; lock = true; TR.t++;
+    const ok = b.textContent === answer;
+    b.classList.add(ok?"ok":"no");
+    if(!ok) btns.find(x=>x.textContent===answer).classList.add("ok");
+    if(ok){ TR.r++; TR.s++; } else TR.s = 0;
+    $("#trFb").className = "fb " + (ok?"ok":"no");
+    $("#trFb").innerHTML = (ok ? "Correct." :
+      `<span class="gk" style="font-size:20px">${gk}</span> = ${en}.`) + note;
+    trScore();
+    setTimeout(trNew, ok && !note ? 800 : 2400);
+  });
+  $("#trNext").onclick = trNew;
+  trScore();
+}
+function trScore(){
+  const txt = `${TR.r} correct / ${TR.t} · streak ${TR.s}`;
+  [$("#trScore"), $("#trScore2")].forEach(el=>{ if(el) el.textContent = txt; });
+}
+
+/* ---------- Accent Trap: command or statement? ---------- */
+const ACC = [
+  {f:"ὅρα",      k:"cmd",  say:"‘see!’ — imperative s."},
+  {f:"ὁρᾷ",      k:"ind",  say:"‘he/she/it sees’ — 3rd s. indicative"},
+  {f:"ποίει",    k:"cmd",  say:"‘do! / make!’ — imperative s."},
+  {f:"ποιεῖ",    k:"ind",  say:"‘he/she/it does’ — 3rd s. indicative"},
+  {f:"δήλου",    k:"cmd",  say:"‘show!’ — imperative s."},
+  {f:"δηλοῖ",    k:"ind",  say:"‘he/she/it shows’ — 3rd s. indicative"},
+  {f:"βοήθει",   k:"cmd",  say:"‘help!’ — imperative s."},
+  {f:"βοηθεῖ",   k:"ind",  say:"‘he/she/it helps’ — 3rd s. indicative"},
+  {f:"τίμα",     k:"cmd",  say:"‘honour!’ — imperative s."},
+  {f:"τιμᾷ",     k:"ind",  say:"‘he/she/it honours’ — 3rd s. indicative"},
+  {f:"σίγα",     k:"cmd",  say:"‘be quiet!’ — imperative s."},
+  {f:"σιγᾷ",     k:"ind",  say:"‘he/she/it is quiet’ — 3rd s. indicative"},
+  {f:"ὁρᾶτε",    k:"both", say:"‘you (pl.) see’ or ‘see!’ — the 2nd pl. and the pl. imperative are identical"},
+  {f:"ποιεῖτε",  k:"both", say:"‘you (pl.) do’ or ‘do!’ — identical forms"},
+  {f:"δηλοῦτε",  k:"both", say:"‘you (pl.) show’ or ‘show!’ — identical forms"},
+  {f:"βοηθεῖτε", k:"both", say:"‘you (pl.) help’ or ‘help!’ — identical forms"},
+  {f:"μὴ δήλου", k:"cmd",  say:"‘don’t show!’ — μή marks a negative command"},
+  {f:"μὴ ποίει", k:"cmd",  say:"‘don’t do it!’ — μή marks a negative command"},
+  {f:"μὴ ὁρᾶτε", k:"cmd",  say:"‘don’t look!’ — μή forces the imperative reading"}
+];
+const AC = {r:0, t:0, s:0};
+function renderAccent(p){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Accent Trap</h2>
+      <p class="hint">In the singular, the accent is the only thing separating a command from a statement:
+      <span class="gk">ποίει</span> ‘do!’ vs <span class="gk">ποιεῖ</span> ‘he does’.
+      In the plural they are the same word. Watch for <span class="gk">μή</span>, which can only introduce a command.</p>
+      <div id="acArea"></div>
+    </div>`;
+  acNew();
+}
+function acNew(){
+  const area = $("#acArea"); if(!area) return;
+  const it = rand(ACC);
+  area.innerHTML = `
+    <div class="card"><div class="meta">Command, statement, or either?</div>
+      <div class="q gk">${it.f}</div></div>
+    <div class="choices" id="acChoices">
+      <button class="txt" data-k="cmd">Command</button>
+      <button class="txt" data-k="ind">Statement (he/she/it …)</button>
+      <button class="txt" data-k="both">Either — you can’t tell</button></div>
+    <div class="fb" id="acFb"></div>
+    <div class="row"><button class="btn ghost" id="acNext">Skip &rarr;</button>
+      <span class="score" id="acScore"></span></div>`;
+  let lock = false;
+  const btns = [...area.querySelectorAll("#acChoices button")];
+  btns.forEach(b => b.onclick = ()=>{
+    if(lock) return; lock = true; AC.t++;
+    const ok = b.dataset.k === it.k;
+    b.classList.add(ok?"ok":"no");
+    if(!ok) btns.find(x=>x.dataset.k===it.k).classList.add("ok");
+    if(ok){ AC.r++; AC.s++; } else AC.s = 0;
+    $("#acFb").className = "fb " + (ok?"ok":"no");
+    $("#acFb").innerHTML = `<span class="gk" style="font-size:20px">${it.f}</span> — ${it.say}`;
+    $("#acScore").textContent = `${AC.r} correct / ${AC.t} · streak ${AC.s}`;
+    setTimeout(acNew, ok?1500:2800);
+  });
+  $("#acNext").onclick = acNew;
+  $("#acScore").textContent = `${AC.r} correct / ${AC.t} · streak ${AC.s}`;
+}
+
+/* ---------- Vowel Math: the contraction table itself ---------- */
+const VM = [
+  ["α","ω","ω"],["α","ο","ω"],["α","ου","ω"],["α","ε","ᾱ"],["α","ει","ᾳ"],
+  ["ε","ω","ω"],["ε","ο","ου"],["ε","ου","ου"],["ε","ε","ει"],["ε","ει","ει"],
+  ["ο","ω","ω"],["ο","ο","ου"],["ο","ου","ου"],["ο","ε","ου"],["ο","ει","οι"]
+];
+const VMRESULTS = ["ω","ᾱ","ᾳ","ου","ει","οι","η","ῳ"];
+const VMS = {r:0, t:0, s:0};
+function renderVmath(p){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Vowel Math</h2>
+      <p class="hint">The contraction rules on their own, stripped of any verb.
+      Order matters: α + ε is not the same as ε + α.</p>
+      <div id="vmArea"></div>
+    </div>
+    <div class="panel"><h2>Reference</h2>${RULEBOX}</div>`;
+  vmNew();
+}
+function vmNew(){
+  const area = $("#vmArea"); if(!area) return;
+  const [a,b,c] = rand(VM);
+  const opts = shuffle([c, ...shuffle(VMRESULTS.filter(x=>x!==c)).slice(0,3)]);
+  area.innerHTML = `
+    <div class="card"><div class="meta">Contract these two vowels, in this order</div>
+      <div class="q gk">${a} &nbsp;+&nbsp; ${b} &nbsp;=&nbsp; ?</div></div>
+    <div class="choices" id="vmChoices">${opts.map(o=>`<button>${o}</button>`).join("")}</div>
+    <div class="fb" id="vmFb"></div>
+    <div class="row"><button class="btn ghost" id="vmNext">Skip &rarr;</button>
+      <span class="score" id="vmScore"></span></div>`;
+  let lock = false;
+  const btns = [...area.querySelectorAll("#vmChoices button")];
+  btns.forEach(btn => btn.onclick = ()=>{
+    if(lock) return; lock = true; VMS.t++;
+    const ok = btn.textContent === c;
+    btn.classList.add(ok?"ok":"no");
+    if(!ok) btns.find(x=>x.textContent===c).classList.add("ok");
+    if(ok){ VMS.r++; VMS.s++; } else VMS.s = 0;
+    $("#vmFb").className = "fb " + (ok?"ok":"no");
+    $("#vmFb").innerHTML = ok ? "Correct."
+      : `<span class="gk" style="font-size:18px">${a} + ${b} = ${c}</span>`;
+    $("#vmScore").textContent = `${VMS.r} correct / ${VMS.t} · streak ${VMS.s}`;
+    setTimeout(vmNew, ok?650:2000);
+  });
+  $("#vmNext").onclick = vmNew;
+  $("#vmScore").textContent = `${VMS.r} correct / ${VMS.t} · streak ${VMS.s}`;
+}
+
 /* ================= Greek vocabulary ================= */
-const VOCAB = [{"week":1,"src":"Mounce 4","items":[{"t":"ἄγγελος, -ου, ὁ","g":"messenger; angel"},{"t":"ἀμήν","g":"verily, truly, amen, so let it be"},{"t":"ἄνθρωπος, -ου, ὁ","g":"man, mankind, person, people, humankind, human being"},{"t":"ἀπόστολος, -ου, ὁ","g":"apostle, envoy, messenger"},{"t":"γραφή, -ῆς, ἡ","g":"writing; Scripture"},{"t":"δόξα, -ης, ἡ","g":"glory, majesty, fame"},{"t":"ἔσχατος, -η, -ον","g":"last"},{"t":"ζωή, -ῆς, ἡ","g":"life"},{"t":"θεός, -οῦ, ὁ","g":"God, god"},{"t":"καί","g":"and, even, also, namely"},{"t":"καρδία, -ας, ἡ","g":"heart; inner self"},{"t":"κόσμος, -ου, ὁ","g":"world, universe; mankind"},{"t":"λόγος, -ου, ὁ","g":"word, Word; statement, message"},{"t":"πνεῦμα, -ατος, τό","g":"spirit, Spirit; wind, breath; inner life"},{"t":"προφήτης, -ου, ὁ","g":"prophet"},{"t":"σάββατον, -ου, τό","g":"Sabbath; week"},{"t":"φωνή, -ῆς, ἡ","g":"sound, noise; voice"},{"t":"χριστός, -οῦ, ὁ","g":"anointed one (Greek trans. for מְשִיַח)"}]},{"week":2,"src":"Mounce 6 & 7","items":[{"t":"ἀγάπη, -ης, ἡ","g":"love"},{"t":"βασιλεία, -ας, ἡ","g":"kingdom"},{"t":"ἐν","g":"dat: in; on; among"},{"t":"ἔργον, -ου, τό","g":"work; deed, action"},{"t":"καιρός, -οῦ, ὁ","g":"appointed time; time; season"},{"t":"νῦν","g":"adv. —now; noun — the present"},{"t":"ὅτι","g":"that; since; because"},{"t":"ὥρα, -ας, ἡ","g":"hour, occasion, moment"},{"t":"ἁμαρτία, -ας, ἡ","g":"sin"},{"t":"ἀρχή, -ῆς, ἡ","g":"beginning; ruler"},{"t":"εἰς","g":"acc: into, in, to, toward"},{"t":"ἐξουσία, -ας, ἡ","g":"authority, power"},{"t":"κύριος, -ου, ὁ","g":"lord, master, sir; the Lord"},{"t":"οὐρανός, -οῦ, ὁ","g":"sky, heaven"},{"t":"υἱός, -οῦ, ὁ","g":"son, descendant"}]},{"week":3,"src":"Mounce 8","items":[{"t":"ἀλλά","g":"but, yet; rather"},{"t":"ἀπό","g":"gen: (away) from"},{"t":"διά","g":"gen: through; acc: because of"},{"t":"ἐκ","g":"gen: from, out of"},{"t":"ἡμέρα, -ας, ἡ","g":"day"},{"t":"θάλασσα, -ης, ἡ","g":"sea, lake"},{"t":"θάνατος, -ου, ὁ","g":"death"},{"t":"ἵνα","g":"in order that; so that"},{"t":"μετά","g":"gen: with; acc: after"},{"t":"οἰκία, -ας, ἡ","g":"house, home"},{"t":"οἶκος, -ου, ὁ","g":"house, home"},{"t":"ὄχλος, -ου, ὁ","g":"crowd, multitude"},{"t":"παρά","g":"gen: from; dat: beside; acc: alongside"},{"t":"παραβολή, -ῆς, ἡ","g":"comparison; parable (in NT)"},{"t":"πρός","g":"acc: to, towards; with"},{"t":"ὑπό","g":"gen: by; acc: under"}]},{"week":4,"src":"Mounce 9","items":[{"t":"ἀγαθός, -ή, -όν","g":"good; noble; useful"},{"t":"ἀγαπητός, -ή, -όν","g":"beloved"},{"t":"ἅγιος, -ία, -ιον","g":"adjective: holy; plural noun: holy ones, i.e. saints"},{"t":"αἰώνιος, -ον","g":"eternal"},{"t":"ἀλλήλων","g":"one another (always in the plural form)"},{"t":"δοῦλος, -ου, ὁ","g":"slave; servant"},{"t":"ἐάν","g":"if; when (Introduces a dependent clause)"},{"t":"ἐντολή, -ῆς, ἡ","g":"order, command, commandment"},{"t":"καθώς","g":"as, even as"},{"t":"κακός, -ή, -όν","g":"bad, evil"},{"t":"νεκρός, -ά, -όν","g":"adjective: dead; noun: dead body, corpse"},{"t":"πιστός, -ή, -όν","g":"faithful, believing"},{"t":"πονηρός, -ά, -όν","g":"evil, bad"},{"t":"πρῶτος, -η, -ον","g":"first; earlier"},{"t":"τρίτος, -η, -ον","g":"third"}]},{"week":5,"src":"Mounce 10","items":[{"t":"εἰ","g":"if"},{"t":"εἰ μή","g":"except; if not"},{"t":"εἷς (ms), μία (fs), ἕν (ns)","g":"one"},{"t":"ἤδη","g":"now, already"},{"t":"ὄνομα, -ατος, τό","g":"name; reputation"},{"t":"οὐδείς (ms), οὐδεμία (fs), οὐδέν (ns)","g":"no one; nothing (neut. οὐδέν)"},{"t":"πᾶς (ms), πᾶσα (fs), πᾶν (ns)","g":"singular: each, every; plural: all"},{"t":"περί","g":"gen: concerning, about; acc: around"},{"t":"σάρξ, σαρκός, ἡ","g":"flesh; body"},{"t":"σύν","g":"dat: with"},{"t":"σῶμα, -ατος, τό","g":"body"},{"t":"τέκνον, -ου, τό","g":"child; descendant"}]},{"week":6,"src":"Mounce 11","items":[{"t":"ἀδελφός, -οῦ, ὁ","g":"brother"},{"t":"ἀνήρ, ἀνδρός, ὁ","g":"male, husband; man"},{"t":"ἐκκλησία, -ας, ἡ","g":"assembly, congregation; a church, (the) Church"},{"t":"ἐλπίς, -ίδος, ἡ","g":"hope, expectation"},{"t":"ἔξω","g":"adverb: without; preposition (gen): outside"},{"t":"ἐπί","g":"gen: on, over, when; dat: on the basis of, at; acc: on, to, against"},{"t":"ἡμεῖς","g":"we"},{"t":"θέλημα, θελήματος, τό","g":"will, desire"},{"t":"ἴδε","g":"See! Behold!"},{"t":"ἰδού","g":"See! Behold!"},{"t":"καλός, -ή, -όν","g":"good; beautiful"},{"t":"μήτηρ, μητρός, ἡ","g":"mother"},{"t":"οὐδέ","g":"and not, not even; neither, nor"},{"t":"πατήρ, πατρός, ὁ","g":"father"},{"t":"πίστις, πίστεως, ἡ","g":"faith, belief; trust; teaching"},{"t":"ὕδωρ, ὕδατος, τό","g":"water"},{"t":"ὑμεῖς","g":"you (plural)"},{"t":"φῶς, φωτός, τό","g":"light"},{"t":"χάρις, χάριτος, ἡ","g":"grace, favor, kindness"},{"t":"ὧδε","g":"here"}]},{"week":7,"src":"Mounce 12","items":[{"t":"αἰών, -ῶνος, ὁ","g":"age, eternity"},{"t":"διδάσκαλος, -ου, ὁ","g":"teacher"},{"t":"εὐθύς","g":"immediately"},{"t":"ἕως","g":"conj: until; preposition (gen): as far as"},{"t":"μαθητής, -οῦ, ὁ","g":"student; disciple"},{"t":"μόνος, -η, -ον","g":"alone, only"},{"t":"ὅπως","g":"how; (in order) that"},{"t":"ὅσος, -η, -ον","g":"as great as, as many as"},{"t":"οὖν","g":"therefore, accordingly"},{"t":"ὀφθαλμός, -οῦ, ὁ","g":"eye, sight"},{"t":"πάλιν","g":"again"},{"t":"πούς, ποδός, ὁ","g":"foot"},{"t":"ὑπέρ","g":"gen: on behalf of; acc: above"}]},{"week":8,"src":"Mounce 13","items":[{"t":"γυνή, γυναικός, ἡ","g":"woman; wife"},{"t":"δικαιοσύνη, -ης, ἡ","g":"righteousness"},{"t":"δώδεκα","g":"twelve (indeclinable)"},{"t":"ἐκεῖνος, -η, -ο","g":"that (far deixis)"},{"t":"ἤ","g":"or; than"},{"t":"μακάριος, -ία, -ιον","g":"happy, blessed (meaning happy)"},{"t":"μέγας, μεγάλη, μέγα","g":"large, great"},{"t":"πόλις, -εως, ἡ","g":"city, town"},{"t":"πολύς, πολλή, πολύ","g":"much, many; adverb: often"},{"t":"πῶς","g":"how?"},{"t":"σημεῖον, -ου, τό","g":"sign, miracle"}]},{"week":9,"src":"Mounce 14","items":[{"t":"ἀλήθεια, -ας, ἡ","g":"truth"},{"t":"εἰρήνη, -ης, ἡ","g":"peace"},{"t":"ἐνώπιον","g":"gen: before (spatial)"},{"t":"ἐπαγγελία, -ας, ἡ","g":"promise"},{"t":"ἑπτά","g":"seven (indeclinable)"},{"t":"θρόνος, -ου, ὁ","g":"throne"},{"t":"κατά (κατ ᾿, καθ ᾿)","g":"gen: down from, against; acc: according to, throughout, during"},{"t":"κεφαλή, -ῆς, ἡ","g":"head"},{"t":"ὁδός, -οῦ, ἡ","g":"way, road; journey; conduct"},{"t":"ὅτε","g":"when"},{"t":"οὕτως","g":"in this way, in this manner; thus"},{"t":"πλοῖον, -ου, τό","g":"ship, boat"},{"t":"ῥῆμα, -ατος, τό","g":"word, saying"},{"t":"χείρ, χειρός, ἡ","g":"hand"},{"t":"ψυχή, -ῆς, ἡ","g":"life; soul; self"}]},{"week":10,"src":"Mounce 16","items":[{"t":"ἀκούω","g":"I hear"},{"t":"βλέπω","g":"I see, look at"},{"t":"ἔχω","g":"I have, hold"},{"t":"λέγω","g":"I say, speak"},{"t":"λύω","g":"I loose, untie; destroy"},{"t":"νόμος, -ου, ὁ","g":"law; principle; custom"},{"t":"ὅπου","g":"where (indef. Relative); wherever (with subjunc.)"},{"t":"πιστεύω","g":"I believe, have faith (in), trust"},{"t":"πρόσωπον, -ου, τό","g":"face; appearance"},{"t":"τότε","g":"then; thereafter"},{"t":"τυφλός, -ή, -όν","g":"blind"},{"t":"χαρά, -ᾶς, ἡ","g":"joy, delight"}]},{"week":11,"src":"Mounce 17","items":[{"t":"ἀγαπάω","g":"I love, cherish"},{"t":"δαιμόνιον, -ου, τό","g":"demon"},{"t":"ζητέω","g":"I seek, desire, try to obtain"},{"t":"καλέω","g":"I call, name, invite"},{"t":"λαλέω","g":"I speak, say"},{"t":"οἶδα","g":"I know, understand"},{"t":"ὅταν","g":"whenever (ὅτε + ἄν) Introduces a dependent clause"},{"t":"πλείων, πλεῖον","g":"larger, more"},{"t":"πληρόω","g":"I fill, complete, fulfill"},{"t":"ποιέω","g":"I do, make"},{"t":"τηρέω","g":"I keep, guard, observe"}]},{"week":12,"src":"Mounce 18","items":[{"t":"ἀποκρίνομαι","g":"I answer"},{"t":"δεῖ","g":"it is necessary"},{"t":"δύναμαι","g":"I am able, am powerful"},{"t":"ἔρχομαι","g":"I come; go"},{"t":"νύξ, νυκτός, ἡ","g":"night"},{"t":"ὅστις, ἥτις, ὅτι","g":"whoever, whichever, whatever"},{"t":"πορεύομαι","g":"I go, proceed; live (metaphorically going = living)"},{"t":"συνάγω","g":"I gather together, bring together; lead"},{"t":"τόπος, -ου, ὁ","g":"place; location"},{"t":"ὡς","g":"as, like; that; approximately; when, after"}]},{"week":13,"src":"Mounce 19","items":[{"t":"βασιλεύς, -έως, ὁ","g":"king"},{"t":"γεννάω","g":"I beget, give birth to; produce"},{"t":"ζάω","g":"I live"},{"t":"Ἰουδαία, -ας, ἡ","g":"Judea"},{"t":"Ἰουδαῖος, -αία, -αῖον","g":"adj: Jewish; noun: Jew, Judean"},{"t":"Ἰσραήλ, ὁ","g":"Israel (indeclinable)"},{"t":"καρπός, -οῦ, ὁ","g":"fruit, crop; result"},{"t":"μείζων, -ον","g":"greater, larger"},{"t":"ὅλος, -η, -ον","g":"adj: whole, complete; adv: entirely"},{"t":"προσκυνέω","g":"I greet, prostrate myself, worship"}]},{"week":14,"src":"Mounce 20","items":[{"t":"αἴρω","g":"I raise, take up, take away"},{"t":"ἀποκτείνω","g":"I kill"},{"t":"ἀποστέλλω","g":"I send (away)"},{"t":"βαπτίζω","g":"I dip, immerse; baptize"},{"t":"γινώσκω","g":"I know, come to know, realize, learn"},{"t":"γλῶσσα, -ης, ἡ","g":"tongue, language"},{"t":"ἐγείρω","g":"I raise up, wake"},{"t":"ἐκβάλλω","g":"I cast out, send out"},{"t":"ἐκεῖ","g":"there, in that place"},{"t":"κρίνω","g":"I judge, decide, prefer"},{"t":"λαός, -οῦ, ὁ","g":"people, crowd"},{"t":"μένω","g":"I remain, live (i.e., remain alive)"},{"t":"ὁράω","g":"I see, notice, experience"},{"t":"σοφία, -ας, ἡ","g":"wisdom"},{"t":"στόμα, -ατος, τό","g":"mouth"},{"t":"σῴζω","g":"I save, deliver, rescue"}]}];
+const VOCAB = [{"week":1,"src":"Mounce 4","items":[{"t":"ἄγγελος, -ου, ὁ","g":"messenger; angel"},{"t":"ἀμήν","g":"verily, truly, amen, so let it be"},{"t":"ἄνθρωπος, -ου, ὁ","g":"man, mankind, person, people, humankind, human being"},{"t":"ἀπόστολος, -ου, ὁ","g":"apostle, envoy, messenger"},{"t":"γραφή, -ῆς, ἡ","g":"writing; Scripture"},{"t":"δόξα, -ης, ἡ","g":"glory, majesty, fame"},{"t":"ἔσχατος, -η, -ον","g":"last"},{"t":"ζωή, -ῆς, ἡ","g":"life"},{"t":"θεός, -οῦ, ὁ","g":"God, god"},{"t":"καί","g":"and, even, also, namely"},{"t":"καρδία, -ας, ἡ","g":"heart; inner self"},{"t":"κόσμος, -ου, ὁ","g":"world, universe; mankind"},{"t":"λόγος, -ου, ὁ","g":"word, Word; statement, message"},{"t":"πνεῦμα, -ατος, τό","g":"spirit, Spirit; wind, breath; inner life"},{"t":"προφήτης, -ου, ὁ","g":"prophet"},{"t":"σάββατον, -ου, τό","g":"Sabbath; week"},{"t":"φωνή, -ῆς, ἡ","g":"sound, noise; voice"},{"t":"χριστός, -οῦ, ὁ","g":"anointed one (Greek trans. for מְשִיַח)"}]},{"week":2,"src":"Mounce 6 & 7","items":[{"t":"ἀγάπη, -ης, ἡ","g":"love"},{"t":"βασιλεία, -ας, ἡ","g":"kingdom"},{"t":"ἐν","g":"dat: in; on; among"},{"t":"ἔργον, -ου, τό","g":"work; deed, action"},{"t":"καιρός, -οῦ, ὁ","g":"appointed time; time; season"},{"t":"νῦν","g":"adv. —now; noun — the present"},{"t":"ὅτι","g":"that; since; because"},{"t":"ὥρα, -ας, ἡ","g":"hour, occasion, moment"},{"t":"ἁμαρτία, -ας, ἡ","g":"sin"},{"t":"ἀρχή, -ῆς, ἡ","g":"beginning; ruler"},{"t":"εἰς","g":"acc: into, in, to, toward"},{"t":"ἐξουσία, -ας, ἡ","g":"authority, power"},{"t":"κύριος, -ου, ὁ","g":"lord, master, sir; the Lord"},{"t":"οὐρανός, -οῦ, ὁ","g":"sky, heaven"},{"t":"υἱός, -οῦ, ὁ","g":"son, descendant"}]},{"week":3,"src":"Mounce 8","items":[{"t":"ἀλλά","g":"but, yet; rather"},{"t":"ἀπό","g":"gen: (away) from"},{"t":"διά","g":"gen: through; acc: because of"},{"t":"ἐκ","g":"gen: from, out of"},{"t":"ἡμέρα, -ας, ἡ","g":"day"},{"t":"θάλασσα, -ης, ἡ","g":"sea, lake"},{"t":"θάνατος, -ου, ὁ","g":"death"},{"t":"ἵνα","g":"in order that; so that"},{"t":"μετά","g":"gen: with; acc: after"},{"t":"οἰκία, -ας, ἡ","g":"house, home"},{"t":"οἶκος, -ου, ὁ","g":"house, home"},{"t":"ὄχλος, -ου, ὁ","g":"crowd, multitude"},{"t":"παρά","g":"gen: from; dat: beside; acc: alongside"},{"t":"παραβολή, -ῆς, ἡ","g":"comparison; parable (in NT)"},{"t":"πρός","g":"acc: to, towards; with"},{"t":"ὑπό","g":"gen: by; acc: under"}]},{"week":4,"src":"Mounce 9","items":[{"t":"ἀγαθός, -ή, -όν","g":"good; noble; useful"},{"t":"ἀγαπητός, -ή, -όν","g":"beloved"},{"t":"ἅγιος, -ία, -ιον","g":"adjective: holy; plural noun: holy ones, i.e. saints"},{"t":"αἰώνιος, -ον","g":"eternal"},{"t":"ἀλλήλων","g":"one another (always in the plural form)"},{"t":"δοῦλος, -ου, ὁ","g":"slave; servant"},{"t":"ἐάν","g":"if; when (Introduces a dependent clause)"},{"t":"ἐντολή, -ῆς, ἡ","g":"order, command, commandment"},{"t":"καθώς","g":"as, even as"},{"t":"κακός, -ή, -όν","g":"bad, evil"},{"t":"νεκρός, -ά, -όν","g":"adjective: dead; noun: dead body, corpse"},{"t":"πιστός, -ή, -όν","g":"faithful, believing"},{"t":"πονηρός, -ά, -όν","g":"evil, bad"},{"t":"πρῶτος, -η, -ον","g":"first; earlier"},{"t":"τρίτος, -η, -ον","g":"third"}]},{"week":5,"src":"Mounce 10","items":[{"t":"εἰ","g":"if"},{"t":"εἰ μή","g":"except; if not"},{"t":"εἷς (ms), μία (fs), ἕν (ns)","g":"one"},{"t":"ἤδη","g":"now, already"},{"t":"ὄνομα, -ατος, τό","g":"name; reputation"},{"t":"οὐδείς (ms), οὐδεμία (fs), οὐδέν (ns)","g":"no one; nothing (neut. οὐδέν)"},{"t":"πᾶς (ms), πᾶσα (fs), πᾶν (ns)","g":"singular: each, every; plural: all"},{"t":"περί","g":"gen: concerning, about; acc: around"},{"t":"σάρξ, σαρκός, ἡ","g":"flesh; body"},{"t":"σύν","g":"dat: with"},{"t":"σῶμα, -ατος, τό","g":"body"},{"t":"τέκνον, -ου, τό","g":"child; descendant"}]},{"week":6,"src":"Mounce 11","items":[{"t":"ἀδελφός, -οῦ, ὁ","g":"brother"},{"t":"ἀνήρ, ἀνδρός, ὁ","g":"male, husband; man"},{"t":"ἐκκλησία, -ας, ἡ","g":"assembly, congregation; a church, (the) Church"},{"t":"ἐλπίς, -ίδος, ἡ","g":"hope, expectation"},{"t":"ἔξω","g":"adverb: without; preposition (gen): outside"},{"t":"ἐπί","g":"gen: on, over, when; dat: on the basis of, at; acc: on, to, against"},{"t":"ἡμεῖς","g":"we"},{"t":"θέλημα, θελήματος, τό","g":"will, desire"},{"t":"ἴδε","g":"See! Behold!"},{"t":"ἰδού","g":"See! Behold!"},{"t":"καλός, -ή, -όν","g":"good; beautiful"},{"t":"μήτηρ, μητρός, ἡ","g":"mother"},{"t":"οὐδέ","g":"and not, not even; neither, nor"},{"t":"πατήρ, πατρός, ὁ","g":"father"},{"t":"πίστις, πίστεως, ἡ","g":"faith, belief; trust; teaching"},{"t":"ὕδωρ, ὕδατος, τό","g":"water"},{"t":"ὑμεῖς","g":"you (plural)"},{"t":"φῶς, φωτός, τό","g":"light"},{"t":"χάρις, χάριτος, ἡ","g":"grace, favor, kindness"},{"t":"ὧδε","g":"here"}]},{"week":7,"src":"Mounce 12","items":[{"t":"αἰών, -ῶνος, ὁ","g":"age, eternity"},{"t":"διδάσκαλος, -ου, ὁ","g":"teacher"},{"t":"εὐθύς","g":"immediately"},{"t":"ἕως","g":"conj: until; preposition (gen): as far as"},{"t":"μαθητής, -οῦ, ὁ","g":"student; disciple"},{"t":"μόνος, -η, -ον","g":"alone, only"},{"t":"ὅπως","g":"how; (in order) that"},{"t":"ὅσος, -η, -ον","g":"as great as, as many as"},{"t":"οὖν","g":"therefore, accordingly"},{"t":"ὀφθαλμός, -οῦ, ὁ","g":"eye, sight"},{"t":"πάλιν","g":"again"},{"t":"πούς, ποδός, ὁ","g":"foot"},{"t":"ὑπέρ","g":"gen: on behalf of; acc: above"}]},{"week":8,"src":"Mounce 13","items":[{"t":"γυνή, γυναικός, ἡ","g":"woman; wife"},{"t":"δικαιοσύνη, -ης, ἡ","g":"righteousness"},{"t":"δώδεκα","g":"twelve (indeclinable)"},{"t":"ἐκεῖνος, -η, -ο","g":"that (far deixis)"},{"t":"ἤ","g":"or; than"},{"t":"μακάριος, -ία, -ιον","g":"happy, blessed (meaning happy)"},{"t":"μέγας, μεγάλη, μέγα","g":"large, great"},{"t":"πόλις, -εως, ἡ","g":"city, town"},{"t":"πολύς, πολλή, πολύ","g":"much, many; adverb: often"},{"t":"πῶς","g":"how?"},{"t":"σημεῖον, -ου, τό","g":"sign, miracle"}]},{"week":9,"src":"Mounce 14","items":[{"t":"ἀλήθεια, -ας, ἡ","g":"truth"},{"t":"εἰρήνη, -ης, ἡ","g":"peace"},{"t":"ἐνώπιον","g":"gen: before (spatial)"},{"t":"ἐπαγγελία, -ας, ἡ","g":"promise"},{"t":"ἑπτά","g":"seven (indeclinable)"},{"t":"θρόνος, -ου, ὁ","g":"throne"},{"t":"κατά (κατ ᾿, καθ ᾿)","g":"gen: down from, against; acc: according to, throughout, during"},{"t":"κεφαλή, -ῆς, ἡ","g":"head"},{"t":"ὁδός, -οῦ, ἡ","g":"way, road; journey; conduct"},{"t":"ὅτε","g":"when"},{"t":"οὕτως","g":"in this way, in this manner; thus"},{"t":"πλοῖον, -ου, τό","g":"ship, boat"},{"t":"ῥῆμα, -ατος, τό","g":"word, saying"},{"t":"χείρ, χειρός, ἡ","g":"hand"},{"t":"ψυχή, -ῆς, ἡ","g":"life; soul; self"}]},{"week":10,"src":"Mounce 16","items":[{"t":"ἀκούω","g":"I hear"},{"t":"βλέπω","g":"I see, look at"},{"t":"ἔχω","g":"I have, hold"},{"t":"λέγω","g":"I say, speak"},{"t":"λύω","g":"I loose, untie; destroy"},{"t":"νόμος, -ου, ὁ","g":"law; principle; custom"},{"t":"ὅπου","g":"where (indef. Relative); wherever (with subjunc.)"},{"t":"πιστεύω","g":"I believe, have faith (in), trust"},{"t":"πρόσωπον, -ου, τό","g":"face; appearance"},{"t":"τότε","g":"then; thereafter"},{"t":"τυφλός, -ή, -όν","g":"blind"},{"t":"χαρά, -ᾶς, ἡ","g":"joy, delight"}]},{"week":11,"src":"Mounce 17","items":[{"t":"ἀγαπάω","g":"I love, cherish"},{"t":"δαιμόνιον, -ου, τό","g":"demon"},{"t":"ζητέω","g":"I seek, desire, try to obtain"},{"t":"καλέω","g":"I call, name, invite"},{"t":"λαλέω","g":"I speak, say"},{"t":"οἶδα","g":"I know, understand"},{"t":"ὅταν","g":"whenever (ὅτε + ἄν) Introduces a dependent clause"},{"t":"πλείων, πλεῖον","g":"larger, more"},{"t":"πληρόω","g":"I fill, complete, fulfill"},{"t":"ποιέω","g":"I do, make"},{"t":"τηρέω","g":"I keep, guard, observe"}]},{"week":12,"src":"Mounce 18","items":[{"t":"ἀποκρίνομαι","g":"I answer"},{"t":"δεῖ","g":"it is necessary"},{"t":"δύναμαι","g":"I am able, am powerful"},{"t":"ἔρχομαι","g":"I come; go"},{"t":"νύξ, νυκτός, ἡ","g":"night"},{"t":"ὅστις, ἥτις, ὅτι","g":"whoever, whichever, whatever"},{"t":"πορεύομαι","g":"I go, proceed; live (metaphorically going = living)"},{"t":"συνάγω","g":"I gather together, bring together; lead"},{"t":"τόπος, -ου, ὁ","g":"place; location"},{"t":"ὡς","g":"as, like; that; approximately; when, after"}]},{"week":13,"src":"Mounce 19","items":[{"t":"βασιλεύς, -έως, ὁ","g":"king"},{"t":"γεννάω","g":"I beget, give birth to; produce"},{"t":"ζάω","g":"I live"},{"t":"Ἰουδαία, -ας, ἡ","g":"Judea"},{"t":"Ἰουδαῖος, -αία, -αῖον","g":"adj: Jewish; noun: Jew, Judean"},{"t":"Ἰσραήλ, ὁ","g":"Israel (indeclinable)"},{"t":"καρπός, -οῦ, ὁ","g":"fruit, crop; result"},{"t":"μείζων, -ον","g":"greater, larger"},{"t":"ὅλος, -η, -ον","g":"adj: whole, complete; adv: entirely"},{"t":"προσκυνέω","g":"I greet, prostrate myself, worship"}]},{"week":14,"src":"Mounce 20","items":[{"t":"αἴρω","g":"I raise, take up, take away"},{"t":"ἀποκτείνω","g":"I kill"},{"t":"ἀποστέλλω","g":"I send (away)"},{"t":"βαπτίζω","g":"I dip, immerse; baptize"},{"t":"γινώσκω","g":"I know, come to know, realize, learn"},{"t":"γλῶσσα, -ης, ἡ","g":"tongue, language"},{"t":"ἐγείρω","g":"I raise up, wake"},{"t":"ἐκβάλλω","g":"I cast out, send out"},{"t":"ἐκεῖ","g":"there, in that place"},{"t":"κρίνω","g":"I judge, decide, prefer"},{"t":"λαός, -οῦ, ὁ","g":"people, crowd"},{"t":"μένω","g":"I remain, live (i.e., remain alive)"},{"t":"ὁράω","g":"I see, notice, experience"},{"t":"σοφία, -ας, ἡ","g":"wisdom"},{"t":"στόμα, -ατος, τό","g":"mouth"},{"t":"σῴζω","g":"I save, deliver, rescue"}]},{"week":15,"name":"Reading Greek 1E–F","src":"Reading Greek, Section 1E–F","items":[{"t":"ἀκριβῶς","g":"accurately, closely"},{"t":"βαθέως","g":"deeply"},{"t":"βοηθέω","g":"help, run to help"},{"t":"δηλόω","g":"show, reveal"},{"t":"κακῶς","g":"badly, evilly"},{"t":"καλῶς","g":"finely, beautifully"},{"t":"μέν ... δέ ...","g":"on the one hand … on the other"},{"t":"οἴμοι","g":"alas! oh dear!"},{"t":"ὁράω","g":"see"},{"t":"ποῖ;","g":"to where?"},{"t":"ποιέω","g":"make, do"},{"t":"ποῦ;","g":"where (at)?"},{"t":"σαφῶς","g":"clearly"},{"t":"σεαυτόν","g":"yourself (s.)"}]}];
 const V = { weeks:new Set([1]), dir:"g2e", fmt:"mc", deck:[], i:0, right:0, wrong:0,
             missed:[], started:false, answered:false, showList:false };
 const head = t => t.split(",")[0].trim();
+const SETNAME = w => { const x = VOCAB.find(v=>v.week===w); return (x && x.name) || ("Week "+w); };
 
 function vocabPool(){
   const out=[];
@@ -546,7 +973,7 @@ function renderVocab(){
     <div class="panel">
       <h2>Pick your weeks</h2>
       <div class="chips" id="weekChips">${VOCAB.map(w=>
-        `<button data-w="${w.week}" class="${V.weeks.has(w.week)?"on":""}">Week ${w.week}<small>${w.items.length}</small></button>`).join("")}</div>
+        `<button data-w="${w.week}" class="${V.weeks.has(w.week)?"on":""}">${w.name||("Week "+w.week)}<small>${w.items.length}</small></button>`).join("")}</div>
       <div class="row" style="margin-top:0">
         <button class="btn ghost" id="wAll">All</button>
         <button class="btn ghost" id="wNone">None</button>
@@ -597,7 +1024,7 @@ function renderVocab(){
 
 function drawList(){
   const rows = VOCAB.filter(w=>V.weeks.has(w.week)).map(w=>`
-    <h2 style="margin-top:18px">Week ${w.week} <span style="font-weight:400;color:var(--muted);font-size:13px">(${w.src})</span></h2>
+    <h2 style="margin-top:18px">${w.name||("Week "+w.week)} <span style="font-weight:400;color:var(--muted);font-size:13px">(${w.src})</span></h2>
     <table><tr><th style="width:42%">Greek</th><th>Meaning</th></tr>
     ${w.items.map(i=>`<tr><td class="gkcell" style="text-align:left">${i.t}</td>
       <td style="text-align:left;font-size:14px">${i.g}</td></tr>`).join("")}</table>`).join("");
@@ -620,7 +1047,7 @@ function drawQ(){
   const pool = vocabPool();
   const pct = Math.round(V.i/V.deck.length*100);
   const statusBar = `
-    <div class="row"><span style="font-size:13px;color:var(--muted)">Week ${item.w} · card ${V.i+1} of ${V.deck.length}</span>
+    <div class="row"><span style="font-size:13px;color:var(--muted)">${SETNAME(item.w)} · card ${V.i+1} of ${V.deck.length}</span>
     <span class="score">${V.right} right · ${V.wrong} missed</span></div>
     <div class="barwrap"><div class="bar" style="width:${pct}%"></div></div>`;
 
@@ -724,7 +1151,7 @@ function drawSummary(){
       <span style="color:var(--muted)">(${total?Math.round(V.right/total*100):0}%)</span></p>
     ${uniq.length ? `<p class="hint" style="margin-bottom:6px">Words you missed:</p>
       <ul class="missed">${uniq.map(m=>`<li><span class="gk">${m.t}</span> — ${m.g}
-        <span style="color:var(--muted);font-size:12px">(wk ${m.w})</span></li>`).join("")}</ul>`
+        <span style="color:var(--muted);font-size:12px">(${SETNAME(m.w)})</span></li>`).join("")}</ul>`
       : `<p class="hint">Clean sweep — nothing missed.</p>`}
     <div class="row">
       <button class="btn" id="vAgain">Go again</button>
