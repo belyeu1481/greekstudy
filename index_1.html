@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Greek &amp; Hebrew Drill</title>
+<style>
+  :root{
+    --ink:#1c1c1e; --muted:#6b6b73; --line:#d8dae6; --panel:#fff;
+    --bg:#f4f5fa; --accent:#5b6bbf; --accent-soft:#e6e9f8;
+    --good:#1e7a4d; --good-bg:#e2f4ea; --bad:#b02a37; --bad-bg:#fbe6e8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    line-height:1.5;padding:22px 16px 60px}
+  .wrap{max-width:900px;margin:0 auto}
+  h1{font-size:22px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+  .gk{font-family:"GFS Didot","Palatino Linotype",Palatino,"Times New Roman",serif}
+  .he{font-family:"SBL Hebrew","Ezra SIL","Taamey Frank CLM","Times New Roman",serif;
+    direction:rtl;unicode-bidi:isolate;line-height:1.35}
+  nav{display:flex;gap:6px;flex-wrap:wrap}
+  nav.lang{margin-bottom:10px}
+  nav.para{margin-bottom:10px}
+  nav.mode{margin-bottom:18px;padding-top:10px;border-top:1px solid var(--line)}
+  nav button{border:1px solid var(--line);background:var(--panel);color:var(--ink);
+    padding:8px 14px;border-radius:999px;cursor:pointer;font-size:14px}
+  nav.lang button{font-weight:600;padding:9px 22px}
+  nav.para button{font-size:15px;padding:9px 18px}
+  nav button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  nav.lang button.on{background:var(--ink);border-color:var(--ink)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px}
+  .panel h2{font-size:16px;margin:0 0 12px}
+  .hint{color:var(--muted);font-size:13px;margin:0 0 14px}
+  table{border-collapse:collapse;width:100%;margin-bottom:6px}
+  caption{text-align:left;font-style:italic;color:var(--muted);padding-bottom:6px;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:center}
+  th{background:#f7f8fc;font-weight:600;font-size:13px;color:var(--muted)}
+  th.rowh{text-align:left;font-style:italic;width:104px;white-space:nowrap}
+  td.gkcell{font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:19px}
+  td.none{background:#fafbfe;color:#c3c6d6}
+  td.cell{cursor:pointer;height:44px;font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:19px}
+  td.cell:hover{background:#f7f8fc}
+  td.cell.sel{outline:2px solid var(--accent);outline-offset:-2px;background:var(--accent-soft)}
+  td.cell.ok{background:var(--good-bg);color:var(--good)}
+  td.cell.no{background:var(--bad-bg);color:var(--bad)}
+  td.cell.pick{background:var(--accent-soft)}
+  .bank{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0 4px;min-height:38px}
+  .bank button{font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:18px;
+    padding:5px 12px;border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer}
+  .bank button:hover{border-color:var(--accent);background:var(--accent-soft)}
+  .bank button.spent{display:none}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+  .btn{border:1px solid var(--accent);background:var(--accent);color:#fff;padding:8px 16px;
+    border-radius:8px;cursor:pointer;font-size:14px}
+  .btn.ghost{background:#fff;color:var(--accent)}
+  .score{margin-left:auto;font-size:14px;color:var(--muted)}
+  .prompt{font-size:21px;margin:6px 0 18px}
+  .prompt b{color:var(--accent)}
+  .choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+  .choices button{font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:23px;
+    padding:14px;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer}
+  .choices button.txt{font-family:inherit;font-size:15px}
+  .choices button.hb{font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;font-size:40px;
+    direction:rtl;unicode-bidi:isolate;padding:10px}
+  .choices button:hover{border-color:var(--accent)}
+  .choices button.ok{background:var(--good-bg);border-color:var(--good);color:var(--good)}
+  .choices button.no{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+  .fb{margin-top:14px;font-size:14px;min-height:22px}
+  .fb.ok{color:var(--good)} .fb.no{color:var(--bad)}
+  .tips{font-size:14px;color:var(--muted);margin:0;padding-left:20px}
+  .tips li{margin-bottom:7px}
+  td.inp{padding:2px}
+  td.inp input{width:100%;border:none;outline:none;background:transparent;text-align:center;
+    font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:19px;padding:8px 4px;color:inherit}
+  td.inp input:focus{background:var(--accent-soft);border-radius:4px}
+  td.inp.ok{background:var(--good-bg);color:var(--good)}
+  td.inp.no{background:var(--bad-bg);color:var(--bad)}
+  .legend{background:#f7f8fc;border:1px solid var(--line);border-radius:10px;padding:12px 14px;
+    font-size:13px;color:var(--muted);margin-bottom:14px}
+  .legend code{background:#fff;border:1px solid var(--line);border-radius:4px;padding:1px 5px;
+    font-size:12px;color:var(--ink)}
+  .legend .gk{font-size:16px;color:var(--ink)}
+  .legend div{margin-bottom:6px}
+  .legend div:last-child{margin-bottom:0}
+  label.chk{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+  .chips button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 11px;
+    font-size:13px;cursor:pointer;color:var(--ink)}
+  .chips button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .chips button small{opacity:.65;margin-left:4px}
+  .opts{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin:14px 0 4px}
+  .opts fieldset{border:none;padding:0;margin:0;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  .opts .lbl{font-size:13px;color:var(--muted);margin-right:2px}
+  .opts select{font-size:13px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .card{text-align:center;padding:26px 16px 20px}
+  .card .q{font-size:30px;margin-bottom:6px}
+  .card .q.gk{font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:38px}
+  .card .q.he{font-size:78px;margin:4px 0 10px}
+  .card .meta{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+  .card .a{font-size:22px;margin-top:18px;padding-top:18px;border-top:1px solid var(--line);color:var(--accent)}
+  .card .a.gk{font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:30px}
+  .card .a.he{font-size:64px}
+  .card .a.hidden{visibility:hidden}
+  .bigin{font-family:"GFS Didot","Palatino Linotype",Palatino,serif;font-size:26px;text-align:center;
+    padding:10px 14px;border:1px solid var(--line);border-radius:10px;width:100%;max-width:340px;outline:none}
+  .bigin:focus{border-color:var(--accent);background:var(--accent-soft)}
+  .missed{font-size:14px;margin-top:10px}
+  .missed li{margin-bottom:4px}
+  .missed .gk{font-size:18px} .missed .he{font-size:24px}
+  .barwrap{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:14px}
+  .bar{height:100%;background:var(--accent);width:0;transition:width .25s}
+  td.hecell{font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;font-size:36px;
+    direction:rtl;unicode-bidi:isolate;width:22%}
+  td.name{font-weight:600;font-size:15px;width:30%}
+  td.snd{font-size:14px;text-align:left;color:var(--muted)}
+  .blur{filter:blur(6px);transition:filter .12s;cursor:pointer}
+  .blur:hover{filter:none}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+  @media(max-width:660px){.grid2{grid-template-columns:1fr}}
+  .hidebtn{font-size:13px;margin-left:8px;padding:4px 10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 id="title"></h1>
+  <p class="sub" id="subtitle"></p>
+
+  <nav class="lang" id="langNav"></nav>
+  <nav class="para" id="paraNav"></nav>
+  <nav class="mode" id="modeNav"></nav>
+
+  <div id="content"></div>
+</div>
+
+<script>
+/* ================= helpers ================= */
+const $ = s=>document.querySelector(s);
+const shuffle = a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
+const rand = a=>a[Math.floor(Math.random()*a.length)];
+
+/* ================= Greek paradigms ================= */
+const GEN = ["m.","f.","n."];
+const GENNAME = {"m.":"masculine","f.":"feminine","n.":"neuter"};
+const NUMS = ["Singular","Plural"];
+
+const PARADIGMS = {
+  article: {
+    label: "Article",
+    title: 'The Definite Article <span class="gk">ὁ, ἡ, τό</span>',
+    subtitle: "‘the’ — 24 cells, but only 17 distinct forms.",
+    rows: { Singular:["Nominative","Accusative","Genitive","Dative"],
+            Plural:["Nominative","Accusative","Genitive","Dative"] },
+    data: {
+      Singular:{
+        Nominative:["ὁ","ἡ","τό"], Accusative:["τόν","τήν","τό"],
+        Genitive:["τοῦ","τῆς","τοῦ"], Dative:["τῷ","τῇ","τῷ"] },
+      Plural:{
+        Nominative:["οἱ","αἱ","τά"], Accusative:["τούς","τᾱ́ς","τά"],
+        Genitive:["τῶν","τῶν","τῶν"], Dative:["τοῖς","ταῖς","τοῖς"] }
+    },
+    tips: [
+      'Every form starts with <span class="gk">τ-</span> except four: <span class="gk">ὁ, ἡ, οἱ, αἱ</span> — the masc./fem. nominatives, which take a rough breathing instead.',
+      'Neuter nominative = neuter accusative, always: <span class="gk">τό / τό</span>, <span class="gk">τά / τά</span>.',
+      'Masculine and neuter share genitive and dative throughout: <span class="gk">τοῦ, τῷ, τῶν, τοῖς</span>.',
+      'Genitive plural is <span class="gk">τῶν</span> for all three genders — one form, three jobs.',
+      'Count the repeats: <span class="gk">τό</span> ×2, <span class="gk">τοῦ</span> ×2, <span class="gk">τῷ</span> ×2, <span class="gk">τά</span> ×2, <span class="gk">τοῖς</span> ×2, <span class="gk">τῶν</span> ×3. Everything else appears once.'
+    ]
+  },
+  kalos: {
+    label: "Adjective καλός",
+    title: 'The Adjective <span class="gk">καλ-ός, -ή, -όν</span>',
+    subtitle: "‘fine, beautiful, good’ — stem καλ-, endings follow 2nd/1st/2nd declension.",
+    rows: { Singular:["Nominative","Accusative","Genitive","Dative","Vocative"],
+            Plural:["Nominative","Accusative","Genitive","Dative"] },
+    data: {
+      Singular:{
+        Nominative:["καλός","καλή","καλόν"], Accusative:["καλόν","καλήν","καλόν"],
+        Genitive:["καλοῦ","καλῆς","καλοῦ"], Dative:["καλῷ","καλῇ","καλῷ"],
+        Vocative:["καλέ",null,null] },
+      Plural:{
+        Nominative:["καλοί","καλαί","καλά"], Accusative:["καλούς","καλᾱ́ς","καλά"],
+        Genitive:["καλῶν","καλῶν","καλῶν"], Dative:["καλοῖς","καλαῖς","καλοῖς"] }
+    },
+    tips: [
+      'The stem never changes — only the ending. Learn <span class="gk">-ός -ή -όν</span> and every adjective of this type follows.',
+      'Masc. and neut. use 2nd-declension endings (<span class="gk">-ος -ον -ου -ῳ</span>); fem. uses 1st-declension (<span class="gk">-η -ην -ης -ῃ</span>).',
+      'Compare the article ending-for-ending: <span class="gk">τῷ / καλῷ</span>, <span class="gk">τῆς / καλῆς</span>, <span class="gk">τοῖς / καλοῖς</span>, <span class="gk">τῶν / καλῶν</span>. The article is essentially this paradigm with the stem stripped away.',
+      'The only separate vocative is masculine singular <span class="gk">καλέ</span>; fem. and neut. vocatives are identical to their nominatives.',
+      'Accent stays on the ending, following the article’s pattern: circumflex in gen./dat., acute elsewhere.'
+    ]
+  },
+  present: {
+    label: "Present active",
+    title: 'The Present Active <span class="gk">λύω, βαίνω</span>',
+    subtitle: "An ordinary -ω verb: indicative and imperative. This is the pattern every contract verb is built on.",
+    cols: ["end","λυ","βαιν"],
+    colHeads: ['<span style="white-space:nowrap">Ending</span>',
+               '<span class="gk" style="white-space:nowrap">λύ-ω</span><br><span style="font-weight:400;white-space:nowrap">‘loose, untie’</span>',
+               '<span class="gk" style="white-space:nowrap">βαίν-ω</span><br><span style="font-weight:400;white-space:nowrap">‘go, walk’</span>'],
+    groups: ["Present indicative", "Imperative"],
+    rows: {
+      "Present indicative": ["1st s.","2nd s.","3rd s.","1st pl.","2nd pl.","3rd pl."],
+      "Imperative": ["s.","pl."]
+    },
+    data: {
+      "Present indicative": {
+        "1st s.":  ["-ω","λύω","βαίνω"],
+        "2nd s.":  ["-εις","λύεις","βαίνεις"],
+        "3rd s.":  ["-ει","λύει","βαίνει"],
+        "1st pl.": ["-ομεν","λύομεν","βαίνομεν"],
+        "2nd pl.": ["-ετε","λύετε","βαίνετε"],
+        "3rd pl.": ["-ουσι","λύουσι","βαίνουσι"]
+      },
+      "Imperative": {
+        "s.":  ["-ε","λῦε","βαῖνε"],
+        "pl.": ["-ετε","λύετε","βαίνετε"]
+      }
+    },
+    labelFn: c => (c.gi === 0)
+      ? (c.num === "Imperative" ? `the imperative ${c.cs} ending` : `the ${c.cs} present ending`)
+      : (c.num === "Imperative" ? `imperative ${c.cs} of ${PRESNAMES[c.gi]}`
+                                : `${c.cs} present of ${PRESNAMES[c.gi]}`),
+    tips: [
+      'The stem never moves: <span class="gk">λύ-</span>, <span class="gk">βαίν-</span>. Everything that changes is the ending, and both verbs take exactly the same set — learn it once.',
+      'Person and number live entirely in the ending: <span class="gk">-ς</span> = you (s.), nothing = he/she/it, <span class="gk">-μεν</span> = we, <span class="gk">-τε</span> = you (pl.), <span class="gk">-σι(ν)</span> = they.',
+      'The vowel in front of the personal ending alternates <span class="gk">ο</span> before <span class="gk">μ</span> and <span class="gk">ν</span>, <span class="gk">ε</span> elsewhere: <span class="gk">-ομεν</span>, <span class="gk">-ετε</span>, <span class="gk">-ουσι</span>. That vowel is what the contract verbs collide with.',
+      'Compare the contract table: <span class="gk">ὁρῶμεν</span> is nothing but <span class="gk">ὁρά</span> + <span class="gk">-ομεν</span> fused, and <span class="gk">ποιεῖτε</span> is <span class="gk">ποιέ</span> + <span class="gk">-ετε</span>. Same endings, merged vowels.',
+      '3rd pl. often adds a movable <span class="gk">ν</span> before a vowel or a pause: <span class="gk">λύουσι</span> or <span class="gk">λύουσιν</span>, both correct.',
+      'The plural imperative is identical to the 2nd pl. indicative — <span class="gk">βαίνετε</span> is both ‘you go’ and ‘go!’. The contract verbs inherit this ambiguity.',
+      'Verb accent is <em>recessive</em>: it slides back as far as the last syllable allows. That is why the imperative is <span class="gk">λῦε</span> with a circumflex but <span class="gk">λύετε</span> with an acute.'
+    ]
+  },
+  contract: {
+    label: "Contract verbs",
+    title: 'Contract Verbs <span class="gk">ὁράω, ποιέω, δηλόω</span>',
+    subtitle: "Present indicative active and imperative — Reading Greek §23–27.",
+    modes: ["study","fill","type","quiz","spot","lab","trans","accent","vmath"],
+    cols: ["α","ε","ο"],
+    colHeads: ['<span style="white-space:nowrap">α-contract</span><br><span class="gk" style="font-size:16px;white-space:nowrap">ὁρά-ω ‘see’</span>',
+               '<span style="white-space:nowrap">ε-contract</span><br><span class="gk" style="font-size:16px;white-space:nowrap">ποιέ-ω ‘do/make’</span>',
+               '<span style="white-space:nowrap">ο-contract</span><br><span class="gk" style="font-size:16px;white-space:nowrap">δηλό-ω ‘show’</span>'],
+    groups: ["Present indicative", "Imperative"],
+    rows: {
+      "Present indicative": ["1st s.","2nd s.","3rd s.","1st pl.","2nd pl.","3rd pl."],
+      "Imperative": ["s.","pl."]
+    },
+    data: {
+      "Present indicative": {
+        "1st s.":  ["ὁρῶ","ποιῶ","δηλῶ"],
+        "2nd s.":  ["ὁρᾷς","ποιεῖς","δηλοῖς"],
+        "3rd s.":  ["ὁρᾷ","ποιεῖ","δηλοῖ"],
+        "1st pl.": ["ὁρῶμεν","ποιοῦμεν","δηλοῦμεν"],
+        "2nd pl.": ["ὁρᾶτε","ποιεῖτε","δηλοῦτε"],
+        "3rd pl.": ["ὁρῶσι","ποιοῦσι","δηλοῦσι"]
+      },
+      "Imperative": {
+        "s.":  ["ὅρα","ποίει","δήλου"],
+        "pl.": ["ὁρᾶτε","ποιεῖτε","δηλοῦτε"]
+      }
+    },
+    labelFn: c => (c.num === "Imperative")
+      ? `imperative ${c.cs} of ${VERBNAMES[c.gi]}`
+      : `${c.cs} present of ${VERBNAMES[c.gi]}`,
+    tips: [
+      'The stem is the part that never changes: <span class="gk">ὁρ-</span>, <span class="gk">ποι-</span>, <span class="gk">δηλ-</span>. Everything after it is the contract vowel fused with a perfectly ordinary <span class="gk">-ω</span> ending.',
+      'Compare <span class="gk">βαίνω</span> ending for ending: <span class="gk">βαίν-ω / βαίν-εις / βαίν-ει / βαίν-ομεν / βαίν-ετε / βαίν-ουσι(ν)</span>. Nothing new has been added — the vowels have only merged.',
+      'Person and number live entirely in the ending: <span class="gk">-ς</span> = you (s.), nothing = he/she/it, <span class="gk">-μεν</span> = we, <span class="gk">-τε</span> = you (pl.), <span class="gk">-σι(ν)</span> = they. The stem tells you nothing about who is acting.',
+      'Every 1st s. is <span class="gk">-ῶ</span> and every 3rd pl. is <span class="gk">-ῶσι / -οῦσι</span>: a long vowel always swallows a short one. And an <span class="gk">ι</span> never vanishes — it stays in the diphthong or drops to a subscript.',
+      'The plural imperative is identical to the 2nd pl. indicative: <span class="gk">ὁρᾶτε</span> is both ‘you see’ and ‘see!’. Only context separates them.',
+      'In the singular imperative the accent is the only clue: <span class="gk">ποίει</span> ‘do!’ vs <span class="gk">ποιεῖ</span> ‘he does’; <span class="gk">δήλου</span> ‘show!’ vs <span class="gk">δηλοῖ</span> ‘he shows’.',
+      'The <span class="gk">ο</span>-contract column is the one that breaks your ear: <span class="gk">δηλῶ</span> but <span class="gk">δηλοῖς</span>. In the other two columns 1st s. and 2nd s. look related; here they do not.'
+    ]
+  },
+  adverbs: {
+    label: "Adverbs",
+    title: 'Adverbs in <span class="gk">-ῶς</span>',
+    subtitle: "Adverbs never change form. Take the adjective’s gen. m. pl. and swap the final ν for ς.",
+    modes: ["study","fill","type","quiz"],
+    cols: ["adj","gen","adv"],
+    colHeads: ["Adjective","Gen. m. pl.","Adverb"],
+    groups: ["Section 1E–F"],
+    hideCaption: true,
+    rows: { "Section 1E–F": ["fine, beautiful","bad, evil","clear","deep","accurate"] },
+    data: { "Section 1E–F": {
+      "fine, beautiful": ["καλός","καλῶν","καλῶς"],
+      "bad, evil":       ["κακός","κακῶν","κακῶς"],
+      "clear":           ["σαφής","σαφῶν","σαφῶς"],
+      "deep":            ["βαθύς","βαθέων","βαθέως"],
+      "accurate":        ["ἀκριβής","ἀκριβῶν","ἀκριβῶς"]
+    }},
+    labelFn: c => `‘${c.cs}’ — ${["adjective (m. nom. s.)","genitive m. pl.","adverb"][c.gi]}`,
+    tips: [
+      'The route is always the same: adjective → gen. m. pl. → change <span class="gk">ν</span> to <span class="gk">ς</span>. You never have to remember the adverb separately.',
+      'Because the gen. pl. of these adjectives is accented with a circumflex, almost every adverb ends <span class="gk">-ῶς</span>.',
+      '<span class="gk">βαθύς</span> is the odd one: its gen. pl. is <span class="gk">βαθέων</span>, so the adverb is <span class="gk">βαθέως</span>, not †<span class="gk">βαθῶς</span>. Same rule, different input.',
+      'Adverbs are indeclinable — one form, whatever the sentence does around them.',
+      'They answer <em>how?</em>: <span class="gk">σαφῶς δηλοῖ</span> ‘he shows clearly’; <span class="gk">ἀκριβῶς ὁρῶμεν</span> ‘we see accurately’.'
+    ]
+  }
+};
+
+const VERBNAMES = ["ὁράω ‘see’", "ποιέω ‘do/make’", "δηλόω ‘show’"];
+const PRESNAMES = ["the ending", "λύω ‘loose’", "βαίνω ‘go’"];
+
+/* A paradigm is a set of tables: groups (captions) x rows x cols.
+   Nominal paradigms use gender columns; verb/adverb paradigms supply their own. */
+const colsOf   = p => p.cols   || GEN;
+const groupsOf = p => p.groups || NUMS;
+const headsOf  = p => p.colHeads || colsOf(p);
+
+function cellsOf(p){
+  const out=[];
+  groupsOf(p).forEach(n=>p.rows[n].forEach(c=>colsOf(p).forEach((g,i)=>{
+    const v=p.data[n][c][i];
+    if(v) out.push({num:n,cs:c,gi:i,g:g,val:v,p:p});
+  })));
+  return out;
+}
+const label = c => (c.p && c.p.labelFn)
+  ? c.p.labelFn(c)
+  : `${c.cs.toLowerCase()} ${GENNAME[c.g]} ${c.num.toLowerCase()}`;
+function table(p,num,cellFn){
+  const showCap = groupsOf(p).length>1 || !p.hideCaption;
+  let h = `<table>${showCap?`<caption>${num}</caption>`:""}<tr><th></th>`;
+  headsOf(p).forEach(g=>h+=`<th>${g}</th>`); h+="</tr>";
+  p.rows[num].forEach(c=>{
+    h += `<tr><th class="rowh">${c}</th>`;
+    colsOf(p).forEach((g,i)=> h += (p.data[num][c][i]===null
+      ? `<td class="none">—</td>` : cellFn(num,c,i)));
+    h += "</tr>";
+  });
+  return h+"</table>";
+}
+const tables = (p,fn)=> groupsOf(p).map(n=>table(p,n,fn)).join("");
+/* one table fills the width; two or more sit side by side */
+const gridCls = p => groupsOf(p).length>1 ? "grid2" : "";
+
+/* --------- Greek typing: Latin keys -> polytonic Greek --------- */
+const GK_LETTERS = {a:"α",b:"β",g:"γ",d:"δ",e:"ε",z:"ζ",h:"η",q:"θ",i:"ι",k:"κ",l:"λ",m:"μ",
+  n:"ν",c:"ξ",o:"ο",p:"π",r:"ρ",s:"σ",t:"τ",u:"υ",f:"φ",x:"χ",y:"ψ",w:"ω",v:"ϝ",j:"ς"};
+const GK_MARKS = {"(":"\u0314", ")":"\u0313", "/":"\u0301", "\\":"\u0300",
+  "=":"\u0342", "|":"\u0345", "+":"\u0308", "_":"\u0304"};
+function toGreek(s){
+  let out = "";
+  for(const ch of s){
+    if(GK_MARKS[ch]) out += GK_MARKS[ch];
+    else out += (GK_LETTERS[ch.toLowerCase()] ?? ch);
+  }
+  out = out.replace(/ς/g,"σ").replace(/σ(?=[^\p{L}]*$)/u,"ς");
+  return out.normalize("NFC");
+}
+const bare = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/ς/g,"σ");
+/* movable nu: ὁρῶσιν and ὁρῶσι are the same form */
+const movnu = s => s.replace(/σιν$/,"σι").replace(/σι\(ν\)$/,"σι");
+function sameForm(a,b,strict){
+  a = movnu(a.normalize("NFC").trim()); b = movnu(b.normalize("NFC").trim());
+  return strict ? a===b : bare(a)===bare(b);
+}
+
+/* ================= shell / navigation ================= */
+let curLang = "greek", curP = "article", curMode = "study", curHT = "vowels", curHM = "chart";
+const MODES = [["study","Study"],["fill","Fill the Grid"],["type","Type It"],["quiz","Quick Quiz"],
+  ["spot","Spot It"],["lab","Contract Lab"],["trans","Translate"],["accent","Accent Trap"],["vmath","Vowel Math"]];
+const DEFAULT_MODES = ["study","fill","type","quiz","spot"];
+const HMODES = [["chart","Chart"],["hquiz","Quiz"],["hcards","Flashcards"],["hname","Type the Name"]];
+
+$("#langNav").innerHTML = `<button data-l="greek">Greek</button><button data-l="hebrew">Hebrew</button>`;
+$("#langNav").onclick = e=>{ const b=e.target.closest("button"); if(!b) return;
+  curLang = b.dataset.l; render(); };
+$("#paraNav").onclick = e=>{ const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.p){ curP=b.dataset.p; } if(b.dataset.ht){ curHT=b.dataset.ht; } render(); };
+$("#modeNav").onclick = e=>{ const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.m){ curMode=b.dataset.m; } if(b.dataset.hm){ curHM=b.dataset.hm; } render(); };
+
+function render(){
+  $("#langNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.l===curLang));
+  if(curLang === "hebrew") return renderHebrew();
+
+  $("#paraNav").innerHTML = Object.entries(PARADIGMS)
+    .map(([k,v])=>`<button data-p="${k}">${v.label}</button>`).join("")
+    + `<button data-p="vocab">Vocabulary</button>`;
+  $("#paraNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.p===curP));
+
+  if(curP === "vocab"){
+    $("#modeNav").style.display = "none";
+    $("#title").innerHTML = "Greek Vocabulary";
+    $("#subtitle").textContent = `${VOCAB.reduce((n,w)=>n+w.items.length,0)} words across ${VOCAB.length} sets.`;
+    return renderVocab();
+  }
+  const p = PARADIGMS[curP];
+  const allowed = p.modes || DEFAULT_MODES;
+  if(!allowed.includes(curMode)) curMode = allowed[0];
+  $("#modeNav").innerHTML = MODES.filter(([k])=>allowed.includes(k))
+    .map(([k,v])=>`<button data-m="${k}">${v}</button>`).join("");
+  $("#modeNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.m===curMode));
+  $("#modeNav").style.display = "";
+  $("#title").innerHTML = p.title;
+  $("#subtitle").textContent = p.subtitle;
+  ({study:renderStudy, fill:renderFill, type:renderType, quiz:renderQuiz, spot:renderSpot,
+    lab:renderLab, trans:renderTrans, accent:renderAccent, vmath:renderVmath})[curMode](p);
+}
+
+/* ================= Greek: study ================= */
+function renderStudy(p){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Reference <button class="btn ghost hidebtn" id="toggleRef">Hide</button></h2>
+      <div class="${gridCls(p)}" id="refTables">${tables(p,(n,c,i)=>`<td class="gkcell">${p.data[n][c][i]}</td>`)}</div>
+    </div>
+    <div class="panel">
+      <h2>Patterns worth noticing</h2>
+      <ul class="tips">${p.tips.map(t=>`<li>${t}</li>`).join("")}</ul>
+    </div>`;
+  $("#toggleRef").onclick = e=>{
+    const t=$("#refTables"), hid = t.style.visibility==="hidden";
+    t.style.visibility = hid?"visible":"hidden";
+    e.target.textContent = hid?"Hide":"Show";
+  };
+}
+
+/* ================= Greek: fill the grid ================= */
+function renderFill(p){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Fill the Grid</h2>
+      <p class="hint">The bank holds <em>exactly</em> the tiles the grid needs — one per cell, duplicates included.
+      Every tile must be used, so you have to know how many times each form repeats. Click a cell, then a tile;
+      click a filled cell to send its tile back. The bank reshuffles on reset.</p>
+      <div class="${gridCls(p)}" id="fillTables">${tables(p,(n,c,i)=>
+        `<td class="cell" data-n="${n}" data-c="${c}" data-i="${i}"></td>`)}</div>
+      <div class="bank" id="bank"></div>
+      <div class="row">
+        <button class="btn" id="checkFill">Check</button>
+        <button class="btn ghost" id="revealFill">Reveal</button>
+        <button class="btn ghost" id="resetFill">Reset</button>
+        <span class="score" id="fillScore"></span>
+      </div>
+    </div>`;
+
+  const cells = cellsOf(p);
+  let tiles = shuffle(cells.map((c,ix)=>({id:ix, form:c.val, used:false})));
+  let sel = null;
+  const bankEl = $("#bank"), scoreEl = $("#fillScore");
+
+  function drawBank(){
+    bankEl.innerHTML = tiles.map(t=>
+      `<button data-id="${t.id}" class="${t.used?"spent":""}">${t.form}</button>`).join("");
+    bankEl.querySelectorAll("button").forEach(b=> b.onclick = ()=>place(+b.dataset.id));
+    const left = tiles.filter(t=>!t.used).length;
+    scoreEl.textContent = left ? `${left} tile${left>1?"s":""} left` : "All tiles placed — hit Check.";
+  }
+  function place(id){
+    const t = tiles.find(x=>x.id===id);
+    if(!sel){ scoreEl.textContent = "Pick a cell first."; return; }
+    sel.textContent = t.form; sel.dataset.tile = id; t.used = true;
+    sel.classList.remove("sel","ok","no");
+    const list = [...$("#fillTables").querySelectorAll(".cell")];
+    const next = list.slice(list.indexOf(sel)+1).find(td=>!td.textContent);
+    sel = null;
+    if(next){ next.classList.add("sel"); sel = next; }
+    drawBank();
+  }
+  $("#fillTables").querySelectorAll(".cell").forEach(td=>{
+    td.onclick = ()=>{
+      td.classList.remove("ok","no");
+      if(td.textContent){
+        const t = tiles.find(x=>x.id===+td.dataset.tile);
+        if(t) t.used=false;
+        td.textContent=""; delete td.dataset.tile; drawBank(); return;
+      }
+      $("#fillTables").querySelectorAll(".sel").forEach(x=>x.classList.remove("sel"));
+      td.classList.add("sel"); sel = td;
+    };
+  });
+  $("#checkFill").onclick = ()=>{
+    let ok=0, total=0;
+    $("#fillTables").querySelectorAll(".cell").forEach(td=>{
+      total++; td.classList.remove("ok","no","sel");
+      const want = p.data[td.dataset.n][td.dataset.c][+td.dataset.i];
+      if(!td.textContent) return;
+      const right = td.textContent===want;
+      td.classList.add(right?"ok":"no");
+      if(right) ok++;
+    });
+    scoreEl.textContent = `${ok} / ${total} correct`;
+  };
+  $("#revealFill").onclick = ()=>{
+    $("#fillTables").querySelectorAll(".cell").forEach(td=>{
+      td.textContent = p.data[td.dataset.n][td.dataset.c][+td.dataset.i];
+      td.classList.remove("no","sel"); td.classList.add("ok");
+    });
+    tiles.forEach(t=>t.used=true); drawBank();
+    scoreEl.textContent = "Answers shown.";
+  };
+  $("#resetFill").onclick = ()=>renderFill(p);
+  drawBank();
+}
+
+/* ================= Greek: type it ================= */
+let strictAccents = false;
+function renderType(p){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Type It</h2>
+      <p class="hint">Type the whole paradigm from memory. No Greek keyboard needed — type Latin letters
+      and they convert as you go. Tab moves to the next cell.</p>
+      <div class="legend">
+        <div><code>a b g d e z h q i k l m n c o p r s t u f x y w</code> &rarr;
+          <span class="gk">α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ τ υ φ χ ψ ω</span>
+          <em>(final sigma is automatic)</em></div>
+        <div>Diacritics go <em>after</em> the vowel:
+          <code>(</code> rough &middot; <code>)</code> smooth &middot; <code>/</code> acute &middot;
+          <code>\\</code> grave &middot; <code>=</code> circumflex &middot; <code>|</code> iota subscript &middot;
+          <code>_</code> macron</div>
+        <div>So <code>h(</code> &rarr; <span class="gk">ἡ</span> &middot;
+          <code>tou=</code> &rarr; <span class="gk">τοῦ</span> &middot;
+          <code>tw=|</code> &rarr; <span class="gk">τῷ</span> &middot;
+          <code>ta_/s</code> &rarr; <span class="gk">τᾱ́ς</span> &middot;
+          <code>kaloi=s</code> &rarr; <span class="gk">καλοῖς</span></div>
+      </div>
+      <div class="${gridCls(p)}" id="typeTables">${tables(p,(n,c,i)=>
+        `<td class="inp" data-n="${n}" data-c="${c}" data-i="${i}"><input type="text" spellcheck="false" autocapitalize="off" autocomplete="off"></td>`)}</div>
+      <div class="row">
+        <button class="btn" id="checkType">Check</button>
+        <button class="btn ghost" id="revealType">Reveal</button>
+        <button class="btn ghost" id="resetType">Reset</button>
+        <label class="chk"><input type="checkbox" id="strict" ${strictAccents?"checked":""}> require accents &amp; breathings</label>
+        <span class="score" id="typeScore"></span>
+      </div>
+    </div>`;
+
+  $("#typeTables").querySelectorAll("input").forEach(inp=>{
+    inp.addEventListener("input", ()=>{
+      const pos = inp.selectionStart, before = inp.value, conv = toGreek(before);
+      if(conv !== before){ inp.value = conv; const d = conv.length - before.length;
+        inp.setSelectionRange(pos+d, pos+d); }
+      inp.parentElement.classList.remove("ok","no");
+    });
+  });
+  $("#strict").onchange = e => strictAccents = e.target.checked;
+  $("#checkType").onclick = ()=>{
+    let ok=0, total=0, blank=0;
+    $("#typeTables").querySelectorAll("td.inp").forEach(td=>{
+      total++;
+      const inp = td.querySelector("input");
+      const want = p.data[td.dataset.n][td.dataset.c][+td.dataset.i];
+      td.classList.remove("ok","no");
+      if(!inp.value.trim()){ blank++; return; }
+      const right = sameForm(inp.value, want, strictAccents);
+      td.classList.add(right?"ok":"no");
+      if(right) ok++;
+    });
+    $("#typeScore").textContent = `${ok} / ${total} correct` + (blank?` · ${blank} blank`:"");
+  };
+  $("#revealType").onclick = ()=>{
+    $("#typeTables").querySelectorAll("td.inp").forEach(td=>{
+      td.querySelector("input").value = p.data[td.dataset.n][td.dataset.c][+td.dataset.i];
+      td.classList.remove("no"); td.classList.add("ok");
+    });
+    $("#typeScore").textContent = "Answers shown.";
+  };
+  $("#resetType").onclick = ()=>renderType(p);
+}
+
+/* ================= Greek: quick quiz ================= */
+const qState = {};
+function renderQuiz(p){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Quick Quiz</h2>
+      <p class="hint">Both directions: sometimes you get the label, sometimes the Greek.</p>
+      <div class="prompt" id="qPrompt"></div>
+      <div class="choices" id="qChoices"></div>
+      <div class="fb" id="qFb"></div>
+      <div class="row">
+        <button class="btn ghost" id="qNext">Next &rarr;</button>
+        <span class="score" id="qScore"></span>
+      </div>
+    </div>`;
+  const cells = cellsOf(p);
+  const forms = [...new Set(cells.map(c=>c.val))];
+  const st = (qState[curP] = qState[curP] || {r:0,t:0,s:0});
+  let lock = false, timer = null;
+  const showScore = ()=> $("#qScore").textContent = `${st.r} correct / ${st.t} · streak ${st.s}`;
+
+  function newQ(){
+    if($("#qPrompt")===null) return;
+    clearTimeout(timer); lock=false;
+    $("#qFb").textContent=""; $("#qFb").className="fb";
+    const cell = rand(cells);
+    const forward = Math.random()<0.65;
+    let answer, opts, isGreek;
+    if(forward){
+      $("#qPrompt").innerHTML = `<b>${label(cell)}</b> — which form?`;
+      answer = cell.val; isGreek = true;
+      opts = [answer, ...shuffle(forms.filter(f=>f!==answer)).slice(0,3)];
+    } else {
+      const matches = cells.filter(c=>c.val===cell.val).map(label);
+      $("#qPrompt").innerHTML = `<span class="gk" style="font-size:30px">${cell.val}</span> — which of these can it be?`;
+      answer = rand(matches); isGreek = false;
+      const wrong = [...new Set(cells.map(label))].filter(l=>!matches.includes(l));
+      opts = [answer, ...shuffle(wrong).slice(0,3)];
+    }
+    opts = shuffle(opts);
+    $("#qChoices").innerHTML = opts.map(o=>`<button class="${isGreek?"":"txt"}">${o}</button>`).join("");
+    $("#qChoices").querySelectorAll("button").forEach(b=> b.onclick = ()=>{
+      if(lock) return; lock=true; st.t++;
+      const right = b.textContent===answer;
+      if(right){ st.r++; st.s++; b.classList.add("ok");
+        $("#qFb").textContent="Correct."; $("#qFb").className="fb ok"; }
+      else{ st.s=0; b.classList.add("no");
+        [...$("#qChoices").children].find(x=>x.textContent===answer).classList.add("ok");
+        $("#qFb").textContent = `Answer: ${answer}`; $("#qFb").className="fb no"; }
+      showScore();
+      timer = setTimeout(newQ, right?650:1900);
+    });
+    showScore();
+  }
+  $("#qNext").onclick = newQ;
+  newQ();
+}
+
+/* ================= Greek: spot it ================= */
+function renderSpot(p){
+  const cells = cellsOf(p);
+  const forms = [...new Set(cells.map(c=>c.val))];
+  let target = rand(forms);
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Spot It</h2>
+      <p class="hint">One form, sometimes several jobs. Click <em>every</em> cell this form can fill, then check.</p>
+      <div class="prompt gk" id="sForm" style="font-size:36px">${target}</div>
+      <div class="${gridCls(p)}" id="spotTables">${tables(p,(n,c,i)=>
+        `<td class="cell" data-n="${n}" data-c="${c}" data-i="${i}">·</td>`)}</div>
+      <div class="row">
+        <button class="btn" id="checkSpot">Check</button>
+        <button class="btn ghost" id="nextSpot">New form</button>
+        <span class="score" id="sFb"></span>
+      </div>
+    </div>`;
+  $("#spotTables").querySelectorAll(".cell").forEach(td=>
+    td.onclick = ()=>{ td.classList.remove("ok","no"); td.classList.toggle("pick"); });
+  $("#checkSpot").onclick = ()=>{
+    let wrong=0, missed=0;
+    $("#spotTables").querySelectorAll(".cell").forEach(td=>{
+      const isRight = p.data[td.dataset.n][td.dataset.c][+td.dataset.i]===target;
+      const picked = td.classList.contains("pick");
+      td.classList.remove("pick");
+      if(picked && isRight) td.classList.add("ok");
+      else if(picked){ td.classList.add("no"); wrong++; }
+      else if(isRight){ td.classList.add("ok"); td.textContent=target; missed++; }
+    });
+    $("#sFb").textContent = (wrong||missed)
+      ? `${wrong} wrong, ${missed} missed — green cells are the full answer.` : "Perfect.";
+  };
+  $("#nextSpot").onclick = ()=>renderSpot(p);
+}
+
+/* ================= contract-verb machinery ================= */
+const CVERBS = [
+  {stem:"ὁρ",      t:"α", gloss:"see"},
+  {stem:"τιμ",     t:"α", gloss:"honour"},
+  {stem:"σιγ",     t:"α", gloss:"be silent"},
+  {stem:"νικ",     t:"α", gloss:"win, defeat"},
+  {stem:"ἐξαπατ",  t:"α", gloss:"deceive"},
+  {stem:"ποι",     t:"ε", gloss:"do, make"},
+  {stem:"βοηθ",    t:"ε", gloss:"help, run to help"},
+  {stem:"γαμ",     t:"ε", gloss:"marry"},
+  {stem:"οἰκ",     t:"ε", gloss:"dwell, live"},
+  {stem:"ἀσεβ",    t:"ε", gloss:"commit sacrilege"},
+  {stem:"ἀσθεν",   t:"ε", gloss:"be weak, be ill"},
+  {stem:"νοσ",     t:"ε", gloss:"be sick"},
+  {stem:"δηλ",     t:"ο", gloss:"show, reveal"},
+  {stem:"ἐλευθερ", t:"ο", gloss:"free, set free"}
+];
+const PERSONS = ["1st s.","2nd s.","3rd s.","1st pl.","2nd pl.","3rd pl."];
+const UNC = {
+  "α":["άω","άεις","άει","άομεν","άετε","άουσι"],
+  "ε":["έω","έεις","έει","έομεν","έετε","έουσι"],
+  "ο":["όω","όεις","όει","όομεν","όετε","όουσι"]
+};
+const CON = {
+  "α":["ῶ","ᾷς","ᾷ","ῶμεν","ᾶτε","ῶσι"],
+  "ε":["ῶ","εῖς","εῖ","οῦμεν","εῖτε","οῦσι"],
+  "ο":["ῶ","οῖς","οῖ","οῦμεν","οῦτε","οῦσι"]
+};
+const RULE = {
+  "α":["α + ω = ω","α + ει = ᾳ (the ι goes subscript)","α + ει = ᾳ (the ι goes subscript)","α + ο = ω","α + ε = ᾱ","α + ου = ω"],
+  "ε":["ε + ω = ω","ε + ει = ει","ε + ει = ει","ε + ο = ου","ε + ε = ει","ε + ου = ου"],
+  "ο":["ο + ω = ω","ο + ει = οι","ο + ει = οι","ο + ο = ου","ο + ε = ου","ο + ου = ου"]
+};
+const uncOf = (v,i) => v.stem + UNC[v.t][i];
+const conOf = (v,i) => v.stem + CON[v.t][i];
+const splitUnc = (v,i) => v.stem + UNC[v.t][i][0] + "-" + UNC[v.t][i].slice(1);
+
+const RULEBOX = `
+  <div class="legend">
+    <div><strong style="color:var(--ink)">α</strong> &nbsp; α + ο/ου/ω = <span class="gk">ω</span> &nbsp;·&nbsp;
+      α + ε = <span class="gk">ᾱ</span> &nbsp;·&nbsp; α + ει = <span class="gk">ᾳ</span></div>
+    <div><strong style="color:var(--ink)">ε</strong> &nbsp; ε + ω = <span class="gk">ω</span> &nbsp;·&nbsp;
+      ε + ε/ει = <span class="gk">ει</span> &nbsp;·&nbsp; ε + ο/ου = <span class="gk">ου</span></div>
+    <div><strong style="color:var(--ink)">ο</strong> &nbsp; ο + ω = <span class="gk">ω</span> &nbsp;·&nbsp;
+      ο + ε/ο/ου = <span class="gk">ου</span> &nbsp;·&nbsp; anything with an ι = <span class="gk">οι</span></div>
+  </div>`;
+
+/* ---------- Contract Lab: uncontracted -> contracted ---------- */
+const LB = {fmt:"mc", r:0, t:0, s:0, showRules:true};
+function renderLab(p){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Contract Lab</h2>
+      <p class="hint">The vocabulary list gives you the uncontracted form; a real text gives you the contracted one.
+      Fuse the stem vowel with the ending. (Reading Greek exercise 1E–F: 3.)</p>
+      <div class="opts" style="margin-top:0">
+        <fieldset><span class="lbl">Format</span>
+          <select id="labFmt">
+            <option value="mc">Multiple choice</option>
+            <option value="type">Type the contracted form</option>
+          </select></fieldset>
+        <label class="chk"><input type="checkbox" id="labRules" ${LB.showRules?"checked":""}> show the rules</label>
+        <span class="score" id="labScore"></span>
+      </div>
+      <div id="labArea"></div>
+    </div>
+    <div class="panel" id="labRuleBox" style="${LB.showRules?"":"display:none"}">
+      <h2>The nine contractions this tense needs</h2>${RULEBOX}
+    </div>`;
+  $("#labFmt").value = LB.fmt;
+  $("#labFmt").onchange = e=>{ LB.fmt = e.target.value; labNew(); };
+  $("#labRules").onchange = e=>{ LB.showRules = e.target.checked;
+    $("#labRuleBox").style.display = LB.showRules ? "" : "none"; };
+  labNew();
+}
+function labScore(){
+  const el = $("#labScore");
+  if(el) el.textContent = `${LB.r} correct / ${LB.t} · streak ${LB.s}`;
+}
+function labMark(ok){ LB.t++; if(ok){ LB.r++; LB.s++; } else LB.s = 0; labScore(); }
+function labNew(){
+  const area = $("#labArea"); if(!area) return;
+  const v = rand(CVERBS), i = Math.floor(Math.random()*6);
+  const ans = conOf(v,i), unc = uncOf(v,i), rule = RULE[v.t][i];
+  const meta = `${v.t}-contract &middot; ${PERSONS[i]} &middot; <span style="text-transform:none">‘${v.gloss}’</span>`;
+  const done = ok => {
+    $("#labFb").className = "fb " + (ok?"ok":"no");
+    $("#labFb").innerHTML = ok
+      ? `Correct — ${rule}`
+      : `<span class="gk" style="font-size:20px">${splitUnc(v,i)}</span> &rarr;
+         <span class="gk" style="font-size:20px">${ans}</span> &nbsp; (${rule})`;
+    labMark(ok);
+    setTimeout(labNew, ok?900:2600);
+  };
+
+  if(LB.fmt === "mc"){
+    const others = shuffle([0,1,2,3,4,5].filter(x=>x!==i)).slice(0,2).map(j=>conOf(v,j));
+    const opts = shuffle([...new Set([ans, ...others, unc])]);
+    area.innerHTML = `
+      <div class="card"><div class="meta">${meta}</div>
+        <div class="q gk">${splitUnc(v,i)}</div>
+        <div style="font-size:14px;color:var(--muted);margin-top:4px">contracts to…</div></div>
+      <div class="choices" id="labChoices">${opts.map(o=>`<button>${o}</button>`).join("")}</div>
+      <div class="fb" id="labFb"></div>
+      <div class="row"><button class="btn ghost" id="labNext">Skip &rarr;</button></div>`;
+    let lock = false;
+    const btns = [...area.querySelectorAll("#labChoices button")];
+    btns.forEach(b => b.onclick = ()=>{
+      if(lock) return; lock = true;
+      const ok = b.textContent === ans;
+      b.classList.add(ok?"ok":"no");
+      if(!ok) btns.find(x=>x.textContent===ans).classList.add("ok");
+      done(ok);
+    });
+  } else {
+    area.innerHTML = `
+      <div class="card"><div class="meta">${meta}</div>
+        <div class="q gk">${splitUnc(v,i)}</div>
+        <div style="margin-top:18px"><input class="bigin" id="labIn" spellcheck="false"
+          autocomplete="off" autocapitalize="off" placeholder="contracted form…"></div></div>
+      <div class="row"><button class="btn" id="labGo">Check (enter)</button>
+        <button class="btn ghost" id="labNext">Show answer</button></div>
+      <div class="fb" id="labFb"></div>`;
+    const inp = $("#labIn"); inp.focus();
+    inp.addEventListener("input", ()=>{
+      const pos = inp.selectionStart, before = inp.value, conv = toGreek(before);
+      if(conv !== before){ inp.value = conv; const d = conv.length - before.length;
+        inp.setSelectionRange(pos+d, pos+d); }
+    });
+    let lock = false;
+    const go = ()=>{
+      if(lock || !inp.value.trim()) return; lock = true;
+      const val = inp.value.trim();
+      if(sameForm(val, ans, true)) return done(true);
+      if(sameForm(val, ans, false)){
+        $("#labFb").className = "fb no";
+        $("#labFb").innerHTML = `Right letters, wrong accent — it is
+          <span class="gk" style="font-size:20px">${ans}</span> (${rule})`;
+        labMark(false); setTimeout(labNew, 2600); return;
+      }
+      done(false);
+    };
+    $("#labGo").onclick = go;
+    inp.onkeydown = e=>{ if(e.key==="Enter"){ e.preventDefault(); go(); } };
+  }
+  $("#labNext").onclick = ()=>{ labNew(); };
+  labScore();
+}
+
+/* ---------- Translate: Greek <-> English, one word each way ---------- */
+const TRV = [
+  {stem:"ὁρ",   t:"α", base:"see",   s3:"sees"},
+  {stem:"τιμ",  t:"α", base:"honour",s3:"honours"},
+  {stem:"νικ",  t:"α", base:"win",   s3:"wins"},
+  {stem:"ποι",  t:"ε", base:"make",  s3:"makes"},
+  {stem:"βοηθ", t:"ε", base:"help",  s3:"helps"},
+  {stem:"δηλ",  t:"ο", base:"show",  s3:"shows"}
+];
+const SUBJ = ["I","you (s.)","he/she/it","we","you (pl.)","they"];
+const enOf = (v,i) => `${SUBJ[i]} ${i===2 ? v.s3 : v.base}`;
+const TR = {dir:"g2e", r:0, t:0, s:0};
+function renderTrans(p){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Translate</h2>
+      <p class="hint">One word each way. Greek has no separate progressive, so ‘he makes’ and ‘he is making’
+      are the same form. (Reading Greek exercises 1E–F: 1 and 2.)</p>
+      <div class="opts" style="margin-top:0">
+        <fieldset><span class="lbl">Direction</span>
+          <select id="trDir">
+            <option value="g2e">Greek &rarr; English</option>
+            <option value="e2g">English &rarr; Greek</option>
+            <option value="mix">Mixed</option>
+          </select></fieldset>
+        <span class="score" id="trScore"></span>
+      </div>
+      <div id="trArea"></div>
+    </div>`;
+  $("#trDir").value = TR.dir;
+  $("#trDir").onchange = e=>{ TR.dir = e.target.value; trNew(); };
+  trNew();
+}
+function trNew(){
+  const area = $("#trArea"); if(!area) return;
+  const dir = TR.dir === "mix" ? rand(["g2e","e2g"]) : TR.dir;
+  const v = rand(TRV), i = Math.floor(Math.random()*6);
+  const gk = conOf(v,i), en = enOf(v,i);
+  const askGreek = dir === "g2e";
+  const answer = askGreek ? en : gk;
+  const others = TRV.filter(x=>x.stem!==v.stem);
+  const wrongPersons = shuffle([0,1,2,3,4,5].filter(x=>x!==i)).slice(0,2)
+    .map(j => askGreek ? enOf(v,j) : conOf(v,j));
+  const otherVerb = (w => askGreek ? enOf(w,i) : conOf(w,i))(rand(others));
+  const opts = shuffle([...new Set([answer, ...wrongPersons, otherVerb])]);
+  const note = (i===4)
+    ? ` This form is also the plural imperative — <span class="gk">${gk}</span> can mean ‘${v.base}!’`
+    : "";
+  area.innerHTML = `
+    <div class="card"><div class="meta">${askGreek?"What does this mean?":"Which Greek form?"}</div>
+      <div class="q ${askGreek?"gk":""}" ${askGreek?"":'style="font-size:24px"'}>${askGreek?gk:en}</div></div>
+    <div class="choices" id="trChoices">${opts.map(o=>
+      `<button class="${askGreek?"txt":""}">${o}</button>`).join("")}</div>
+    <div class="fb" id="trFb"></div>
+    <div class="row"><button class="btn ghost" id="trNext">Skip &rarr;</button></div>`;
+  let lock = false;
+  const btns = [...area.querySelectorAll("#trChoices button")];
+  btns.forEach(b => b.onclick = ()=>{
+    if(lock) return; lock = true; TR.t++;
+    const ok = b.textContent === answer;
+    b.classList.add(ok?"ok":"no");
+    if(!ok) btns.find(x=>x.textContent===answer).classList.add("ok");
+    if(ok){ TR.r++; TR.s++; } else TR.s = 0;
+    $("#trFb").className = "fb " + (ok?"ok":"no");
+    $("#trFb").innerHTML = (ok ? "Correct." :
+      `<span class="gk" style="font-size:20px">${gk}</span> = ${en}.`) + note;
+    trScore();
+    setTimeout(trNew, ok && !note ? 800 : 2400);
+  });
+  $("#trNext").onclick = trNew;
+  trScore();
+}
+function trScore(){
+  const txt = `${TR.r} correct / ${TR.t} · streak ${TR.s}`;
+  [$("#trScore"), $("#trScore2")].forEach(el=>{ if(el) el.textContent = txt; });
+}
+
+/* ---------- Accent Trap: command or statement? ---------- */
+const ACC = [
+  {f:"ὅρα",      k:"cmd",  say:"‘see!’ — imperative s."},
+  {f:"ὁρᾷ",      k:"ind",  say:"‘he/she/it sees’ — 3rd s. indicative"},
+  {f:"ποίει",    k:"cmd",  say:"‘do! / make!’ — imperative s."},
+  {f:"ποιεῖ",    k:"ind",  say:"‘he/she/it does’ — 3rd s. indicative"},
+  {f:"δήλου",    k:"cmd",  say:"‘show!’ — imperative s."},
+  {f:"δηλοῖ",    k:"ind",  say:"‘he/she/it shows’ — 3rd s. indicative"},
+  {f:"βοήθει",   k:"cmd",  say:"‘help!’ — imperative s."},
+  {f:"βοηθεῖ",   k:"ind",  say:"‘he/she/it helps’ — 3rd s. indicative"},
+  {f:"τίμα",     k:"cmd",  say:"‘honour!’ — imperative s."},
+  {f:"τιμᾷ",     k:"ind",  say:"‘he/she/it honours’ — 3rd s. indicative"},
+  {f:"σίγα",     k:"cmd",  say:"‘be quiet!’ — imperative s."},
+  {f:"σιγᾷ",     k:"ind",  say:"‘he/she/it is quiet’ — 3rd s. indicative"},
+  {f:"ὁρᾶτε",    k:"both", say:"‘you (pl.) see’ or ‘see!’ — the 2nd pl. and the pl. imperative are identical"},
+  {f:"ποιεῖτε",  k:"both", say:"‘you (pl.) do’ or ‘do!’ — identical forms"},
+  {f:"δηλοῦτε",  k:"both", say:"‘you (pl.) show’ or ‘show!’ — identical forms"},
+  {f:"βοηθεῖτε", k:"both", say:"‘you (pl.) help’ or ‘help!’ — identical forms"},
+  {f:"μὴ δήλου", k:"cmd",  say:"‘don’t show!’ — μή marks a negative command"},
+  {f:"μὴ ποίει", k:"cmd",  say:"‘don’t do it!’ — μή marks a negative command"},
+  {f:"μὴ ὁρᾶτε", k:"cmd",  say:"‘don’t look!’ — μή forces the imperative reading"}
+];
+const AC = {r:0, t:0, s:0};
+function renderAccent(p){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Accent Trap</h2>
+      <p class="hint">In the singular, the accent is the only thing separating a command from a statement:
+      <span class="gk">ποίει</span> ‘do!’ vs <span class="gk">ποιεῖ</span> ‘he does’.
+      In the plural they are the same word. Watch for <span class="gk">μή</span>, which can only introduce a command.</p>
+      <div id="acArea"></div>
+    </div>`;
+  acNew();
+}
+function acNew(){
+  const area = $("#acArea"); if(!area) return;
+  const it = rand(ACC);
+  area.innerHTML = `
+    <div class="card"><div class="meta">Command, statement, or either?</div>
+      <div class="q gk">${it.f}</div></div>
+    <div class="choices" id="acChoices">
+      <button class="txt" data-k="cmd">Command</button>
+      <button class="txt" data-k="ind">Statement (he/she/it …)</button>
+      <button class="txt" data-k="both">Either — you can’t tell</button></div>
+    <div class="fb" id="acFb"></div>
+    <div class="row"><button class="btn ghost" id="acNext">Skip &rarr;</button>
+      <span class="score" id="acScore"></span></div>`;
+  let lock = false;
+  const btns = [...area.querySelectorAll("#acChoices button")];
+  btns.forEach(b => b.onclick = ()=>{
+    if(lock) return; lock = true; AC.t++;
+    const ok = b.dataset.k === it.k;
+    b.classList.add(ok?"ok":"no");
+    if(!ok) btns.find(x=>x.dataset.k===it.k).classList.add("ok");
+    if(ok){ AC.r++; AC.s++; } else AC.s = 0;
+    $("#acFb").className = "fb " + (ok?"ok":"no");
+    $("#acFb").innerHTML = `<span class="gk" style="font-size:20px">${it.f}</span> — ${it.say}`;
+    $("#acScore").textContent = `${AC.r} correct / ${AC.t} · streak ${AC.s}`;
+    setTimeout(acNew, ok?1500:2800);
+  });
+  $("#acNext").onclick = acNew;
+  $("#acScore").textContent = `${AC.r} correct / ${AC.t} · streak ${AC.s}`;
+}
+
+/* ---------- Vowel Math: the contraction table itself ---------- */
+const VM = [
+  ["α","ω","ω"],["α","ο","ω"],["α","ου","ω"],["α","ε","ᾱ"],["α","ει","ᾳ"],
+  ["ε","ω","ω"],["ε","ο","ου"],["ε","ου","ου"],["ε","ε","ει"],["ε","ει","ει"],
+  ["ο","ω","ω"],["ο","ο","ου"],["ο","ου","ου"],["ο","ε","ου"],["ο","ει","οι"]
+];
+const VMRESULTS = ["ω","ᾱ","ᾳ","ου","ει","οι","η","ῳ"];
+const VMS = {r:0, t:0, s:0};
+function renderVmath(p){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Vowel Math</h2>
+      <p class="hint">The contraction rules on their own, stripped of any verb.
+      Order matters: α + ε is not the same as ε + α.</p>
+      <div id="vmArea"></div>
+    </div>
+    <div class="panel"><h2>Reference</h2>${RULEBOX}</div>`;
+  vmNew();
+}
+function vmNew(){
+  const area = $("#vmArea"); if(!area) return;
+  const [a,b,c] = rand(VM);
+  const opts = shuffle([c, ...shuffle(VMRESULTS.filter(x=>x!==c)).slice(0,3)]);
+  area.innerHTML = `
+    <div class="card"><div class="meta">Contract these two vowels, in this order</div>
+      <div class="q gk">${a} &nbsp;+&nbsp; ${b} &nbsp;=&nbsp; ?</div></div>
+    <div class="choices" id="vmChoices">${opts.map(o=>`<button>${o}</button>`).join("")}</div>
+    <div class="fb" id="vmFb"></div>
+    <div class="row"><button class="btn ghost" id="vmNext">Skip &rarr;</button>
+      <span class="score" id="vmScore"></span></div>`;
+  let lock = false;
+  const btns = [...area.querySelectorAll("#vmChoices button")];
+  btns.forEach(btn => btn.onclick = ()=>{
+    if(lock) return; lock = true; VMS.t++;
+    const ok = btn.textContent === c;
+    btn.classList.add(ok?"ok":"no");
+    if(!ok) btns.find(x=>x.textContent===c).classList.add("ok");
+    if(ok){ VMS.r++; VMS.s++; } else VMS.s = 0;
+    $("#vmFb").className = "fb " + (ok?"ok":"no");
+    $("#vmFb").innerHTML = ok ? "Correct."
+      : `<span class="gk" style="font-size:18px">${a} + ${b} = ${c}</span>`;
+    $("#vmScore").textContent = `${VMS.r} correct / ${VMS.t} · streak ${VMS.s}`;
+    setTimeout(vmNew, ok?650:2000);
+  });
+  $("#vmNext").onclick = vmNew;
+  $("#vmScore").textContent = `${VMS.r} correct / ${VMS.t} · streak ${VMS.s}`;
+}
+
+/* ================= Greek vocabulary ================= */
+const VOCAB = [{"week":1,"src":"Mounce 4","items":[{"t":"ἄγγελος, -ου, ὁ","g":"messenger; angel"},{"t":"ἀμήν","g":"verily, truly, amen, so let it be"},{"t":"ἄνθρωπος, -ου, ὁ","g":"man, mankind, person, people, humankind, human being"},{"t":"ἀπόστολος, -ου, ὁ","g":"apostle, envoy, messenger"},{"t":"γραφή, -ῆς, ἡ","g":"writing; Scripture"},{"t":"δόξα, -ης, ἡ","g":"glory, majesty, fame"},{"t":"ἔσχατος, -η, -ον","g":"last"},{"t":"ζωή, -ῆς, ἡ","g":"life"},{"t":"θεός, -οῦ, ὁ","g":"God, god"},{"t":"καί","g":"and, even, also, namely"},{"t":"καρδία, -ας, ἡ","g":"heart; inner self"},{"t":"κόσμος, -ου, ὁ","g":"world, universe; mankind"},{"t":"λόγος, -ου, ὁ","g":"word, Word; statement, message"},{"t":"πνεῦμα, -ατος, τό","g":"spirit, Spirit; wind, breath; inner life"},{"t":"προφήτης, -ου, ὁ","g":"prophet"},{"t":"σάββατον, -ου, τό","g":"Sabbath; week"},{"t":"φωνή, -ῆς, ἡ","g":"sound, noise; voice"},{"t":"χριστός, -οῦ, ὁ","g":"anointed one (Greek trans. for מְשִיַח)"}]},{"week":2,"src":"Mounce 6 & 7","items":[{"t":"ἀγάπη, -ης, ἡ","g":"love"},{"t":"βασιλεία, -ας, ἡ","g":"kingdom"},{"t":"ἐν","g":"dat: in; on; among"},{"t":"ἔργον, -ου, τό","g":"work; deed, action"},{"t":"καιρός, -οῦ, ὁ","g":"appointed time; time; season"},{"t":"νῦν","g":"adv. —now; noun — the present"},{"t":"ὅτι","g":"that; since; because"},{"t":"ὥρα, -ας, ἡ","g":"hour, occasion, moment"},{"t":"ἁμαρτία, -ας, ἡ","g":"sin"},{"t":"ἀρχή, -ῆς, ἡ","g":"beginning; ruler"},{"t":"εἰς","g":"acc: into, in, to, toward"},{"t":"ἐξουσία, -ας, ἡ","g":"authority, power"},{"t":"κύριος, -ου, ὁ","g":"lord, master, sir; the Lord"},{"t":"οὐρανός, -οῦ, ὁ","g":"sky, heaven"},{"t":"υἱός, -οῦ, ὁ","g":"son, descendant"}]},{"week":3,"src":"Mounce 8","items":[{"t":"ἀλλά","g":"but, yet; rather"},{"t":"ἀπό","g":"gen: (away) from"},{"t":"διά","g":"gen: through; acc: because of"},{"t":"ἐκ","g":"gen: from, out of"},{"t":"ἡμέρα, -ας, ἡ","g":"day"},{"t":"θάλασσα, -ης, ἡ","g":"sea, lake"},{"t":"θάνατος, -ου, ὁ","g":"death"},{"t":"ἵνα","g":"in order that; so that"},{"t":"μετά","g":"gen: with; acc: after"},{"t":"οἰκία, -ας, ἡ","g":"house, home"},{"t":"οἶκος, -ου, ὁ","g":"house, home"},{"t":"ὄχλος, -ου, ὁ","g":"crowd, multitude"},{"t":"παρά","g":"gen: from; dat: beside; acc: alongside"},{"t":"παραβολή, -ῆς, ἡ","g":"comparison; parable (in NT)"},{"t":"πρός","g":"acc: to, towards; with"},{"t":"ὑπό","g":"gen: by; acc: under"}]},{"week":4,"src":"Mounce 9","items":[{"t":"ἀγαθός, -ή, -όν","g":"good; noble; useful"},{"t":"ἀγαπητός, -ή, -όν","g":"beloved"},{"t":"ἅγιος, -ία, -ιον","g":"adjective: holy; plural noun: holy ones, i.e. saints"},{"t":"αἰώνιος, -ον","g":"eternal"},{"t":"ἀλλήλων","g":"one another (always in the plural form)"},{"t":"δοῦλος, -ου, ὁ","g":"slave; servant"},{"t":"ἐάν","g":"if; when (Introduces a dependent clause)"},{"t":"ἐντολή, -ῆς, ἡ","g":"order, command, commandment"},{"t":"καθώς","g":"as, even as"},{"t":"κακός, -ή, -όν","g":"bad, evil"},{"t":"νεκρός, -ά, -όν","g":"adjective: dead; noun: dead body, corpse"},{"t":"πιστός, -ή, -όν","g":"faithful, believing"},{"t":"πονηρός, -ά, -όν","g":"evil, bad"},{"t":"πρῶτος, -η, -ον","g":"first; earlier"},{"t":"τρίτος, -η, -ον","g":"third"}]},{"week":5,"src":"Mounce 10","items":[{"t":"εἰ","g":"if"},{"t":"εἰ μή","g":"except; if not"},{"t":"εἷς (ms), μία (fs), ἕν (ns)","g":"one"},{"t":"ἤδη","g":"now, already"},{"t":"ὄνομα, -ατος, τό","g":"name; reputation"},{"t":"οὐδείς (ms), οὐδεμία (fs), οὐδέν (ns)","g":"no one; nothing (neut. οὐδέν)"},{"t":"πᾶς (ms), πᾶσα (fs), πᾶν (ns)","g":"singular: each, every; plural: all"},{"t":"περί","g":"gen: concerning, about; acc: around"},{"t":"σάρξ, σαρκός, ἡ","g":"flesh; body"},{"t":"σύν","g":"dat: with"},{"t":"σῶμα, -ατος, τό","g":"body"},{"t":"τέκνον, -ου, τό","g":"child; descendant"}]},{"week":6,"src":"Mounce 11","items":[{"t":"ἀδελφός, -οῦ, ὁ","g":"brother"},{"t":"ἀνήρ, ἀνδρός, ὁ","g":"male, husband; man"},{"t":"ἐκκλησία, -ας, ἡ","g":"assembly, congregation; a church, (the) Church"},{"t":"ἐλπίς, -ίδος, ἡ","g":"hope, expectation"},{"t":"ἔξω","g":"adverb: without; preposition (gen): outside"},{"t":"ἐπί","g":"gen: on, over, when; dat: on the basis of, at; acc: on, to, against"},{"t":"ἡμεῖς","g":"we"},{"t":"θέλημα, θελήματος, τό","g":"will, desire"},{"t":"ἴδε","g":"See! Behold!"},{"t":"ἰδού","g":"See! Behold!"},{"t":"καλός, -ή, -όν","g":"good; beautiful"},{"t":"μήτηρ, μητρός, ἡ","g":"mother"},{"t":"οὐδέ","g":"and not, not even; neither, nor"},{"t":"πατήρ, πατρός, ὁ","g":"father"},{"t":"πίστις, πίστεως, ἡ","g":"faith, belief; trust; teaching"},{"t":"ὕδωρ, ὕδατος, τό","g":"water"},{"t":"ὑμεῖς","g":"you (plural)"},{"t":"φῶς, φωτός, τό","g":"light"},{"t":"χάρις, χάριτος, ἡ","g":"grace, favor, kindness"},{"t":"ὧδε","g":"here"}]},{"week":7,"src":"Mounce 12","items":[{"t":"αἰών, -ῶνος, ὁ","g":"age, eternity"},{"t":"διδάσκαλος, -ου, ὁ","g":"teacher"},{"t":"εὐθύς","g":"immediately"},{"t":"ἕως","g":"conj: until; preposition (gen): as far as"},{"t":"μαθητής, -οῦ, ὁ","g":"student; disciple"},{"t":"μόνος, -η, -ον","g":"alone, only"},{"t":"ὅπως","g":"how; (in order) that"},{"t":"ὅσος, -η, -ον","g":"as great as, as many as"},{"t":"οὖν","g":"therefore, accordingly"},{"t":"ὀφθαλμός, -οῦ, ὁ","g":"eye, sight"},{"t":"πάλιν","g":"again"},{"t":"πούς, ποδός, ὁ","g":"foot"},{"t":"ὑπέρ","g":"gen: on behalf of; acc: above"}]},{"week":8,"src":"Mounce 13","items":[{"t":"γυνή, γυναικός, ἡ","g":"woman; wife"},{"t":"δικαιοσύνη, -ης, ἡ","g":"righteousness"},{"t":"δώδεκα","g":"twelve (indeclinable)"},{"t":"ἐκεῖνος, -η, -ο","g":"that (far deixis)"},{"t":"ἤ","g":"or; than"},{"t":"μακάριος, -ία, -ιον","g":"happy, blessed (meaning happy)"},{"t":"μέγας, μεγάλη, μέγα","g":"large, great"},{"t":"πόλις, -εως, ἡ","g":"city, town"},{"t":"πολύς, πολλή, πολύ","g":"much, many; adverb: often"},{"t":"πῶς","g":"how?"},{"t":"σημεῖον, -ου, τό","g":"sign, miracle"}]},{"week":9,"src":"Mounce 14","items":[{"t":"ἀλήθεια, -ας, ἡ","g":"truth"},{"t":"εἰρήνη, -ης, ἡ","g":"peace"},{"t":"ἐνώπιον","g":"gen: before (spatial)"},{"t":"ἐπαγγελία, -ας, ἡ","g":"promise"},{"t":"ἑπτά","g":"seven (indeclinable)"},{"t":"θρόνος, -ου, ὁ","g":"throne"},{"t":"κατά (κατ ᾿, καθ ᾿)","g":"gen: down from, against; acc: according to, throughout, during"},{"t":"κεφαλή, -ῆς, ἡ","g":"head"},{"t":"ὁδός, -οῦ, ἡ","g":"way, road; journey; conduct"},{"t":"ὅτε","g":"when"},{"t":"οὕτως","g":"in this way, in this manner; thus"},{"t":"πλοῖον, -ου, τό","g":"ship, boat"},{"t":"ῥῆμα, -ατος, τό","g":"word, saying"},{"t":"χείρ, χειρός, ἡ","g":"hand"},{"t":"ψυχή, -ῆς, ἡ","g":"life; soul; self"}]},{"week":10,"src":"Mounce 16","items":[{"t":"ἀκούω","g":"I hear"},{"t":"βλέπω","g":"I see, look at"},{"t":"ἔχω","g":"I have, hold"},{"t":"λέγω","g":"I say, speak"},{"t":"λύω","g":"I loose, untie; destroy"},{"t":"νόμος, -ου, ὁ","g":"law; principle; custom"},{"t":"ὅπου","g":"where (indef. Relative); wherever (with subjunc.)"},{"t":"πιστεύω","g":"I believe, have faith (in), trust"},{"t":"πρόσωπον, -ου, τό","g":"face; appearance"},{"t":"τότε","g":"then; thereafter"},{"t":"τυφλός, -ή, -όν","g":"blind"},{"t":"χαρά, -ᾶς, ἡ","g":"joy, delight"}]},{"week":11,"src":"Mounce 17","items":[{"t":"ἀγαπάω","g":"I love, cherish"},{"t":"δαιμόνιον, -ου, τό","g":"demon"},{"t":"ζητέω","g":"I seek, desire, try to obtain"},{"t":"καλέω","g":"I call, name, invite"},{"t":"λαλέω","g":"I speak, say"},{"t":"οἶδα","g":"I know, understand"},{"t":"ὅταν","g":"whenever (ὅτε + ἄν) Introduces a dependent clause"},{"t":"πλείων, πλεῖον","g":"larger, more"},{"t":"πληρόω","g":"I fill, complete, fulfill"},{"t":"ποιέω","g":"I do, make"},{"t":"τηρέω","g":"I keep, guard, observe"}]},{"week":12,"src":"Mounce 18","items":[{"t":"ἀποκρίνομαι","g":"I answer"},{"t":"δεῖ","g":"it is necessary"},{"t":"δύναμαι","g":"I am able, am powerful"},{"t":"ἔρχομαι","g":"I come; go"},{"t":"νύξ, νυκτός, ἡ","g":"night"},{"t":"ὅστις, ἥτις, ὅτι","g":"whoever, whichever, whatever"},{"t":"πορεύομαι","g":"I go, proceed; live (metaphorically going = living)"},{"t":"συνάγω","g":"I gather together, bring together; lead"},{"t":"τόπος, -ου, ὁ","g":"place; location"},{"t":"ὡς","g":"as, like; that; approximately; when, after"}]},{"week":13,"src":"Mounce 19","items":[{"t":"βασιλεύς, -έως, ὁ","g":"king"},{"t":"γεννάω","g":"I beget, give birth to; produce"},{"t":"ζάω","g":"I live"},{"t":"Ἰουδαία, -ας, ἡ","g":"Judea"},{"t":"Ἰουδαῖος, -αία, -αῖον","g":"adj: Jewish; noun: Jew, Judean"},{"t":"Ἰσραήλ, ὁ","g":"Israel (indeclinable)"},{"t":"καρπός, -οῦ, ὁ","g":"fruit, crop; result"},{"t":"μείζων, -ον","g":"greater, larger"},{"t":"ὅλος, -η, -ον","g":"adj: whole, complete; adv: entirely"},{"t":"προσκυνέω","g":"I greet, prostrate myself, worship"}]},{"week":14,"src":"Mounce 20","items":[{"t":"αἴρω","g":"I raise, take up, take away"},{"t":"ἀποκτείνω","g":"I kill"},{"t":"ἀποστέλλω","g":"I send (away)"},{"t":"βαπτίζω","g":"I dip, immerse; baptize"},{"t":"γινώσκω","g":"I know, come to know, realize, learn"},{"t":"γλῶσσα, -ης, ἡ","g":"tongue, language"},{"t":"ἐγείρω","g":"I raise up, wake"},{"t":"ἐκβάλλω","g":"I cast out, send out"},{"t":"ἐκεῖ","g":"there, in that place"},{"t":"κρίνω","g":"I judge, decide, prefer"},{"t":"λαός, -οῦ, ὁ","g":"people, crowd"},{"t":"μένω","g":"I remain, live (i.e., remain alive)"},{"t":"ὁράω","g":"I see, notice, experience"},{"t":"σοφία, -ας, ἡ","g":"wisdom"},{"t":"στόμα, -ατος, τό","g":"mouth"},{"t":"σῴζω","g":"I save, deliver, rescue"}]},{"week":15,"name":"Reading Greek 1E–F","src":"Reading Greek, Section 1E–F","items":[{"t":"ἀκριβῶς","g":"accurately, closely"},{"t":"βαθέως","g":"deeply"},{"t":"βοηθέω","g":"help, run to help"},{"t":"δηλόω","g":"show, reveal"},{"t":"κακῶς","g":"badly, evilly"},{"t":"καλῶς","g":"finely, beautifully"},{"t":"μέν ... δέ ...","g":"on the one hand … on the other"},{"t":"οἴμοι","g":"alas! oh dear!"},{"t":"ὁράω","g":"see"},{"t":"ποῖ;","g":"to where?"},{"t":"ποιέω","g":"make, do"},{"t":"ποῦ;","g":"where (at)?"},{"t":"σαφῶς","g":"clearly"},{"t":"σεαυτόν","g":"yourself (s.)"}]}];
+const V = { weeks:new Set([1]), dir:"g2e", fmt:"mc", deck:[], i:0, right:0, wrong:0,
+            missed:[], started:false, answered:false, showList:false };
+const head = t => t.split(",")[0].trim();
+const SETNAME = w => { const x = VOCAB.find(v=>v.week===w); return (x && x.name) || ("Week "+w); };
+
+function vocabPool(){
+  const out=[];
+  VOCAB.forEach(w=>{ if(V.weeks.has(w.week)) w.items.forEach(it=>out.push({t:it.t,g:it.g,w:w.week})); });
+  return out;
+}
+
+function renderVocab(){
+  const pool = vocabPool();
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Pick your weeks</h2>
+      <div class="chips" id="weekChips">${VOCAB.map(w=>
+        `<button data-w="${w.week}" class="${V.weeks.has(w.week)?"on":""}">${w.name||("Week "+w.week)}<small>${w.items.length}</small></button>`).join("")}</div>
+      <div class="row" style="margin-top:0">
+        <button class="btn ghost" id="wAll">All</button>
+        <button class="btn ghost" id="wNone">None</button>
+        <button class="btn ghost" id="wLast3">Last 3</button>
+        <span class="score" id="poolCount">${pool.length} words selected</span>
+      </div>
+      <div class="opts">
+        <fieldset><span class="lbl">Direction</span>
+          <select id="vDir">
+            <option value="g2e">Greek &rarr; English</option>
+            <option value="e2g">English &rarr; Greek</option>
+            <option value="mix">Mixed</option>
+          </select></fieldset>
+        <fieldset><span class="lbl">Format</span>
+          <select id="vFmt">
+            <option value="mc">Multiple choice</option>
+            <option value="card">Flashcard (self-graded)</option>
+            <option value="type">Type the Greek</option>
+          </select></fieldset>
+        <button class="btn" id="vStart">${V.started?"Restart":"Start quiz"}</button>
+        <button class="btn ghost" id="vList">${V.showList?"Hide word list":"Show word list"}</button>
+      </div>
+    </div>
+    <div id="vArea"></div>
+    <div id="vListArea"></div>`;
+
+  $("#vDir").value = V.dir; $("#vFmt").value = V.fmt;
+  $("#weekChips").onclick = e=>{
+    const b = e.target.closest("button"); if(!b) return;
+    const w = +b.dataset.w;
+    V.weeks.has(w) ? V.weeks.delete(w) : V.weeks.add(w);
+    V.started = false; renderVocab();
+  };
+  $("#wAll").onclick = ()=>{ V.weeks = new Set(VOCAB.map(w=>w.week)); V.started=false; renderVocab(); };
+  $("#wNone").onclick = ()=>{ V.weeks = new Set(); V.started=false; renderVocab(); };
+  $("#wLast3").onclick = ()=>{ V.weeks = new Set(VOCAB.slice(-3).map(w=>w.week)); V.started=false; renderVocab(); };
+  $("#vDir").onchange = e=>{ V.dir=e.target.value; if(V.started) startDeck(); };
+  $("#vFmt").onchange = e=>{ V.fmt=e.target.value; if(V.started) startDeck(); };
+  $("#vStart").onclick = ()=>{
+    if(!vocabPool().length){ $("#poolCount").textContent = "Pick at least one week."; return; }
+    startDeck();
+  };
+  $("#vList").onclick = ()=>{ V.showList = !V.showList; renderVocab(); };
+
+  if(V.showList) drawList();
+  if(V.started) drawQ();
+}
+
+function drawList(){
+  const rows = VOCAB.filter(w=>V.weeks.has(w.week)).map(w=>`
+    <h2 style="margin-top:18px">${w.name||("Week "+w.week)} <span style="font-weight:400;color:var(--muted);font-size:13px">(${w.src})</span></h2>
+    <table><tr><th style="width:42%">Greek</th><th>Meaning</th></tr>
+    ${w.items.map(i=>`<tr><td class="gkcell" style="text-align:left">${i.t}</td>
+      <td style="text-align:left;font-size:14px">${i.g}</td></tr>`).join("")}</table>`).join("");
+  $("#vListArea").innerHTML = `<div class="panel"><h2>Word list</h2>${rows||"<p class='hint'>No weeks selected.</p>"}</div>`;
+}
+
+function startDeck(){
+  V.deck = shuffle(vocabPool()); V.i=0; V.right=0; V.wrong=0; V.missed=[];
+  V.started = true; V.answered = false;
+  if($("#vStart")) $("#vStart").textContent = "Restart";
+  drawQ();
+}
+
+function drawQ(){
+  const area = $("#vArea"); if(!area) return;
+  if(V.i >= V.deck.length) return drawSummary();
+  const item = V.deck[V.i];
+  const dir = V.dir==="mix" ? (Math.random()<0.5?"g2e":"e2g") : V.dir;
+  V.answered = false;
+  const pool = vocabPool();
+  const pct = Math.round(V.i/V.deck.length*100);
+  const statusBar = `
+    <div class="row"><span style="font-size:13px;color:var(--muted)">${SETNAME(item.w)} · card ${V.i+1} of ${V.deck.length}</span>
+    <span class="score">${V.right} right · ${V.wrong} missed</span></div>
+    <div class="barwrap"><div class="bar" style="width:${pct}%"></div></div>`;
+
+  if(V.fmt === "mc"){
+    const askGreek = dir==="g2e";
+    const key = askGreek ? "g" : "t";
+    const answer = item[key];
+    const wrong = shuffle(pool.filter(x=>x[key]!==answer)
+      .filter((x,ix,arr)=>arr.findIndex(y=>y[key]===x[key])===ix)).slice(0,3).map(x=>x[key]);
+    const opts = shuffle([answer,...wrong]);
+    area.innerHTML = `<div class="panel">
+      <div class="card"><div class="meta">${askGreek?"What does this mean?":"Which Greek word?"}</div>
+        <div class="q ${askGreek?"gk":""}">${askGreek?item.t:item.g}</div></div>
+      <div class="choices" id="vChoices">${opts.map((o,ix)=>
+        `<button class="${askGreek?"txt":""}" data-o="${ix}">${o}</button>`).join("")}</div>
+      <div class="fb" id="vFb"></div>${statusBar}</div>`;
+    const btns = [...area.querySelectorAll("#vChoices button")];
+    btns.forEach(b=> b.onclick = ()=>{
+      if(V.answered) return; V.answered = true;
+      const ok = b.textContent === answer;
+      b.classList.add(ok?"ok":"no");
+      if(!ok) btns.find(x=>x.textContent===answer).classList.add("ok");
+      score(ok, item, ok ? "Correct." : `${item.t} — ${item.g}`);
+      setTimeout(next, ok?600:1800);
+    });
+    V.keyPick = n => { const b = btns[n]; if(b) b.click(); };
+  }
+
+  else if(V.fmt === "card"){
+    const front = dir==="g2e" ? item.t : item.g;
+    const back  = dir==="g2e" ? item.g : item.t;
+    area.innerHTML = `<div class="panel">
+      <div class="card">
+        <div class="meta">${dir==="g2e"?"Greek → English":"English → Greek"}</div>
+        <div class="q ${dir==="g2e"?"gk":""}">${front}</div>
+        <div class="a hidden ${dir==="g2e"?"":"gk"}" id="vBack">${back}</div>
+      </div>
+      <div class="row"><button class="btn" id="vShow">Show answer <span style="opacity:.7">(space)</span></button>
+        <span id="vRate" style="display:none">
+          <button class="btn ghost" id="vMiss">Missed it (1)</button>
+          <button class="btn" id="vKnew">Knew it (2)</button></span></div>
+      ${statusBar}</div>`;
+    const reveal = ()=>{ $("#vBack").classList.remove("hidden");
+      $("#vShow").style.display="none"; $("#vRate").style.display="inline"; };
+    $("#vShow").onclick = reveal;
+    $("#vMiss").onclick = ()=>{ score(false,item,""); next(); };
+    $("#vKnew").onclick = ()=>{ score(true,item,""); next(); };
+    V.reveal = reveal;
+  }
+
+  else { /* type the Greek */
+    area.innerHTML = `<div class="panel">
+      <div class="card"><div class="meta">Type the Greek — accents &amp; breathings required</div>
+        <div class="q">${item.g}</div>
+        <div style="margin-top:18px"><input class="bigin" id="vIn" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="type here…"></div>
+      </div>
+      <div class="row"><button class="btn" id="vSubmit">Check (enter)</button>
+        <button class="btn ghost" id="vSkip">Show answer</button></div>
+      <div class="fb" id="vFb"></div>${statusBar}</div>`;
+    const inp = $("#vIn"); inp.focus();
+    inp.addEventListener("input", ()=>{
+      const pos = inp.selectionStart, before = inp.value, conv = toGreek(before);
+      if(conv!==before){ inp.value = conv; const d = conv.length-before.length;
+        inp.setSelectionRange(pos+d,pos+d); }
+    });
+    const submit = ()=>{
+      if(V.answered) return;
+      const val = inp.value.trim(); if(!val) return;
+      V.answered = true;
+      const ok    = sameForm(head(val), head(item.t), true)  || sameForm(val, item.t, true);
+      const close = sameForm(head(val), head(item.t), false) || sameForm(val, item.t, false);
+      $("#vFb").className = "fb " + (ok?"ok":"no");
+      $("#vFb").innerHTML = ok ? "Correct."
+        : (close ? `Right letters, wrong accents or breathing — it's <span class="gk" style="font-size:20px">${item.t}</span>`
+                 : `Answer: <span class="gk" style="font-size:20px">${item.t}</span>`);
+      score(ok,item,"");
+      setTimeout(next, ok?650:2600);
+    };
+    $("#vSubmit").onclick = submit;
+    $("#vSkip").onclick = ()=>{ if(V.answered) return; V.answered=true;
+      $("#vFb").className="fb no";
+      $("#vFb").innerHTML = `Answer: <span class="gk" style="font-size:20px">${item.t}</span>`;
+      score(false,item,""); setTimeout(next,2600); };
+    inp.onkeydown = e=>{ if(e.key==="Enter"){ e.preventDefault(); V.answered ? next() : submit(); } };
+  }
+}
+
+function score(ok,item,msg){
+  if(ok) V.right++; else { V.wrong++; V.missed.push(item); V.deck.push(item); }
+  const fb = $("#vFb");
+  if(fb && msg){ fb.textContent = msg; fb.className = "fb " + (ok?"ok":"no"); }
+}
+function next(){ V.i++; drawQ(); }
+
+function drawSummary(){
+  const uniq = [...new Map(V.missed.map(m=>[m.t,m])).values()];
+  const total = V.right + V.wrong;
+  $("#vArea").innerHTML = `<div class="panel">
+    <h2>Round complete</h2>
+    <p style="font-size:15px">${V.right} of ${total} correct
+      <span style="color:var(--muted)">(${total?Math.round(V.right/total*100):0}%)</span></p>
+    ${uniq.length ? `<p class="hint" style="margin-bottom:6px">Words you missed:</p>
+      <ul class="missed">${uniq.map(m=>`<li><span class="gk">${m.t}</span> — ${m.g}
+        <span style="color:var(--muted);font-size:12px">(${SETNAME(m.w)})</span></li>`).join("")}</ul>`
+      : `<p class="hint">Clean sweep — nothing missed.</p>`}
+    <div class="row">
+      <button class="btn" id="vAgain">Go again</button>
+      ${uniq.length?`<button class="btn ghost" id="vDrill">Drill missed only (${uniq.length})</button>`:""}
+    </div></div>`;
+  $("#vAgain").onclick = startDeck;
+  if(uniq.length) $("#vDrill").onclick = ()=>{
+    V.deck = shuffle(uniq); V.i=0; V.right=0; V.wrong=0; V.missed=[]; V.answered=false; drawQ();
+  };
+}
+
+/* ================= Hebrew ================= */
+const HEB_VOWELS = [
+  {n:"Patach",        f:"אַ",  s:'short "ah" as in l<u>a</u>h',        cls:"A-class", len:"short"},
+  {n:"Kamets",        f:"אָ",  s:'long "awe" as in <u>awe</u>some',    cls:"A-class", len:"long"},
+  {n:"Patach Yod",    f:"אַי", s:'long "ai" as in <u>ai</u>sle',       cls:"A-class", len:"long"},
+  {n:"Segol",         f:"אֶ",  s:'short "eh" as in p<u>e</u>t',        cls:"E-class", len:"short"},
+  {n:"Tsere",         f:"אֵ",  s:'long "ay" as in h<u>ay</u>',         cls:"E-class", len:"long"},
+  {n:"Tsere Yod",     f:"אֵי", s:'long "ay" as in h<u>ay</u>',         cls:"E-class", len:"long"},
+  {n:"Chirek",        f:"אִ",  s:'short "ih" as in s<u>i</u>t',        cls:"I-class", len:"short"},
+  {n:"Chirek Yod",    f:"אִי", s:'long "ee" as in s<u>ee</u>',         cls:"I-class", len:"long"},
+  {n:"Cholem",        f:"אֹ",  s:'long "oh" as in r<u>o</u>w',         cls:"O-class", len:"long"},
+  {n:"Cholem Vav",    f:"אוֹ", s:'long "oh" as in r<u>o</u>w',         cls:"O-class", len:"long"},
+  {n:"Cholem Yod",    f:"אֹי", s:'long "oi" as in b<u>oy</u>',         cls:"O-class", len:"long"},
+  {n:"Kibuts",        f:"אֻ",  s:'short "uh" as in b<u>oo</u>k',       cls:"U-class", len:"short"},
+  {n:"Shurek",        f:"אוּ", s:'long "ooh" as in b<u>oo</u>t',       cls:"U-class", len:"long"},
+  {n:"Sheva",         f:"אְ",  s:'the smallest sound you can make — like th<u>e</u> or <u>a</u>bout; sometimes silent', cls:"Reduced", len:"reduced"},
+  {n:"Chateph Patach",f:"אֲ",  s:'short "ah"',                          cls:"Reduced", len:"reduced"},
+  {n:"Chateph Segol", f:"אֱ",  s:'short "eh"',                          cls:"Reduced", len:"reduced"},
+  {n:"Chateph Kamets",f:"אֳ",  s:'long "oh" as in pill<u>o</u>w',       cls:"Reduced", len:"reduced"}
+];
+const HEB_CLASSES = ["A-class","E-class","I-class","O-class","U-class","Reduced"];
+const HEB_TOPICS = { vowels: { label:"Vowels", title:"Hebrew Vowels",
+  subtitle:"The 17 vowel signs and the sounds they make. א is only a placeholder — the vowel attaches to whatever consonant it follows." } };
+
+function renderHebrew(){
+  $("#paraNav").innerHTML = Object.entries(HEB_TOPICS)
+    .map(([k,v])=>`<button data-ht="${k}">${v.label}</button>`).join("");
+  $("#modeNav").innerHTML = HMODES.map(([k,v])=>`<button data-hm="${k}">${v}</button>`).join("");
+  $("#modeNav").style.display = "";
+  $("#paraNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.ht===curHT));
+  $("#modeNav").querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.hm===curHM));
+  const t = HEB_TOPICS[curHT];
+  $("#title").textContent = t.title;
+  $("#subtitle").textContent = t.subtitle;
+  ({chart:hebChart, hquiz:hebQuiz, hcards:hebCards, hname:hebName})[curHM]();
+}
+
+function hebChart(){
+  const rows = HEB_CLASSES.map(c=>{
+    const list = HEB_VOWELS.filter(v=>v.cls===c);
+    return `<tr><th colspan="3" style="text-align:left;background:var(--accent-soft);color:var(--ink)">${c}</th></tr>` +
+      list.map(v=>`<tr>
+        <td class="hecell">${v.f}</td>
+        <td class="name maskname">${v.n}</td>
+        <td class="snd masksound">${v.s}</td></tr>`).join("");
+  }).join("");
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Vowel chart</h2>
+      <p class="hint">Click any blurred cell to peek at it. Hide a column and read down the chart to test yourself.</p>
+      <div class="row" style="margin-top:0">
+        <button class="btn ghost" id="hideNames">Hide names</button>
+        <button class="btn ghost" id="hideSounds">Hide sounds</button>
+      </div>
+      <table style="margin-top:14px">
+        <tr><th style="width:22%">Vowel</th><th style="width:30%">Name</th><th style="text-align:left">Sound</th></tr>
+        ${rows}
+      </table>
+    </div>
+    <div class="panel">
+      <h2>Worth noticing</h2>
+      <ul class="tips">
+        <li>Most vowels sit <em>under</em> the consonant; cholem sits above it, and shurek/cholem vav use a ו next to it.</li>
+        <li>A yod (י) after a vowel usually lengthens it: chirek &rarr; chirek yod (“ih” &rarr; “ee”), tsere &rarr; tsere yod, patach &rarr; patach yod.</li>
+        <li>The four <strong>reduced</strong> vowels all contain a sheva (the two vertical dots). A plain sheva is the tiny “uh”; a chateph is a sheva paired with another vowel sign, giving a very short version of that vowel.</li>
+        <li>Two dots side by side under a letter is <em>tsere</em> (“ay”); three dots in a triangle is <em>segol</em> (“eh”); three dots on a diagonal is <em>kibuts</em> (“uh”).</li>
+        <li>Kamets (ָ) and patach (ַ) look alike — kamets has the little tail hanging down from the bar.</li>
+      </ul>
+    </div>`;
+  const toggle = (sel,btn,onTxt,offTxt)=>{
+    let hidden = false;
+    $(btn).onclick = ()=>{
+      hidden = !hidden;
+      document.querySelectorAll(sel).forEach(el=>{
+        el.classList.toggle("blur", hidden);
+        el.onclick = hidden ? ()=>el.classList.toggle("blur") : null;
+      });
+      $(btn).textContent = hidden ? offTxt : onTxt;
+    };
+  };
+  toggle(".maskname","#hideNames","Hide names","Show names");
+  toggle(".masksound","#hideSounds","Hide sounds","Show sounds");
+}
+
+const hq = {r:0,t:0,s:0,kind:"mix"};
+function hebQuiz(){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Vowel quiz</h2>
+      <div class="opts" style="margin-top:0">
+        <fieldset><span class="lbl">Ask me</span>
+          <select id="hKind">
+            <option value="mix">Mixed</option>
+            <option value="sym2name">Vowel &rarr; name</option>
+            <option value="name2sym">Name &rarr; vowel</option>
+            <option value="sym2snd">Vowel &rarr; sound</option>
+            <option value="snd2sym">Sound &rarr; vowel</option>
+          </select></fieldset>
+        <span class="score" id="hScore"></span>
+      </div>
+      <div id="hArea"></div>
+    </div>`;
+  $("#hKind").value = hq.kind;
+  $("#hKind").onchange = e=>{ hq.kind = e.target.value; hNew(); };
+  hNew();
+}
+function hNew(){
+  const area = $("#hArea"); if(!area) return;
+  const kind = hq.kind==="mix" ? rand(["sym2name","name2sym","sym2snd","snd2sym"]) : hq.kind;
+  const v = rand(HEB_VOWELS);
+  let promptHtml, answer, key, optClass, meta;
+  if(kind==="sym2name"){ promptHtml=`<div class="q he">${v.f}</div>`; key="n"; optClass="txt"; meta="What is this vowel called?"; }
+  else if(kind==="name2sym"){ promptHtml=`<div class="q">${v.n}</div>`; key="f"; optClass="hb"; meta="Which sign is it?"; }
+  else if(kind==="sym2snd"){ promptHtml=`<div class="q he">${v.f}</div>`; key="s"; optClass="txt"; meta="What sound does it make?"; }
+  else { promptHtml=`<div class="q" style="font-size:22px">${v.s}</div>`; key="f"; optClass="hb"; meta="Which vowel makes this sound?"; }
+  answer = v[key];
+  const wrong = shuffle(HEB_VOWELS.filter(x=>x[key]!==answer)
+    .filter((x,i,arr)=>arr.findIndex(y=>y[key]===x[key])===i)).slice(0,3).map(x=>x[key]);
+  const opts = shuffle([answer,...wrong]);
+  area.innerHTML = `
+    <div class="card"><div class="meta">${meta}</div>${promptHtml}</div>
+    <div class="choices" id="hChoices">${opts.map(o=>`<button class="${optClass}">${o}</button>`).join("")}</div>
+    <div class="fb" id="hFb"></div>
+    <div class="row"><button class="btn ghost" id="hNext">Next &rarr;</button></div>`;
+  let lock=false;
+  const btns=[...area.querySelectorAll("#hChoices button")];
+  btns.forEach(b=> b.onclick = ()=>{
+    if(lock) return; lock=true; hq.t++;
+    const ok = b.innerHTML===answer;
+    b.classList.add(ok?"ok":"no");
+    if(!ok) btns.find(x=>x.innerHTML===answer).classList.add("ok");
+    if(ok){ hq.r++; hq.s++; } else hq.s=0;
+    $("#hFb").className = "fb " + (ok?"ok":"no");
+    $("#hFb").innerHTML = ok ? "Correct."
+      : `<span class="he" style="font-size:26px">${v.f}</span> is <strong>${v.n}</strong> — ${v.s}`;
+    $("#hScore").textContent = `${hq.r} correct / ${hq.t} · streak ${hq.s}`;
+    setTimeout(hNew, ok?700:2400);
+  });
+  $("#hNext").onclick = hNew;
+  $("#hScore").textContent = `${hq.r} correct / ${hq.t} · streak ${hq.s}`;
+}
+
+const HC = {deck:[],i:0,right:0,wrong:0,missed:[],dir:"sym2name"};
+function hebCards(){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Flashcards</h2>
+      <div class="opts" style="margin-top:0">
+        <fieldset><span class="lbl">Front of card</span>
+          <select id="hcDir">
+            <option value="sym2name">The vowel sign</option>
+            <option value="name2sym">The vowel name</option>
+            <option value="snd2sym">The sound</option>
+          </select></fieldset>
+        <button class="btn" id="hcStart">Shuffle &amp; start</button>
+      </div>
+      <div id="hcArea"></div>
+    </div>`;
+  $("#hcDir").value = HC.dir;
+  $("#hcDir").onchange = e=>{ HC.dir=e.target.value; hcStart(); };
+  $("#hcStart").onclick = hcStart;
+  hcStart();
+}
+function hcStart(){
+  HC.deck = shuffle(HEB_VOWELS.slice()); HC.i=0; HC.right=0; HC.wrong=0; HC.missed=[];
+  hcDraw();
+}
+function hcDraw(){
+  const area = $("#hcArea"); if(!area) return;
+  if(HC.i >= HC.deck.length){
+    const uniq=[...new Set(HC.missed.map(m=>m.n))];
+    area.innerHTML = `<div style="padding-top:14px">
+      <h2>Round complete</h2>
+      <p>${HC.right} of ${HC.right+HC.wrong} known.</p>
+      ${uniq.length?`<p class="hint" style="margin-bottom:6px">Review these:</p>
+        <ul class="missed">${HC.missed.filter((m,i,a)=>a.findIndex(x=>x.n===m.n)===i)
+          .map(m=>`<li><span class="he">${m.f}</span> &nbsp;<strong>${m.n}</strong> — ${m.s}</li>`).join("")}</ul>`
+        :`<p class="hint">All of them. Nice.</p>`}
+      <div class="row"><button class="btn" id="hcAgain">Go again</button>
+      ${uniq.length?`<button class="btn ghost" id="hcDrill">Drill missed (${uniq.length})</button>`:""}</div></div>`;
+    $("#hcAgain").onclick = hcStart;
+    if(uniq.length) $("#hcDrill").onclick = ()=>{
+      HC.deck = shuffle(HC.missed.filter((m,i,a)=>a.findIndex(x=>x.n===m.n)===i));
+      HC.i=0;HC.right=0;HC.wrong=0;HC.missed=[];hcDraw();
+    };
+    return;
+  }
+  const v = HC.deck[HC.i];
+  const frontHe = HC.dir==="sym2name";
+  const front = frontHe ? v.f : (HC.dir==="name2sym" ? v.n : v.s);
+  const back  = frontHe ? `<strong>${v.n}</strong><div style="font-size:15px;color:var(--muted);margin-top:6px">${v.s}</div>`
+                        : `<span class="he">${v.f}</span><div style="font-size:15px;color:var(--muted);margin-top:6px">${HC.dir==="name2sym"?v.s:v.n}</div>`;
+  const pct = Math.round(HC.i/HC.deck.length*100);
+  area.innerHTML = `
+    <div class="card">
+      <div class="q ${frontHe?"he":""}" style="${frontHe?"":"font-size:24px"}">${front}</div>
+      <div class="a hidden" id="hcBack">${back}</div>
+    </div>
+    <div class="row"><button class="btn" id="hcShow">Show answer <span style="opacity:.7">(space)</span></button>
+      <span id="hcRate" style="display:none">
+        <button class="btn ghost" id="hcMiss">Missed it (1)</button>
+        <button class="btn" id="hcKnew">Knew it (2)</button></span>
+      <span class="score">card ${HC.i+1} of ${HC.deck.length} · ${HC.right} known</span></div>
+    <div class="barwrap"><div class="bar" style="width:${pct}%"></div></div>`;
+  const reveal = ()=>{ $("#hcBack").classList.remove("hidden");
+    $("#hcShow").style.display="none"; $("#hcRate").style.display="inline"; };
+  $("#hcShow").onclick = reveal;
+  HC.reveal = reveal;
+  $("#hcMiss").onclick = ()=>{ HC.wrong++; HC.missed.push(v); HC.deck.push(v); HC.i++; hcDraw(); };
+  $("#hcKnew").onclick = ()=>{ HC.right++; HC.i++; hcDraw(); };
+}
+
+/* ---------- Hebrew: look at the vowel, type its name ---------- */
+/* Transliteration is a free-for-all, so fold the common spellings together
+   before grading. Every alias maps to the spelling used in HEB_VOWELS. */
+const HEBALIAS = {
+  patach:"patach", patah:"patach", pathach:"patach", patakh:"patach", pattah:"patach", pattach:"patach",
+  kamets:"kamets", kametz:"kamets", kamatz:"kamets", kamats:"kamets", kames:"kamets",
+  qamets:"kamets", qametz:"kamets", qamatz:"kamets", qamats:"kamets",
+  segol:"segol", seghol:"segol", seghol:"segol", segol1:"segol",
+  tsere:"tsere", tzere:"tsere", sere:"tsere", tsereh:"tsere", tseire:"tsere", tzeire:"tsere", cere:"tsere",
+  chirek:"chirek", chireq:"chirek", chiriq:"chirek", chirik:"chirek", hireq:"chirek", hiriq:"chirek",
+  hirek:"chirek", hirik:"chirek", khirik:"chirek",
+  cholem:"cholem", cholam:"cholem", cholim:"cholem", holem:"cholem", holam:"cholem", kholam:"cholem",
+  kibuts:"kibuts", kibbuts:"kibuts", kibbutz:"kibuts", kibutz:"kibuts", kubuts:"kibuts", kubbutz:"kibuts",
+  qibbuts:"kibuts", qibbus:"kibuts", qubbuts:"kibuts",
+  shurek:"shurek", shureq:"shurek", shuruk:"shurek", shuruq:"shurek",
+  sheva:"sheva", shewa:"sheva", shva:"sheva", schwa:"sheva", shwa:"sheva",
+  chateph:"chateph", chatef:"chateph", chataph:"chateph", chataf:"chateph", chatuph:"chateph",
+  hateph:"chateph", hatef:"chateph", hataph:"chateph", hataf:"chateph", khataf:"chateph",
+  yod:"yod", yodh:"yod", yud:"yod", jod:"yod",
+  vav:"vav", waw:"vav", vov:"vav", wav:"vav"
+};
+function hebKey(s){
+  return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .replace(/[^a-z]+/g," ").trim().split(/\s+/).filter(Boolean)
+    .map(t => HEBALIAS[t] || t).sort().join(" ");
+}
+const HN = {deck:[], i:0, right:0, wrong:0, missed:[], hint:false, answered:false};
+function hebName(){
+  $("#content").innerHTML = `
+    <div class="panel">
+      <h2>Type the Name</h2>
+      <p class="hint">Look at the sign and type what it is called. Spelling is forgiving —
+      <em>qamets</em>, <em>kametz</em> and <em>kamats</em> all count, and so do <em>hateph</em> for
+      <em>chateph</em> and <em>waw</em> for <em>vav</em>. The deck is all 17 signs; anything you miss comes back.</p>
+      <div class="opts" style="margin-top:0">
+        <label class="chk"><input type="checkbox" id="hnHint" ${HN.hint?"checked":""}> show the sound as a hint</label>
+        <button class="btn ghost" id="hnRestart">Shuffle &amp; restart</button>
+        <span class="score" id="hnScore"></span>
+      </div>
+      <div id="hnArea"></div>
+    </div>`;
+  $("#hnHint").onchange = e=>{ HN.hint = e.target.checked; hnDraw(); };
+  $("#hnRestart").onclick = hnStart;
+  if(!HN.deck.length || HN.i >= HN.deck.length) hnStart(); else hnDraw();
+}
+function hnStart(){
+  HN.deck = shuffle(HEB_VOWELS.slice());
+  HN.i = 0; HN.right = 0; HN.wrong = 0; HN.missed = []; HN.answered = false;
+  hnDraw();
+}
+function hnDraw(){
+  const area = $("#hnArea"); if(!area) return;
+  const scoreEl = $("#hnScore");
+  if(scoreEl) scoreEl.textContent = `${HN.right} right · ${HN.wrong} missed`;
+
+  if(HN.i >= HN.deck.length){
+    const uniq = HN.missed.filter((m,i,a)=>a.findIndex(x=>x.n===m.n)===i);
+    area.innerHTML = `<div style="padding-top:16px">
+      <h2>Round complete</h2>
+      <p style="font-size:15px">${HN.right} of ${HN.right+HN.wrong} named correctly
+        <span style="color:var(--muted)">(${HN.right+HN.wrong?Math.round(HN.right/(HN.right+HN.wrong)*100):0}%)</span></p>
+      ${uniq.length ? `<p class="hint" style="margin-bottom:6px">Names to work on:</p>
+        <ul class="missed">${uniq.map(m=>`<li><span class="he">${m.f}</span> &nbsp;<strong>${m.n}</strong> — ${m.s}</li>`).join("")}</ul>`
+        : `<p class="hint">All 17, no misses.</p>`}
+      <div class="row"><button class="btn" id="hnAgain">Go again</button>
+        ${uniq.length?`<button class="btn ghost" id="hnDrill">Drill missed (${uniq.length})</button>`:""}</div></div>`;
+    $("#hnAgain").onclick = hnStart;
+    if(uniq.length) $("#hnDrill").onclick = ()=>{
+      HN.deck = shuffle(uniq); HN.i=0; HN.right=0; HN.wrong=0; HN.missed=[]; HN.answered=false; hnDraw();
+    };
+    return;
+  }
+
+  const v = HN.deck[HN.i];
+  const pct = Math.round(HN.i / HN.deck.length * 100);
+  area.innerHTML = `
+    <div class="card">
+      <div class="meta">What is this vowel called?</div>
+      <div class="q he">${v.f}</div>
+      ${HN.hint?`<div style="font-size:14px;color:var(--muted);margin-top:2px">${v.s}</div>`:""}
+      <div style="margin-top:18px"><input class="bigin" id="hnIn" style="font-family:inherit;font-size:20px"
+        spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="type the name…"></div>
+    </div>
+    <div class="row"><button class="btn" id="hnGo">Check (enter)</button>
+      <button class="btn ghost" id="hnSkip">Show answer</button>
+      <span class="score">card ${HN.i+1} of ${HN.deck.length}</span></div>
+    <div class="fb" id="hnFb"></div>
+    <div class="barwrap"><div class="bar" style="width:${pct}%"></div></div>`;
+
+  const inp = $("#hnIn"); inp.focus();
+  HN.answered = false;
+  const advance = ms => setTimeout(()=>{ HN.i++; hnDraw(); }, ms);
+  const reveal = (cls, html, ok) => {
+    HN.answered = true;
+    $("#hnFb").className = "fb " + cls;
+    $("#hnFb").innerHTML = html;
+    if(ok){ HN.right++; } else { HN.wrong++; HN.missed.push(v); HN.deck.push(v); }
+    if($("#hnScore")) $("#hnScore").textContent = `${HN.right} right · ${HN.wrong} missed`;
+  };
+  const answerLine = `<span class="he" style="font-size:26px">${v.f}</span> is <strong>${v.n}</strong> — ${v.s}`;
+
+  const go = ()=>{
+    if(HN.answered) return;
+    const val = inp.value.trim();
+    if(!val) return;
+    const got = hebKey(val), want = hebKey(v.n);
+    if(got === want){ reveal("ok", `Correct — <strong>${v.n}</strong>, ${v.s}`, true); return advance(950); }
+    /* right base, missing or wrong modifier (yod / vav / chateph) */
+    const gotSet = new Set(got.split(" ")), wantSet = new Set(want.split(" "));
+    const shared = [...gotSet].filter(t=>wantSet.has(t));
+    if(shared.length && (gotSet.size !== wantSet.size)){
+      const extra = [...wantSet].filter(t=>!gotSet.has(t));
+      reveal("no", extra.length
+        ? `So close — you need <strong>${extra.join(" ")}</strong> as well. ${answerLine}`
+        : `Nearly — that has a word too many. ${answerLine}`, false);
+      return advance(3000);
+    }
+    reveal("no", answerLine, false);
+    advance(2800);
+  };
+  $("#hnGo").onclick = go;
+  $("#hnSkip").onclick = ()=>{ if(HN.answered) return; reveal("no", answerLine, false); advance(2800); };
+  inp.onkeydown = e=>{ if(e.key === "Enter"){ e.preventDefault(); HN.answered ? (HN.i++, hnDraw()) : go(); } };
+}
+
+/* ================= keyboard ================= */
+document.addEventListener("keydown", e=>{
+  if(e.target.tagName === "INPUT") return;
+  if(curLang==="hebrew"){
+    if(curHM!=="hcards") return;
+    if(e.code==="Space"){ e.preventDefault(); if($("#hcShow") && $("#hcShow").style.display!=="none") HC.reveal(); }
+    if(e.key==="1" && $("#hcMiss")) $("#hcMiss").click();
+    if(e.key==="2" && $("#hcKnew")) $("#hcKnew").click();
+    return;
+  }
+  if(curP!=="vocab" || !V.started) return;
+  if(V.fmt==="card"){
+    if(e.code==="Space"){ e.preventDefault(); if($("#vShow") && $("#vShow").style.display!=="none") V.reveal(); }
+    if(e.key==="1" && $("#vMiss")) $("#vMiss").click();
+    if(e.key==="2" && $("#vKnew")) $("#vKnew").click();
+  }
+  if(V.fmt==="mc" && "1234".includes(e.key) && V.keyPick) V.keyPick(+e.key-1);
+});
+
+render();
+</script>
+</body>
+</html>
