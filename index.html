@@ -1003,6 +1003,17 @@ const V = { weeks:new Set([1]), dir:"g2e", fmt:"mc", deck:[], i:0, right:0, wron
 const head = t => t.split(",")[0].trim();
 const SETNAME = w => { const x = VOCAB.find(v=>v.week===w); return (x && x.name) || ("Week "+w); };
 
+/* Some words share a meaning — οἰκία / οἶκος, ἴδε / ἰδού, κακός / πονηρός.
+   Group them by sense so any of them counts when the English is the prompt,
+   and so two right answers never appear side by side in one question. */
+const GKEY = g => [...new Set(g.toLowerCase().replace(/[.!?]/g,"")
+  .split(/[;,]/).map(x=>x.trim()).filter(Boolean))].sort().join("|");
+const SENSE = {};
+VOCAB.forEach(w => w.items.forEach(it => { (SENSE[GKEY(it.g)] = SENSE[GKEY(it.g)] || []).push(it); }));
+const senseOf   = it => SENSE[GKEY(it.g)] || [it];
+const altsOf    = it => senseOf(it).filter(x => x.t !== it.t);
+const sameSense = (g1,g2) => GKEY(g1) === GKEY(g2);
+
 function vocabPool(){
   const out=[];
   VOCAB.forEach(w=>{ if(V.weeks.has(w.week)) w.items.forEach(it=>out.push({t:it.t,g:it.g,w:w.week})); });
@@ -1097,30 +1108,39 @@ function drawQ(){
     const askGreek = dir==="g2e";
     const key = askGreek ? "g" : "t";
     const answer = item[key];
-    const wrong = shuffle(pool.filter(x=>x[key]!==answer)
+    const alts = altsOf(item);
+    /* never offer a word that means the same thing as the answer */
+    const wrong = shuffle(pool.filter(x=>!sameSense(x.g, item.g))
       .filter((x,ix,arr)=>arr.findIndex(y=>y[key]===x[key])===ix)).slice(0,3).map(x=>x[key]);
     const opts = shuffle([answer,...wrong]);
+    const shareNote = (!askGreek && alts.length)
+      ? `<div style="font-size:13px;color:var(--muted);margin-top:6px">${alts.length+1} words share this meaning; only one of them is offered here.</div>`
+      : "";
     area.innerHTML = `<div class="panel">
       <div class="card"><div class="meta">${askGreek?"What does this mean?":"Which Greek word?"}</div>
-        <div class="q ${askGreek?"gk":""}">${askGreek?item.t:item.g}</div></div>
+        <div class="q ${askGreek?"gk":""}">${askGreek?item.t:item.g}</div>${shareNote}</div>
       <div class="choices" id="vChoices">${opts.map((o,ix)=>
         `<button class="${askGreek?"txt":""}" data-o="${ix}">${o}</button>`).join("")}</div>
       <div class="fb" id="vFb"></div>${statusBar}</div>`;
     const btns = [...area.querySelectorAll("#vChoices button")];
     btns.forEach(b=> b.onclick = ()=>{
       if(V.answered) return; V.answered = true;
-      const ok = b.textContent === answer;
+      const picked = b.textContent;
+      const ok = askGreek ? sameSense(picked, answer) : senseOf(item).some(x=>x.t===picked);
       b.classList.add(ok?"ok":"no");
       if(!ok) btns.find(x=>x.textContent===answer).classList.add("ok");
-      score(ok, item, ok ? "Correct." : `${item.t} — ${item.g}`);
-      setTimeout(next, ok?600:1800);
+      const altNote = alts.length ? ` &nbsp;<span style="color:var(--muted)">also: ${alts.map(x=>x.t).join(", ")}</span>` : "";
+      score(ok, item, "");
+      $("#vFb").className = "fb " + (ok?"ok":"no");
+      $("#vFb").innerHTML = (ok ? "Correct." : `${item.t} — ${item.g}`) + altNote;
+      setTimeout(next, ok && !altNote ? 600 : (ok?1400:2200));
     });
     V.keyPick = n => { const b = btns[n]; if(b) b.click(); };
   }
 
   else if(V.fmt === "card"){
     const front = dir==="g2e" ? item.t : item.g;
-    const back  = dir==="g2e" ? item.g : item.t;
+    const back  = dir==="g2e" ? item.g : senseOf(item).map(x=>x.t).join("  ·  ");
     area.innerHTML = `<div class="panel">
       <div class="card">
         <div class="meta">${dir==="g2e"?"Greek → English":"English → Greek"}</div>
@@ -1159,19 +1179,25 @@ function drawQ(){
       if(V.answered) return;
       const val = inp.value.trim(); if(!val) return;
       V.answered = true;
-      const ok    = sameForm(head(val), head(item.t), true)  || sameForm(val, item.t, true);
-      const close = sameForm(head(val), head(item.t), false) || sameForm(val, item.t, false);
+      /* any word with this meaning is a correct answer */
+      const hit   = senseOf(item).find(x => sameForm(head(val), head(x.t), true)  || sameForm(val, x.t, true));
+      const near  = senseOf(item).find(x => sameForm(head(val), head(x.t), false) || sameForm(val, x.t, false));
+      const ok = !!hit, close = !!near;
+      const others = senseOf(item).filter(x => x.t !== (hit||item).t);
+      const alsoNote = others.length
+        ? ` <span style="color:var(--muted)">Also accepted: <span class="gk" style="font-size:18px">${others.map(x=>x.t).join(", ")}</span></span>`
+        : "";
       $("#vFb").className = "fb " + (ok?"ok":"no");
-      $("#vFb").innerHTML = ok ? "Correct."
-        : (close ? `Right letters, wrong accents or breathing — it's <span class="gk" style="font-size:20px">${item.t}</span>`
-                 : `Answer: <span class="gk" style="font-size:20px">${item.t}</span>`);
+      $("#vFb").innerHTML = ok ? ("Correct." + alsoNote)
+        : (close ? `Right letters, wrong accents or breathing — it's <span class="gk" style="font-size:20px">${near.t}</span>` + alsoNote
+                 : `Answer: <span class="gk" style="font-size:20px">${item.t}</span>` + alsoNote);
       score(ok,item,"");
-      setTimeout(next, ok?650:2600);
+      setTimeout(next, ok ? (alsoNote?1600:650) : 2600);
     };
     $("#vSubmit").onclick = submit;
     $("#vSkip").onclick = ()=>{ if(V.answered) return; V.answered=true;
       $("#vFb").className="fb no";
-      $("#vFb").innerHTML = `Answer: <span class="gk" style="font-size:20px">${item.t}</span>`;
+      $("#vFb").innerHTML = `Answer: <span class="gk" style="font-size:20px">${senseOf(item).map(x=>x.t).join(", ")}</span>`;
       score(false,item,""); setTimeout(next,2600); };
     inp.onkeydown = e=>{ if(e.key==="Enter"){ e.preventDefault(); V.answered ? next() : submit(); } };
   }
