@@ -71,6 +71,14 @@
   td.hevcell{font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;font-size:26px;
     direction:rtl;unicode-bidi:isolate;text-align:right;line-height:1.6}
   .note{font-size:13px;color:var(--muted);margin-top:6px;direction:ltr;unicode-bidi:isolate}
+  .bigin.hein{font-family:"SBL Hebrew","Ezra SIL","Taamey Frank CLM","Times New Roman",serif;
+    direction:rtl;unicode-bidi:isolate;font-size:34px}
+  .bigin.enin{font-family:inherit;font-size:20px}
+  .keys{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:14px auto 0;max-width:640px}
+  .keys button{font-family:"SBL Hebrew","Ezra SIL","Times New Roman",serif;font-size:24px;
+    min-width:42px;padding:4px 8px;border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer}
+  .keys button:hover{border-color:var(--accent);background:var(--accent-soft)}
+  .keys button.util{font-family:inherit;font-size:13px;min-width:auto;padding:8px 12px;color:var(--accent)}
   .heinline{font-family:"SBL Hebrew","Ezra SIL","Taamey Frank CLM","Times New Roman",serif;
     direction:rtl;unicode-bidi:isolate;font-size:1.25em;line-height:1.2}
   .choices button:hover{border-color:var(--accent)}
@@ -282,6 +290,38 @@ const PARADIGMS = {
       'The <span class="gk">ο</span>-contract column is the one that breaks your ear: <span class="gk">δηλῶ</span> but <span class="gk">δηλοῖς</span>. In the other two columns 1st s. and 2nd s. look related; here they do not.'
     ]
   },
+  eimi: {
+    label: "εἰμί & οἶδα",
+    title: 'The Irregulars <span class="gk">εἰμί, οἶδα</span>',
+    subtitle: "‘I am’ and ‘I know’ — two of the commonest verbs in Greek, and neither behaves.",
+    modes: ["study","fill","type","quiz"],
+    cols: ["eimi","oida"],
+    colHeads: ['<span class="gk" style="white-space:nowrap">εἰμί</span><br><span style="font-weight:400">‘I am’</span>',
+               '<span class="gk" style="white-space:nowrap">οἶδα</span><br><span style="font-weight:400">‘I know’</span>'],
+    groups: ["Singular","Plural"],
+    rows: { Singular:["1st person","2nd person","3rd person"],
+            Plural:["1st person","2nd person","3rd person"] },
+    data: {
+      Singular: {
+        "1st person":["εἰμί","οἶδα"],
+        "2nd person":["εἶ","οἶσθα"],
+        "3rd person":["ἐστί","οἶδε"] },
+      Plural: {
+        "1st person":["ἐσμέν","ἴσμεν"],
+        "2nd person":["ἐστέ","ἴστε"],
+        "3rd person":["εἰσί","ἴσασι"] }
+    },
+    labelFn: c => `${c.cs.toLowerCase()} ${c.num.toLowerCase()} of ${EIMINAMES[c.gi]}`,
+    tips: [
+      'Neither verb takes the endings you have learnt, and both are far too common to look up each time. These sixteen forms are worth knowing cold.',
+      'Third person singular and third person plural carry a movable <span class="gk">ν</span>: <span class="gk">ἐστί(ν)</span>, <span class="gk">εἰσί(ν)</span>, <span class="gk">ἴσασι(ν)</span>. Both spellings are correct.',
+      'The pair that catches everyone: <span class="gk">ἐστί</span> ‘he is’ against <span class="gk">ἐστέ</span> ‘you (pl.) are’. One letter, and the accent, separate them — and the same trap runs through <span class="gk">ἴστε</span> vs <span class="gk">ἴσμεν</span>.',
+      '<span class="gk">εἰμί</span> is an <em>enclitic</em> in the present indicative — it leans back and throws its accent onto the word before it — everywhere except second person singular <span class="gk">εἶ</span>. It keeps its own accent when it begins a sentence or means ‘there is’, where it is written <span class="gk">ἔστι</span>.',
+      '<span class="gk">εἰμί</span> links rather than acts, so what follows it stays <em>nominative</em>: <span class="gk">ὁ ἄνθρωπός ἐστι καλός</span>, ‘the man is fine’ — not accusative.',
+      '<span class="gk">οἶδα</span> is a perfect in form but a present in meaning. Its root is <span class="gk">ϝιδ-</span> ‘see’ (the same root as Latin <em>video</em>), so ‘I have seen’ came to mean ‘I know’.',
+      'That history shows in the plural, where the stem shifts to <span class="gk">ἰσ-</span>: <span class="gk">ἴσμεν, ἴστε, ἴσασι</span>. Singular <span class="gk">οἰδ-</span>, plural <span class="gk">ἰσ-</span> — learn them as two halves.'
+    ]
+  },
   noun2: {
     label: "Nouns 2a/2b",
     title: 'Nouns Type 2a &amp; 2b <span class="gk">ἄνθρωπος, ἔργον</span>',
@@ -393,6 +433,7 @@ const PARADIGMS = {
 const VERBNAMES = ["ὁράω ‘see’", "ποιέω ‘do/make’", "δηλόω ‘show’"];
 const PRESNAMES = ["the ending", "λύω ‘loose’", "βαίνω ‘go’"];
 const NOUN2NAMES = ["ἄνθρωπος ‘man’ (2a)", "ἔργον ‘task’ (2b)"];
+const EIMINAMES  = ["εἰμί ‘I am’", "οἶδα ‘I know’"];
 
 /* A paradigm is a set of tables: groups (captions) x rows x cols.
    Nominal paradigms use gender columns; verb/adverb paradigms supply their own. */
@@ -443,7 +484,7 @@ function toGreek(s){
 }
 const bare = s => s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/ς/g,"σ");
 /* movable nu: ὁρῶσιν and ὁρῶσι are the same form */
-const movnu = s => s.replace(/σιν$/,"σι").replace(/σι\(ν\)$/,"σι");
+const movnu = s => s.replace(/σι\(ν\)$/,"σι").replace(/([στ])([ιίῖ])ν$/,"$1$2");
 function sameForm(a,b,strict){
   a = movnu(a.normalize("NFC").trim()); b = movnu(b.normalize("NFC").trim());
   return strict ? a===b : bare(a)===bare(b);
@@ -1106,7 +1147,7 @@ function setLexLang(l){
   V.saved[V.lang] = V.weeks;
   V.lang = l;
   V.weeks = V.saved[l] || new Set([LEXICON[l][0].week]);
-  if(l === "hebrew" && V.fmt === "type") V.fmt = "mc";
+
   V.started = false; V.deck = []; V.i = 0;
 }
 
@@ -1143,6 +1184,66 @@ function vocabPool(){
 }
 
 const LANGNAME = () => (V.lang === "hebrew" ? "Hebrew" : "Greek");
+
+/* ---------- typing Hebrew on a Latin keyboard ----------
+   Lower case is the plain letter; upper case is its "other" partner
+   (H=ח vs h=ה, T=ט vs t=ת, S=ש vs s=ס). ' is aleph, ` is ayin. */
+const HB_KEYS = { "'":"א", b:"ב", g:"ג", d:"ד", h:"ה", v:"ו", w:"ו", z:"ז", H:"ח", T:"ט",
+  y:"י", k:"כ", l:"ל", m:"מ", n:"נ", s:"ס", "`":"ע", p:"פ", c:"צ", q:"ק", r:"ר", S:"ש", t:"ת" };
+const HB_FINALS = { "כ":"ך", "מ":"ם", "נ":"ן", "פ":"ף", "צ":"ץ" };
+const HEBLETTERS = ["א","ב","ג","ד","ה","ו","ז","ח","ט","י","כ","ל","מ","נ",
+                    "ס","ע","פ","צ","ק","ר","ש","ת"];
+/* Each key and its letter travel together in one isolated chip; a long mixed
+   run would otherwise be reshuffled by the bidi algorithm as it wraps. */
+const HB_LEGEND = [["'","א"],["b","ב"],["g","ג"],["d","ד"],["h","ה"],["v","ו"],["z","ז"],
+  ["H","ח"],["T","ט"],["y","י"],["k","כ"],["l","ל"],["m","מ"],["n","נ"],["s","ס"],
+  ["`","ע"],["p","פ"],["c","צ"],["q","ק"],["r","ר"],["S","ש"],["t","ת"]]
+  .map(([k,l])=>`<span style="display:inline-block;white-space:nowrap;margin:0 7px 4px 0"><code>${k}</code> <span class="heinline">${l}</span></span>`).join("");
+function toHebrew(str){
+  let out = "";
+  for(const ch of str){
+    if(HB_KEYS[ch] !== undefined) out += HB_KEYS[ch];
+    else if(HB_KEYS[ch.toLowerCase()] !== undefined && !/[A-Z]/.test(ch)) out += HB_KEYS[ch.toLowerCase()];
+    else out += ch;
+  }
+  /* a letter that can take a final form does so at the end of a word */
+  return out.replace(/[כמנפצ](?=$|\s)/g, m => HB_FINALS[m] || m);
+}
+/* Grading ignores every vowel point, accent, maqqef and final-form
+   difference — you are being asked for the consonants, not the pointing. */
+const hebBare = t => (t||"").normalize("NFC")
+  .replace(/[֑-ׇ]/g, "")
+  .replace(/[־׳״‐-―'’"-]/g, "")
+  .replace(/ך/g,"כ").replace(/ם/g,"מ").replace(/ן/g,"נ").replace(/ף/g,"פ").replace(/ץ/g,"צ")
+  .replace(/\s+/g, "");
+
+/* ---------- grading typed English ---------- */
+const enNorm = t => (t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
+  .replace(/[’]/g,"'").replace(/[^a-z0-9' ]/g," ")
+  .replace(/\s+/g," ").trim().replace(/^(a|an|the|to) /,"");
+/* "he, it; (demonstrative) that" should accept he, it, that, or the whole thing */
+function enSenses(g){
+  const out = new Set();
+  const add = x => { const n = enNorm(x); if(n) out.add(n); };
+  add(g); add(g.replace(/\([^)]*\)/g," "));
+  g.split(/[;,]/).forEach(seg => { add(seg); add(seg.replace(/\([^)]*\)/g," ")); });
+  return [...out];
+}
+function lev(a,b){
+  if(a === b) return 0;
+  const m = a.length, n = b.length;
+  if(!m || !n) return m || n;
+  let prev = Array.from({length:n+1}, (_,j)=>j);
+  for(let i=1;i<=m;i++){
+    const cur = [i];
+    for(let j=1;j<=n;j++)
+      cur[j] = Math.min(prev[j]+1, cur[j-1]+1, prev[j-1] + (a[i-1]===b[j-1]?0:1));
+    prev = cur;
+  }
+  return prev[n];
+}
+/* one slip of the finger still counts, on anything long enough to be sure about */
+const nearEnough = (typed, list) => list.some(x => x.length >= 4 && lev(typed, x) <= 1);
 /* A note like "mp אֲנָשִׁים · 2,188×" is English prose with a Hebrew island in it.
    Left to itself the bidi algorithm drags the digits to the wrong side, so isolate each run. */
 const HEBRUN = /[\u0590-\u05FF\uFB1D-\uFB4F]+(?:[ \u05BE\u2010-\u2015־]*[\u0590-\u05FF\uFB1D-\uFB4F]+)*/g;
@@ -1171,7 +1272,8 @@ function renderVocab(){
           <select id="vFmt">
             <option value="mc">Multiple choice</option>
             <option value="card">Flashcard (self-graded)</option>
-            ${V.lang==="hebrew" ? "" : '<option value="type">Type the Greek</option>'}
+            <option value="type">Type the ${LANGNAME()}</option>
+            <option value="typeEn">Type the English</option>
           </select></fieldset>
         <button class="btn" id="vStart">${V.started?"Restart":"Start quiz"}</button>
         <button class="btn ghost" id="vList">${V.showList?"Hide word list":"Show word list"}</button>
@@ -1293,45 +1395,127 @@ function drawQ(){
     V.reveal = reveal;
   }
 
-  else { /* type the Greek */
+  else if(V.fmt === "typeEn"){ /* see the word, type what it means */
+    const heb = V.lang === "hebrew";
     area.innerHTML = `<div class="panel">
-      <div class="card"><div class="meta">Type the Greek — accents &amp; breathings required</div>
-        <div class="q">${item.g}</div>
-        <div style="margin-top:18px"><input class="bigin" id="vIn" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="type here…"></div>
+      <div class="card"><div class="meta">Type what it means</div>
+        <div class="q ${scriptCls()}${heb?" hev":""}">${item.t}</div>
+        <div style="margin-top:18px"><input class="bigin enin" id="vIn" spellcheck="false"
+          autocomplete="off" autocapitalize="off" placeholder="in English…"></div>
       </div>
       <div class="row"><button class="btn" id="vSubmit">Check (enter)</button>
         <button class="btn ghost" id="vSkip">Show answer</button></div>
-      <div class="fb" id="vFb"></div>${statusBar}</div>`;
+      <div class="fb" id="vFb"></div>
+      <p class="hint" style="margin:12px 0 0">Any one of the listed meanings counts, and a single
+        slip of the finger is forgiven. Articles and ‘to’ are ignored, so <em>ground</em> and
+        <em>the ground</em> both pass.</p>
+      ${statusBar}</div>`;
+    const inp = $("#vIn"); inp.focus();
+    const answers = enSenses(item.g);
+    const full = `<span class="${scriptCls()}" style="font-size:20px">${item.t}</span> — ${item.g}` +
+                 (item.n ? `<div class="note">${hebIso(item.n)}</div>` : "");
+    const finish = (ok, msg, wait) => {
+      V.answered = true;
+      $("#vFb").className = "fb " + (ok?"ok":"no");
+      $("#vFb").innerHTML = msg;
+      score(ok, item, "");
+      setTimeout(next, wait);
+    };
+    const submit = ()=>{
+      if(V.answered) return;
+      const raw = inp.value.trim(); if(!raw) return;
+      const val = enNorm(raw);
+      if(answers.includes(val)) return finish(true, "Correct. " + full, 1500);
+      if(nearEnough(val, answers))
+        return finish(true, `Close enough — the spelling is “${item.g}”. ` + full, 2400);
+      finish(false, full, 2800);
+    };
+    $("#vSubmit").onclick = submit;
+    $("#vSkip").onclick = ()=>{ if(!V.answered) finish(false, full, 2800); };
+    inp.onkeydown = e=>{ if(e.key==="Enter"){ e.preventDefault(); V.answered ? next() : submit(); } };
+  }
+
+  else { /* see the meaning, type the word */
+    const heb = V.lang === "hebrew";
+    const legend = heb ? `
+      <div class="legend">
+        <div style="margin-bottom:8px">Type Hebrew straight from a Latin keyboard:</div>
+        <div style="line-height:2">${HB_LEGEND}</div>
+        <div>A capital gives the partner letter, so <code>h</code>/<code>H</code> separate
+          <span class="heinline">ה</span> from <span class="heinline">ח</span>, and
+          <code>t</code>/<code>T</code> separate <span class="heinline">ת</span> from
+          <span class="heinline">ט</span>. Final forms appear on their own at the end of a word.</div>
+        <div>Or just tap the letters above. <strong style="color:var(--ink)">Vowel points are not required</strong>
+          — you are graded on the consonants.</div>
+      </div>` : `
+      <div class="legend">
+        <div><code>a b g d e z h q i k l m n c o p r s t u f x y w</code> &rarr;
+          <span class="gk">α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ τ υ φ χ ψ ω</span></div>
+        <div>Diacritics go after the vowel: <code>(</code> rough &middot; <code>)</code> smooth &middot;
+          <code>/</code> acute &middot; <code>=</code> circumflex &middot; <code>|</code> iota subscript</div>
+      </div>`;
+    area.innerHTML = `<div class="panel">
+      <div class="card"><div class="meta">Type the ${LANGNAME()}${heb?"":" — accents &amp; breathings required"}</div>
+        <div class="q">${item.g}</div>
+        <div style="margin-top:18px"><input class="bigin ${heb?"hein":""}" id="vIn" spellcheck="false"
+          autocomplete="off" autocapitalize="off" placeholder="${heb?"consonants are enough…":"type here…"}"></div>
+        ${heb ? `<div class="keys" id="vKeys">${HEBLETTERS.map(l=>`<button data-l="${l}">${l}</button>`).join("")}
+          <button class="util" data-act="back">⌫ back</button>
+          <button class="util" data-act="clear">clear</button></div>` : ""}
+      </div>
+      <div class="row"><button class="btn" id="vSubmit">Check (enter)</button>
+        <button class="btn ghost" id="vSkip">Show answer</button></div>
+      <div class="fb" id="vFb"></div>${legend}${statusBar}</div>`;
     const inp = $("#vIn"); inp.focus();
     inp.addEventListener("input", ()=>{
-      const pos = inp.selectionStart, before = inp.value, conv = toGreek(before);
+      const pos = inp.selectionStart, before = inp.value;
+      const conv = heb ? toHebrew(before) : toGreek(before);
       if(conv!==before){ inp.value = conv; const d = conv.length-before.length;
         inp.setSelectionRange(pos+d,pos+d); }
     });
+    if(heb) $("#vKeys").onclick = e=>{
+      const b = e.target.closest("button"); if(!b) return;
+      if(b.dataset.act === "clear") inp.value = "";
+      else if(b.dataset.act === "back") inp.value = inp.value.slice(0,-1);
+      else inp.value = toHebrew(inp.value + b.dataset.l);
+      inp.focus();
+    };
+    const all = senseOf(item);
+    const others = all.filter(x => head(x.t) !== head(item.t));
+    const alsoNote = others.length
+      ? ` <span style="color:var(--muted)">Also accepted: <span class="${scriptCls()}" style="font-size:18px">${others.map(x=>x.t).join(", ")}</span></span>`
+      : "";
+    const info = item.n ? `<div class="note">${hebIso(item.n)}</div>` : "";
     const submit = ()=>{
       if(V.answered) return;
       const val = inp.value.trim(); if(!val) return;
       V.answered = true;
-      /* any word with this meaning is a correct answer */
-      const hit   = senseOf(item).find(x => sameForm(head(val), head(x.t), true)  || sameForm(val, x.t, true));
-      const near  = senseOf(item).find(x => sameForm(head(val), head(x.t), false) || sameForm(val, x.t, false));
-      const ok = !!hit, close = !!near;
-      const others = senseOf(item).filter(x => x.t !== (hit||item).t);
-      const alsoNote = others.length
-        ? ` <span style="color:var(--muted)">Also accepted: <span class="gk" style="font-size:18px">${others.map(x=>x.t).join(", ")}</span></span>`
-        : "";
+      let ok = false, close = false, target = item;
+      if(heb){
+        const b = hebBare(val);
+        const hit = all.find(x => hebBare(x.t) === b);
+        ok = !!hit; if(hit) target = hit;
+        if(!ok){ const nr = all.find(x => lev(b, hebBare(x.t)) <= 1 && hebBare(x.t).length >= 3);
+                 close = !!nr; if(nr) target = nr; }
+      } else {
+        const hit = all.find(x => sameForm(head(val), head(x.t), true) || sameForm(val, x.t, true));
+        ok = !!hit; if(hit) target = hit;
+        if(!ok){ const nr = all.find(x => sameForm(head(val), head(x.t), false) || sameForm(val, x.t, false));
+                 close = !!nr; if(nr) target = nr; }
+      }
+      const shown = `<span class="${scriptCls()}" style="font-size:${heb?24:20}px">${target.t}</span>`;
       $("#vFb").className = "fb " + (ok?"ok":"no");
-      $("#vFb").innerHTML = ok ? ("Correct." + alsoNote)
-        : (close ? `Right letters, wrong accents or breathing — it's <span class="gk" style="font-size:20px">${near.t}</span>` + alsoNote
-                 : `Answer: <span class="gk" style="font-size:20px">${item.t}</span>` + alsoNote);
+      $("#vFb").innerHTML = (ok ? "Correct. " + shown
+        : close ? (heb ? `One letter off — it is ${shown}` : `Right letters, wrong accents or breathing — it's ${shown}`)
+                : `Answer: ${shown}`) + alsoNote + info;
       score(ok,item,"");
-      setTimeout(next, ok ? (alsoNote?1600:650) : 2600);
+      setTimeout(next, ok ? ((alsoNote||info)?1800:800) : 2800);
     };
     $("#vSubmit").onclick = submit;
     $("#vSkip").onclick = ()=>{ if(V.answered) return; V.answered=true;
       $("#vFb").className="fb no";
-      $("#vFb").innerHTML = `Answer: <span class="gk" style="font-size:20px">${senseOf(item).map(x=>x.t).join(", ")}</span>`;
-      score(false,item,""); setTimeout(next,2600); };
+      $("#vFb").innerHTML = `Answer: <span class="${scriptCls()}" style="font-size:${heb?24:20}px">${all.map(x=>x.t).join(", ")}</span>` + info;
+      score(false,item,""); setTimeout(next,2800); };
     inp.onkeydown = e=>{ if(e.key==="Enter"){ e.preventDefault(); V.answered ? next() : submit(); } };
   }
 }
