@@ -1550,27 +1550,32 @@ function drawSummary(){
 
 /* ================= Hebrew ================= */
 const HEB_VOWELS = [
-  {n:"Patach",        f:"אַ",  s:'short "ah" as in l<u>a</u>h',        cls:"A-class", len:"short"},
-  {n:"Kamets",        f:"אָ",  s:'long "awe" as in <u>awe</u>some',    cls:"A-class", len:"long"},
-  {n:"Patach Yod",    f:"אַי", s:'long "ai" as in <u>ai</u>sle',       cls:"A-class", len:"long"},
-  {n:"Segol",         f:"אֶ",  s:'short "eh" as in p<u>e</u>t',        cls:"E-class", len:"short"},
-  {n:"Tsere",         f:"אֵ",  s:'long "ay" as in h<u>ay</u>',         cls:"E-class", len:"long"},
-  {n:"Tsere Yod",     f:"אֵי", s:'long "ay" as in h<u>ay</u>',         cls:"E-class", len:"long"},
-  {n:"Chirek",        f:"אִ",  s:'short "ih" as in s<u>i</u>t',        cls:"I-class", len:"short"},
-  {n:"Chirek Yod",    f:"אִי", s:'long "ee" as in s<u>ee</u>',         cls:"I-class", len:"long"},
-  {n:"Cholem",        f:"אֹ",  s:'long "oh" as in r<u>o</u>w',         cls:"O-class", len:"long"},
-  {n:"Cholem Vav",    f:"אוֹ", s:'long "oh" as in r<u>o</u>w',         cls:"O-class", len:"long"},
-  {n:"Cholem Yod",    f:"אֹי", s:'long "oi" as in b<u>oy</u>',         cls:"O-class", len:"long"},
-  {n:"Kibuts",        f:"אֻ",  s:'short "uh" as in b<u>oo</u>k',       cls:"U-class", len:"short"},
-  {n:"Shurek",        f:"אוּ", s:'long "ooh" as in b<u>oo</u>t',       cls:"U-class", len:"long"},
-  {n:"Sheva",         f:"אְ",  s:'the smallest sound you can make — like th<u>e</u> or <u>a</u>bout; sometimes silent', cls:"Reduced", len:"reduced"},
-  {n:"Chateph Patach",f:"אֲ",  s:'short "ah"',                          cls:"Reduced", len:"reduced"},
-  {n:"Chateph Segol", f:"אֱ",  s:'short "eh"',                          cls:"Reduced", len:"reduced"},
-  {n:"Chateph Kamets",f:"אֳ",  s:'long "oh" as in pill<u>o</u>w',       cls:"Reduced", len:"reduced"}
+  {n:"Kamatz", f:"אָ", s:'A-sound as in f<u>a</u>ther', cls:"A-sound", len:"long", alt:["kamatz gadol"]},
+  {n:"Patakh", f:"אַ", s:'A-sound as in f<u>a</u>ther', cls:"A-sound", len:"short"},
+  {n:"Khataf Patakh", f:"אֲ", s:'a hurried A-sound', cls:"A-sound", len:"reduced"},
+  {n:"Tsere Maleh", f:"אֵי", s:'E-sound as in b<u>e</u>t', cls:"E-sound", len:"long", ctx:"‘full’ — written with a yod", alt:["tsere"]},
+  {n:"Tsere Khaser", f:"אֵ", s:'E-sound as in b<u>e</u>t', cls:"E-sound", len:"long", ctx:"‘defective’ — no yod", alt:["tsere"]},
+  {n:"Seghol", f:"אֶ", s:'E-sound as in b<u>e</u>t', cls:"E-sound", len:"short"},
+  {n:"Khataf Seghol", f:"אֱ", s:'a hurried E-sound', cls:"E-sound", len:"reduced"},
+  {n:"Khiriq Maleh", f:"אִי", s:'I-sound as in f<u>ee</u>t', cls:"I-sound", len:"long", ctx:"‘full’ — written with a yod", alt:["khiriq"]},
+  {n:"Khiriq Khaser", f:"אִ", s:'I-sound as in f<u>ee</u>t', cls:"I-sound", len:"short", ctx:"‘defective’ — no yod", alt:["khiriq"]},
+  {n:"Kholam Maleh", f:"אוֹ", s:'O-sound as in m<u>o</u>re', cls:"O-sound", len:"long", ctx:"‘full’ — written with a vav", alt:["kholam"]},
+  {n:"Kholam Khaser", f:"אֹ", s:'O-sound as in m<u>o</u>re', cls:"O-sound", len:"long", ctx:"‘defective’ — no vav", alt:["kholam"]},
+  {n:"Kamatz Katan", f:"אָ", s:'O-sound as in m<u>o</u>re', cls:"O-sound", len:"short", ctx:"identical to kamatz on the page — the O-sound shows up in a closed unaccented syllable, e.g. כָּל"},
+  {n:"Khataf Kamatz", f:"אֳ", s:'a hurried O-sound', cls:"O-sound", len:"reduced", ctx:"e.g. צָהֳרַיִם"},
+  {n:"Shuruk", f:"אוּ", s:'U-sound as in f<u>oo</u>d', cls:"U-sound", len:"long", ctx:"written with a vav"},
+  {n:"Qubbutz", f:"אֻ", s:'U-sound as in f<u>oo</u>d', cls:"U-sound", len:"short"},
+  {n:"Shva Na", f:"אְ", s:'a short E-sound as in b<u>e</u>t', cls:"Short E-sound", len:"reduced", ctx:"mobile sheva — at the start of a word, at the start of a syllable after a closed syllable, or after a long vowel in an open syllable", alt:["shva","mobile shva","vocal shva"]}
 ];
-const HEB_CLASSES = ["A-class","E-class","I-class","O-class","U-class","Reduced"];
+const HEB_CLASSES = ["A-sound","E-sound","I-sound","O-sound","U-sound","Short E-sound"];
+const HEB_LEN = {long:"long", short:"short", reduced:"reduced"};
+/* קָמָץ and קָמָץ קָטָן are the same mark, and several vowels now share a sound,
+   so a question may have more than one right answer. */
+const sameGlyph = v => HEB_VOWELS.filter(x => x.f === v.f);
+const sameSound = v => HEB_VOWELS.filter(x => x.s === v.s);
+const namesFor  = v => [v.n, ...(v.alt || [])];
 const HEB_TOPICS = { vowels: { label:"Vowels", title:"Hebrew Vowels",
-  subtitle:"The 17 vowel signs and the sounds they make. א is only a placeholder — the vowel attaches to whatever consonant it follows." } };
+  subtitle:"The vowel signs grouped by sound, long to reduced. א is only a placeholder — the vowel attaches to whatever consonant it follows." } };
 
 function renderHebrew(){
   $("#paraNav").innerHTML = Object.entries(HEB_TOPICS)
@@ -1598,11 +1603,12 @@ function renderHebrew(){
 function hebChart(){
   const rows = HEB_CLASSES.map(c=>{
     const list = HEB_VOWELS.filter(v=>v.cls===c);
-    return `<tr><th colspan="3" style="text-align:left;background:var(--accent-soft);color:var(--ink)">${c}</th></tr>` +
+    return `<tr><th colspan="4" style="text-align:left;background:var(--accent-soft);color:var(--ink)">${c}</th></tr>` +
       list.map(v=>`<tr>
         <td class="hecell">${v.f}</td>
         <td class="name maskname">${v.n}</td>
-        <td class="snd masksound">${v.s}</td></tr>`).join("");
+        <td class="snd" style="text-align:center;font-style:italic">${v.len}</td>
+        <td class="snd masksound">${v.s}${v.ctx?`<div class="note">${hebIso(v.ctx)}</div>`:""}</td></tr>`).join("");
   }).join("");
   $("#content").innerHTML = `
     <div class="panel">
@@ -1613,18 +1619,30 @@ function hebChart(){
         <button class="btn ghost" id="hideSounds">Hide sounds</button>
       </div>
       <table style="margin-top:14px">
-        <tr><th style="width:22%">Vowel</th><th style="width:30%">Name</th><th style="text-align:left">Sound</th></tr>
+        <tr><th style="width:18%">Vowel</th><th style="width:26%">Name</th>
+          <th style="width:12%">Type</th><th style="text-align:left">Sound</th></tr>
         ${rows}
       </table>
     </div>
     <div class="panel">
       <h2>Worth noticing</h2>
       <ul class="tips">
-        <li>Most vowels sit <em>under</em> the consonant; cholem sits above it, and shurek/cholem vav use a ו next to it.</li>
-        <li>A yod (י) after a vowel usually lengthens it: chirek &rarr; chirek yod (“ih” &rarr; “ee”), tsere &rarr; tsere yod, patach &rarr; patach yod.</li>
-        <li>The four <strong>reduced</strong> vowels all contain a sheva (the two vertical dots). A plain sheva is the tiny “uh”; a chateph is a sheva paired with another vowel sign, giving a very short version of that vowel.</li>
-        <li>Two dots side by side under a letter is <em>tsere</em> (“ay”); three dots in a triangle is <em>segol</em> (“eh”); three dots on a diagonal is <em>kibuts</em> (“uh”).</li>
-        <li>Kamets (ָ) and patach (ַ) look alike — kamets has the little tail hanging down from the bar.</li>
+        <li>The chart is organised by <em>sound</em>, not by shape. Within each sound the three columns are
+          <strong>long</strong>, <strong>short</strong> and <strong>reduced</strong> — so kamatz, patakh and khataf patakh
+          are one A-sound at three lengths.</li>
+        <li><strong>Maleh</strong> (מָלֵא, ‘full’) means the vowel is written with a helper letter;
+          <strong>khaser</strong> (חָסֵר, ‘defective’) means it is not. Tsere and khiriq take a
+          <span class="he">י</span>, kholam takes a <span class="he">ו</span>. Same sound either way — only the spelling differs.</li>
+        <li>The one that will catch you: <strong>kamatz</strong> and <strong>kamatz katan</strong> are the
+          <em>same mark</em>. Kamatz is the long A-sound; kamatz katan is a short O-sound, and it turns up in a
+          closed unaccented syllable — <span class="he">כָּל</span> is ‘kol’, not ‘kal’. Only the syllable tells you which.</li>
+        <li>The <strong>reduced</strong> vowels all contain a shva (the two vertical dots). A khataf is a shva paired
+          with another vowel sign, giving a hurried version of that vowel — and they appear under the gutturals.</li>
+        <li>Most vowels sit <em>under</em> the consonant. Kholam sits above and to the left; shuruk and kholam maleh
+          use a <span class="he">ו</span> standing next to it.</li>
+        <li>Shapes worth separating by eye: kamatz <span class="he">אָ</span> has a tail hanging from the bar,
+          patakh <span class="he">אַ</span> does not. Tsere <span class="he">אֵ</span> is two dots side by side;
+          seghol <span class="he">אֶ</span> is three in a triangle; qubbutz <span class="he">אֻ</span> is three on a diagonal.</li>
       </ul>
     </div>`;
   const toggle = (sel,btn,onTxt,offTxt)=>{
@@ -1668,17 +1686,30 @@ function hNew(){
   const area = $("#hArea"); if(!area) return;
   const kind = hq.kind==="mix" ? rand(["sym2name","name2sym","sym2snd","snd2sym"]) : hq.kind;
   const v = rand(HEB_VOWELS);
-  let promptHtml, answer, key, optClass, meta;
-  if(kind==="sym2name"){ promptHtml=`<div class="q he">${v.f}</div>`; key="n"; optClass="txt"; meta="What is this vowel called?"; }
-  else if(kind==="name2sym"){ promptHtml=`<div class="q">${v.n}</div>`; key="f"; optClass="hb"; meta="Which sign is it?"; }
-  else if(kind==="sym2snd"){ promptHtml=`<div class="q he">${v.f}</div>`; key="s"; optClass="txt"; meta="What sound does it make?"; }
-  else { promptHtml=`<div class="q" style="font-size:22px">${v.s}</div>`; key="f"; optClass="hb"; meta="Which vowel makes this sound?"; }
-  answer = v[key];
-  const wrong = shuffle(HEB_VOWELS.filter(x=>x[key]!==answer)
+  let promptHtml, key, optClass, meta, valid;
+  /* valid = every answer that is genuinely right for this prompt, because one
+     mark can carry two names and one sound can be spelled several ways */
+  if(kind==="sym2name"){
+    promptHtml=`<div class="q he">${v.f}</div>`; key="n"; optClass="txt";
+    meta="What is this vowel called?"; valid = sameGlyph(v).map(x=>x.n);
+  } else if(kind==="name2sym"){
+    promptHtml=`<div class="q">${v.n}</div>`; key="f"; optClass="hb";
+    meta="Which sign is it?"; valid = [v.f];
+  } else if(kind==="sym2snd"){
+    promptHtml=`<div class="q he">${v.f}</div>`; key="s"; optClass="txt";
+    meta="What sound does it make?"; valid = sameGlyph(v).map(x=>x.s);
+  } else {
+    promptHtml=`<div class="q" style="font-size:22px">${v.s}</div>`; key="f"; optClass="hb";
+    meta="Which vowel makes this sound?"; valid = sameSound(v).map(x=>x.f);
+  }
+  const answer = v[key];
+  const wrong = shuffle(HEB_VOWELS.filter(x=>!valid.includes(x[key]))
     .filter((x,i,arr)=>arr.findIndex(y=>y[key]===x[key])===i)).slice(0,3).map(x=>x[key]);
   const opts = shuffle([answer,...wrong]);
+  const share = valid.length > 1
+    ? `<div class="note" style="text-align:center">${valid.length} answers would be right here; one of them is below.</div>` : "";
   area.innerHTML = `
-    <div class="card"><div class="meta">${meta}</div>${promptHtml}</div>
+    <div class="card"><div class="meta">${meta}</div>${promptHtml}${share}</div>
     <div class="choices" id="hChoices">${opts.map(o=>`<button class="${optClass}">${o}</button>`).join("")}</div>
     <div class="fb" id="hFb"></div>
     <div class="row"><button class="btn ghost" id="hNext">Next &rarr;</button></div>`;
@@ -1686,15 +1717,18 @@ function hNew(){
   const btns=[...area.querySelectorAll("#hChoices button")];
   btns.forEach(b=> b.onclick = ()=>{
     if(lock) return; lock=true; hq.t++;
-    const ok = b.innerHTML===answer;
+    const ok = valid.includes(b.innerHTML);
     b.classList.add(ok?"ok":"no");
-    if(!ok) btns.find(x=>x.innerHTML===answer).classList.add("ok");
+    if(!ok) btns.find(x=>valid.includes(x.innerHTML)).classList.add("ok");
     if(ok){ hq.r++; hq.s++; } else hq.s=0;
+    const twin = sameGlyph(v).filter(x=>x.n!==v.n);
     $("#hFb").className = "fb " + (ok?"ok":"no");
-    $("#hFb").innerHTML = ok ? "Correct."
-      : `<span class="he" style="font-size:26px">${v.f}</span> is <strong>${v.n}</strong> — ${v.s}`;
+    $("#hFb").innerHTML = `<span class="he" style="font-size:26px">${v.f}</span> is
+      <strong>${v.n}</strong> (${v.len}) — ${v.s}` +
+      (twin.length ? ` &nbsp;<span style="color:var(--muted)">the same mark is also ${twin.map(x=>x.n).join(", ")}</span>` : "") +
+      (v.ctx ? `<div class="note">${hebIso(v.ctx)}</div>` : "");
     $("#hScore").textContent = `${hq.r} correct / ${hq.t} · streak ${hq.s}`;
-    setTimeout(hNew, ok?700:2400);
+    setTimeout(hNew, ok?1500:2800);
   });
   $("#hNext").onclick = hNew;
   $("#hScore").textContent = `${hq.r} correct / ${hq.t} · streak ${hq.s}`;
@@ -1748,8 +1782,10 @@ function hcDraw(){
   const v = HC.deck[HC.i];
   const frontHe = HC.dir==="sym2name";
   const front = frontHe ? v.f : (HC.dir==="name2sym" ? v.n : v.s);
-  const back  = frontHe ? `<strong>${v.n}</strong><div style="font-size:15px;color:var(--muted);margin-top:6px">${v.s}</div>`
-                        : `<span class="he">${v.f}</span><div style="font-size:15px;color:var(--muted);margin-top:6px">${HC.dir==="name2sym"?v.s:v.n}</div>`;
+  const twins = sameGlyph(v).filter(x=>x.n!==v.n);
+  const extra = (twins.length ? ` · also ${twins.map(x=>x.n).join(", ")}` : "");
+  const back  = frontHe ? `<strong>${v.n}</strong><div style="font-size:15px;color:var(--muted);margin-top:6px">${v.len} · ${v.s}${extra}</div>`
+                        : `<span class="he">${v.f}</span><div style="font-size:15px;color:var(--muted);margin-top:6px">${HC.dir==="name2sym"?v.s:v.n}${extra}</div>`;
   const pct = Math.round(HC.i/HC.deck.length*100);
   area.innerHTML = `
     <div class="card">
@@ -2079,22 +2115,40 @@ function ptNew(){
 /* Transliteration is a free-for-all, so fold the common spellings together
    before grading. Every alias maps to the spelling used in HEB_VOWELS. */
 const HEBALIAS = {
-  patach:"patach", patah:"patach", pathach:"patach", patakh:"patach", pattah:"patach", pattach:"patach",
-  kamets:"kamets", kametz:"kamets", kamatz:"kamets", kamats:"kamets", kames:"kamets",
-  qamets:"kamets", qametz:"kamets", qamatz:"kamets", qamats:"kamets",
-  segol:"segol", seghol:"segol", seghol:"segol", segol1:"segol",
+  /* patakh */
+  patakh:"patakh", patach:"patakh", patah:"patakh", pathach:"patakh", pattach:"patakh", pattah:"patakh",
+  /* kamatz */
+  kamatz:"kamatz", kamats:"kamatz", kametz:"kamatz", kamets:"kamatz", kames:"kamatz",
+  qamatz:"kamatz", qamats:"kamatz", qametz:"kamatz", qamets:"kamatz",
+  /* seghol */
+  seghol:"seghol", segol:"seghol", seghol:"seghol",
+  /* tsere */
   tsere:"tsere", tzere:"tsere", sere:"tsere", tsereh:"tsere", tseire:"tsere", tzeire:"tsere", cere:"tsere",
-  chirek:"chirek", chireq:"chirek", chiriq:"chirek", chirik:"chirek", hireq:"chirek", hiriq:"chirek",
-  hirek:"chirek", hirik:"chirek", khirik:"chirek",
-  cholem:"cholem", cholam:"cholem", cholim:"cholem", holem:"cholem", holam:"cholem", kholam:"cholem",
-  kibuts:"kibuts", kibbuts:"kibuts", kibbutz:"kibuts", kibutz:"kibuts", kubuts:"kibuts", kubbutz:"kibuts",
-  qibbuts:"kibuts", qibbus:"kibuts", qubbuts:"kibuts",
-  shurek:"shurek", shureq:"shurek", shuruk:"shurek", shuruq:"shurek",
-  sheva:"sheva", shewa:"sheva", shva:"sheva", schwa:"sheva", shwa:"sheva",
-  chateph:"chateph", chatef:"chateph", chataph:"chateph", chataf:"chateph", chatuph:"chateph",
-  hateph:"chateph", hatef:"chateph", hataph:"chateph", hataf:"chateph", khataf:"chateph",
-  yod:"yod", yodh:"yod", yud:"yod", jod:"yod",
-  vav:"vav", waw:"vav", vov:"vav", wav:"vav"
+  /* khiriq */
+  khiriq:"khiriq", khirik:"khiriq", khireq:"khiriq", chirek:"khiriq", chireq:"khiriq", chiriq:"khiriq",
+  chirik:"khiriq", hireq:"khiriq", hiriq:"khiriq", hirek:"khiriq", hirik:"khiriq",
+  /* kholam */
+  kholam:"kholam", kholem:"kholam", cholam:"kholam", cholem:"kholam", cholim:"kholam",
+  holam:"kholam", holem:"kholam",
+  /* qubbutz */
+  qubbutz:"qubbutz", qubbuts:"qubbutz", qibbuts:"qubbutz", qibbus:"qubbutz", kibbutz:"qubbutz",
+  kibbuts:"qubbutz", kibutz:"qubbutz", kibuts:"qubbutz", kubbutz:"qubbutz", kubuts:"qubbutz",
+  /* shuruk */
+  shuruk:"shuruk", shureq:"shuruk", shuruq:"shuruk", shurek:"shuruk",
+  /* shva */
+  shva:"shva", sheva:"shva", shewa:"shva", schwa:"shva", shwa:"shva",
+  na:"na", nah:"na", mobile:"na", vocal:"na",
+  /* khataf */
+  khataf:"khataf", khatef:"khataf", khatuf:"khataf", chateph:"khataf", chatef:"khataf",
+  chataph:"khataf", chataf:"khataf", chatuph:"khataf", hateph:"khataf", hatef:"khataf",
+  hataph:"khataf", hataf:"khataf",
+  /* maleh / khaser / katan — and the helper letters that name the same thing */
+  maleh:"maleh", male:"maleh", malei:"maleh", full:"maleh",
+  yod:"maleh", yodh:"maleh", yud:"maleh", vav:"maleh", waw:"maleh", vov:"maleh", wav:"maleh",
+  khaser:"khaser", chaser:"khaser", haser:"khaser", hasser:"khaser", khasser:"khaser",
+  defective:"khaser", deficient:"khaser",
+  katan:"katan", qatan:"katan", katon:"katan", qaton:"katan", small:"katan",
+  gadol:"gadol", gadhol:"gadol", big:"gadol", large:"gadol"
 };
 function hebKey(s){
   return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
@@ -2174,14 +2228,24 @@ function hnDraw(){
     if(ok){ HN.right++; } else { HN.wrong++; HN.missed.push(v); HN.deck.push(v); }
     if($("#hnScore")) $("#hnScore").textContent = `${HN.right} right · ${HN.wrong} missed`;
   };
-  const answerLine = `<span class="he" style="font-size:26px">${v.f}</span> is <strong>${v.n}</strong> — ${v.s}`;
+  const others = sameGlyph(v).filter(x => x.n !== v.n);
+  const answerLine = `<span class="he" style="font-size:26px">${v.f}</span> is <strong>${v.n}</strong> (${v.len}) — ${v.s}` +
+    (others.length ? ` &nbsp;<span style="color:var(--muted)">the same mark is also ${others.map(x=>x.n).join(", ")}</span>` : "") +
+    (v.ctx ? `<div class="note">${hebIso(v.ctx)}</div>` : "");
 
   const go = ()=>{
     if(HN.answered) return;
     const val = inp.value.trim();
     if(!val) return;
+    /* one mark can carry two names, and several names have a short form */
+    const accepted = sameGlyph(v).flatMap(namesFor);
     const got = hebKey(val), want = hebKey(v.n);
-    if(got === want){ reveal("ok", `Correct — <strong>${v.n}</strong>, ${v.s}`, true); return advance(950); }
+    const hit = accepted.find(nm => hebKey(nm) === got);
+    if(hit){
+      const twin = sameGlyph(v).find(x => namesFor(x).some(nm => hebKey(nm) === got)) || v;
+      return reveal("ok", `Correct — <strong>${twin.n}</strong> (${twin.len}), ${twin.s}` +
+        (twin.ctx ? `<div class="note">${hebIso(twin.ctx)}</div>` : ""), true), advance(1400);
+    }
     /* right base, missing or wrong modifier (yod / vav / chateph) */
     const gotSet = new Set(got.split(" ")), wantSet = new Set(want.split(" "));
     const shared = [...gotSet].filter(t=>wantSet.has(t));
