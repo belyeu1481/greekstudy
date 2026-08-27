@@ -290,6 +290,90 @@ const PARADIGMS = {
       'The <span class="gk">ο</span>-contract column is the one that breaks your ear: <span class="gk">δηλῶ</span> but <span class="gk">δηλοῖς</span>. In the other two columns 1st s. and 2nd s. look related; here they do not.'
     ]
   },
+  middle: {
+    label: "Middle voice",
+    title: 'The Middle Voice <span class="gk">ἔρχομαι, πορεύομαι</span>',
+    subtitle: "Present indicative and imperative middle — the second set of endings, on verbs that never use anything else.",
+    cols: ["end","ερχ","πορευ"],
+    colHeads: ['<span style="white-space:nowrap">Ending</span>',
+               '<span class="gk" style="white-space:nowrap">ἔρχ-ομαι</span><br><span style="font-weight:400;white-space:nowrap">‘go, come’</span>',
+               '<span class="gk" style="white-space:nowrap">πορεύ-ομαι</span><br><span style="font-weight:400;white-space:nowrap">‘go, proceed’</span>'],
+    groups: ["Present indicative", "Imperative"],
+    rows: {
+      "Present indicative": ["1st s.","2nd s.","3rd s.","1st pl.","2nd pl.","3rd pl."],
+      "Imperative": ["s.","pl."]
+    },
+    data: {
+      "Present indicative": {
+        "1st s.":  ["-ομαι","ἔρχομαι","πορεύομαι"],
+        "2nd s.":  ["-ῃ","ἔρχῃ","πορεύῃ"],
+        "3rd s.":  ["-εται","ἔρχεται","πορεύεται"],
+        "1st pl.": ["-όμεθα","ἐρχόμεθα","πορευόμεθα"],
+        "2nd pl.": ["-εσθε","ἔρχεσθε","πορεύεσθε"],
+        "3rd pl.": ["-ονται","ἔρχονται","πορεύονται"]
+      },
+      "Imperative": {
+        "s.":  ["-ου","ἔρχου","πορεύου"],
+        "pl.": ["-εσθε","ἔρχεσθε","πορεύεσθε"]
+      }
+    },
+    labelFn: c => (c.gi === 0)
+      ? (c.num === "Imperative" ? `the middle imperative ${c.cs} ending` : `the ${c.cs} middle ending`)
+      : (c.num === "Imperative" ? `imperative ${c.cs} of ${MIDNAMES[c.gi]}`
+                                : `${c.cs} present of ${MIDNAMES[c.gi]}`),
+    tips: [
+      'The stem does not change and the personal markers are still in there — they are simply wrapped in a second layer: <span class="gk">-μαι, -σαι, -ται, -μεθα, -σθε, -νται</span>. Set it beside the active and the shape is familiar: <span class="gk">βαίν-ομεν / ἐρχ-όμεθα</span>, <span class="gk">βαίν-ετε / ἔρχ-εσθε</span>, <span class="gk">βαίν-ουσι / ἔρχ-ονται</span>.',
+      'The linking vowel behaves exactly as in the active — <span class="gk">ο</span> before <span class="gk">μ</span> and <span class="gk">ν</span>, <span class="gk">ε</span> elsewhere: <span class="gk">-ομαι, -εται, -όμεθα, -εσθε, -ονται</span>.',
+      'Second singular is the irregular-looking one. It began as <span class="gk">-εσαι</span>, the <span class="gk">σ</span> dropped out between vowels, and <span class="gk">ε + αι</span> fused to <span class="gk">-ῃ</span>. Some texts print <span class="gk">-ει</span> instead: <span class="gk">ἔρχῃ</span> and <span class="gk">ἔρχει</span> are the same form.',
+      'The singular imperative <span class="gk">-ου</span> has the same history: <span class="gk">-εσο</span> lost its <span class="gk">σ</span> and <span class="gk">ε + ο</span> gave <span class="gk">-ου</span>. So <span class="gk">ἔρχου</span> ‘go!’, <span class="gk">πορεύου</span> ‘proceed!’',
+      'And the old trap returns: the plural imperative is identical to the 2nd pl. indicative. <span class="gk">ἔρχεσθε</span> is both ‘you go’ and ‘go!’',
+      'These two verbs are <em>deponent</em> — middle in form, active in meaning. There is no †<span class="gk">ἔρχω</span> to fall back on, so translate <span class="gk">ἔρχομαι</span> as plain ‘I go’, never ‘I go for myself’. <span class="gk">ἀποκρίνομαι</span> ‘I answer’, <span class="gk">δύναμαι</span> ‘I am able’ and <span class="gk">γίγνομαι</span> ‘I become’ work the same way.',
+      'Where a verb has both voices, the middle turns the action back on the subject: <span class="gk">λούω</span> ‘I wash something’ against <span class="gk">λούομαι</span> ‘I wash myself’; <span class="gk">παύω</span> ‘I stop someone’ against <span class="gk">παύομαι</span> ‘I stop’.',
+      'Accent stays recessive, sliding back as far as the ending allows: <span class="gk">ἔρχομαι</span> but <span class="gk">ἐρχόμεθα</span>, because the extra syllable pushes it forward.'
+    ]
+  },
+  cmiddle: {
+    label: "Contract middles",
+    title: 'Contract Verbs, Middle <span class="gk">θεάομαι, φοβέομαι, δουλόομαι</span>',
+    subtitle: "Present indicative and imperative middle of the α-, ε- and ο-contracts — the same nine contractions, a new set of endings.",
+    modes: ["study","fill","type","quiz","spot","vmath"],
+    cols: ["α","ε","ο"],
+    colHeads: ['<span style="white-space:nowrap">α-contract</span><br><span class="gk" style="font-size:16px;white-space:nowrap">θεά-ομαι ‘watch’</span>',
+               '<span style="white-space:nowrap">ε-contract</span><br><span class="gk" style="font-size:16px;white-space:nowrap">φοβέ-ομαι ‘fear’</span>',
+               '<span style="white-space:nowrap">ο-contract</span><br><span class="gk" style="font-size:16px;white-space:nowrap">δουλό-ομαι ‘enslave’</span>'],
+    groups: ["Present indicative", "Imperative"],
+    rows: {
+      "Present indicative": ["1st s.","2nd s.","3rd s.","1st pl.","2nd pl.","3rd pl."],
+      "Imperative": ["s.","pl."]
+    },
+    data: {
+      "Present indicative": {
+        "1st s.":  ["θεῶμαι","φοβοῦμαι","δουλοῦμαι"],
+        "2nd s.":  ["θεᾷ","φοβῇ","δουλοῖ"],
+        "3rd s.":  ["θεᾶται","φοβεῖται","δουλοῦται"],
+        "1st pl.": ["θεώμεθα","φοβούμεθα","δουλούμεθα"],
+        "2nd pl.": ["θεᾶσθε","φοβεῖσθε","δουλοῦσθε"],
+        "3rd pl.": ["θεῶνται","φοβοῦνται","δουλοῦνται"]
+      },
+      "Imperative": {
+        "s.":  ["θεῶ","φοβοῦ","δουλοῦ"],
+        "pl.": ["θεᾶσθε","φοβεῖσθε","δουλοῦσθε"]
+      }
+    },
+    labelFn: c => (c.num === "Imperative")
+      ? `imperative ${c.cs} of ${CMIDNAMES[c.gi]}`
+      : `${c.cs} present of ${CMIDNAMES[c.gi]}`,
+    tips: [
+      'Nothing here is new. Take the middle endings — <span class="gk">-ομαι, -ῃ, -εται, -όμεθα, -εσθε, -ονται</span> — put the contract vowel in front, and apply the rules you already have. <span class="gk">θε-άομαι</span> → <span class="gk">θεῶμαι</span>, <span class="gk">φοβ-έομαι</span> → <span class="gk">φοβοῦμαι</span>.',
+      'The endings beginning with <span class="gk">ο</span> behave exactly as they did in the active: <span class="gk">α + ο = ω</span>, <span class="gk">ε + ο = ου</span>, <span class="gk">ο + ο = ου</span>. Compare <span class="gk">ὁρῶμεν / θεώμεθα</span> and <span class="gk">ποιοῦμεν / φοβούμεθα</span>.',
+      'Second singular is the one to drill. The ending is <span class="gk">-ῃ</span>, so: <span class="gk">α + ῃ = ᾳ</span> → <span class="gk">θεᾷ</span>; <span class="gk">ε + ῃ = ῃ</span> → <span class="gk">φοβῇ</span>; and because an <span class="gk">ι</span> never vanishes from an ο-contract, <span class="gk">ο + ῃ = οι</span> → <span class="gk">δουλοῖ</span>.',
+      'The singular imperative is contract vowel + <span class="gk">-ου</span>: <span class="gk">α + ου = ω</span> → <span class="gk">θεῶ</span> ‘watch!’; <span class="gk">ε + ου = ου</span> → <span class="gk">φοβοῦ</span> ‘fear!’; <span class="gk">ο + ου = ου</span> → <span class="gk">δουλοῦ</span> ‘enslave!’',
+      'That leaves ε- and ο-contracts looking identical in three places: <span class="gk">φοβοῦμαι / δουλοῦμαι</span>, <span class="gk">φοβοῦνται / δουλοῦνται</span>, <span class="gk">φοβοῦ / δουλοῦ</span>. Only the dictionary form of the verb tells you which contract you are in.',
+      'And a cross-voice collision worth knowing: <span class="gk">δουλοῖ</span> is ‘you enslave’ (2nd s. middle), but <span class="gk">δηλοῖ</span> is ‘he shows’ (3rd s. active). Same ending, different person <em>and</em> different voice.',
+      'The plural imperative is again identical to the 2nd pl. indicative: <span class="gk">θεᾶσθε</span> is ‘you watch’ and ‘watch!’, <span class="gk">φοβεῖσθε</span> is ‘you fear’ and ‘fear!’',
+      '<span class="gk">φοβέομαι</span> is deponent in this sense — ‘I fear’. The active <span class="gk">φοβέω</span> exists but means ‘I frighten someone’, which is a different verb in practice.'
+    ]
+  },
   eimi: {
     label: "εἰμί & οἶδα",
     title: 'The Irregulars <span class="gk">εἰμί, οἶδα</span>',
@@ -434,6 +518,8 @@ const VERBNAMES = ["ὁράω ‘see’", "ποιέω ‘do/make’", "δηλό�
 const PRESNAMES = ["the ending", "λύω ‘loose’", "βαίνω ‘go’"];
 const NOUN2NAMES = ["ἄνθρωπος ‘man’ (2a)", "ἔργον ‘task’ (2b)"];
 const EIMINAMES  = ["εἰμί ‘I am’", "οἶδα ‘I know’"];
+const MIDNAMES   = ["the ending", "ἔρχομαι ‘go, come’", "πορεύομαι ‘go, proceed’"];
+const CMIDNAMES  = ["θεάομαι ‘watch’", "φοβέομαι ‘fear’", "δουλόομαι ‘enslave’"];
 
 /* A paradigm is a set of tables: groups (captions) x rows x cols.
    Nominal paradigms use gender columns; verb/adverb paradigms supply their own. */
@@ -1088,7 +1174,9 @@ const VM = [
   ["ε","ω","ω"],["ε","ο","ου"],["ε","ου","ου"],["ε","ε","ει"],["ε","ει","ει"],
   ["ο","ω","ω"],["ο","ο","ου"],["ο","ου","ου"],["ο","ε","ου"],["ο","ει","οι"]
 ];
-const VMRESULTS = ["ω","ᾱ","ᾳ","ου","ει","οι","η","ῳ"];
+/* the middle adds one more ending vowel to fuse with: -ῃ (2nd s.) */
+const VM_MID = [["α","ῃ","ᾳ"],["ε","ῃ","ῃ"],["ο","ῃ","οι"]];
+const VMRESULTS = ["ω","ᾱ","ᾳ","ου","ει","οι","η","ῳ","ῃ"];
 const VMS = {r:0, t:0, s:0};
 function renderVmath(p){
   $("#content").innerHTML = `
@@ -1098,12 +1186,16 @@ function renderVmath(p){
       Order matters: α + ε is not the same as ε + α.</p>
       <div id="vmArea"></div>
     </div>
-    <div class="panel"><h2>Reference</h2>${RULEBOX}</div>`;
+    <div class="panel"><h2>Reference</h2>${RULEBOX}
+      ${curP === "cmiddle" ? `<div class="legend"><div>The middle adds one more:
+        α + ῃ = <span class="gk">ᾳ</span> &nbsp;·&nbsp; ε + ῃ = <span class="gk">ῃ</span> &nbsp;·&nbsp;
+        ο + ῃ = <span class="gk">οι</span> &nbsp;— the 2nd s. ending
+        <span class="gk">-ῃ</span>.</div></div>` : ""}</div>`;
   vmNew();
 }
 function vmNew(){
   const area = $("#vmArea"); if(!area) return;
-  const [a,b,c] = rand(VM);
+  const [a,b,c] = rand(curP === "cmiddle" ? VM.concat(VM_MID) : VM);
   const opts = shuffle([c, ...shuffle(VMRESULTS.filter(x=>x!==c)).slice(0,3)]);
   area.innerHTML = `
     <div class="card"><div class="meta">Contract these two vowels, in this order</div>
