@@ -1313,13 +1313,29 @@ const hebBare = t => (t||"").normalize("NFC")
 const enNorm = t => (t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"")
   .replace(/[’]/g,"'").replace(/[^a-z0-9' ]/g," ")
   .replace(/\s+/g," ").trim().replace(/^(a|an|the|to) /,"");
+/* Glosses carry scaffolding the learner should not have to reproduce:
+   a subject pronoun ("I hear"), a case or part-of-speech label ("gen: through",
+   "adjective: dead"), an "i.e.", a leading article. Strip it from both sides. */
+const EN_LEAD = /^(?:it is|there is|to be|i am|i e|e g|viz|namely|i|we|you|he|she|it|they|one|to|a|an|the)\s+/;
+function enStrip(n){
+  let s = n;
+  for(let k=0;k<3;k++){ const t = s.replace(EN_LEAD,"").trim(); if(t===s || !t) break; s = t; }
+  return s;
+}
 /* "he, it; (demonstrative) that" should accept he, it, that, or the whole thing */
 function enSenses(g){
   const out = new Set();
-  const add = x => { const n = enNorm(x); if(n) out.add(n); };
-  add(g); add(g.replace(/\([^)]*\)/g," "));
-  g.split(/[;,]/).forEach(seg => { add(seg); add(seg.replace(/\([^)]*\)/g," ")); });
-  return [...out];
+  const add = x => { const n = enNorm(x); if(!n) return;
+    out.add(n); const s = enStrip(n); if(s) out.add(s); };
+  const seg = t => t.split(/[;,\/]|…|\.\.\./).forEach(part => {
+    add(part);
+    /* "gen: down from" and "plural noun: holy ones" — the label is not the answer */
+    const ci = part.indexOf(":");
+    if(ci >= 0) add(part.slice(ci+1));
+  });
+  const plain = g.replace(/\([^)]*\)/g," ");
+  add(g); add(plain); seg(g); seg(plain);
+  return [...out].filter(Boolean);
 }
 function lev(a,b){
   if(a === b) return 0;
@@ -1334,8 +1350,42 @@ function lev(a,b){
   }
   return prev[n];
 }
-/* one slip of the finger still counts, on anything long enough to be sure about */
-const nearEnough = (typed, list) => list.some(x => x.length >= 4 && lev(typed, x) <= 1);
+/* Two letters the wrong way round is always a typo, never a different word. */
+const swapped = (a,b) => {
+  if(a.length !== b.length || a.length < 4) return false;
+  const d = []; for(let i=0;i<a.length;i++) if(a[i]!==b[i]) d.push(i);
+  return d.length===2 && d[1]===d[0]+1 && a[d[0]]===b[d[1]] && a[d[1]]===b[d[0]];
+};
+/* A missing letter only counts as a slip once the word is long enough that nothing
+   else could be meant. Below that, one letter is the whole difference between
+   word and world, hear and heart, live and life — which is the point of the drill. */
+const nearEnough = (typed, list) => list.some(x =>
+  swapped(typed, x) || (x.length >= 7 && lev(typed, x) <= (x.length >= 11 ? 2 : 1)));
+/* Grade a typed English answer: "hit" = knew it, "near" = knew it, spelled it badly.
+   Any one listed meaning counts, and if they offer several, one right is enough. */
+function enGrade(raw, answers){
+  const val = enNorm(raw); if(!val) return null;
+  const cands = [...new Set([val, enStrip(val)])].filter(Boolean);
+  const parts = [...new Set(val.split(/[;,\/]|…|\.\.\./)
+    .map(s => enStrip(enNorm(s))).filter(Boolean))];
+  const all = [...new Set([...cands, ...parts])];
+  if(all.some(c => answers.includes(c))) return "hit";
+  /* word order, inflection and small grammar words should not decide this:
+     "marks the definite object" and "definite object marker" are the same answer */
+  const keys = new Set(answers.map(enKey).filter(Boolean));
+  if(all.some(c => keys.has(enKey(c)))) return "hit";
+  if(all.some(c => nearEnough(c, answers))) return "near";
+  return null;
+}
+/* the grammar words carry no meaning here; the rest are compared as stems, unordered */
+const EN_STOP = new Set(("a an the to of in on at for from with by into upon as and or " +
+  "is are am be been being it its i we you he she they them his her their that this " +
+  /* the labels a lexicon puts in front of a gloss */
+  "gen dat acc nom voc adj adv conj prep noun verb adjective adverb preposition " +
+  "conjunction pronoun").split(" "));
+/* no -ly: namely is not name, and clearly is not clear */
+const enStem = w => w.replace(/(?:ings|ing|ed|es|er|s)$/,"") || w;
+const enKey = t => t.split(" ").filter(w => w && !EN_STOP.has(w)).map(enStem).sort().join(" ");
 /* A note like "mp אֲנָשִׁים · 2,188×" is English prose with a Hebrew island in it.
    Left to itself the bidi algorithm drags the digits to the wrong side, so isolate each run. */
 const HEBRUN = /[\u0590-\u05FF\uFB1D-\uFB4F]+(?:[ \u05BE\u2010-\u2015־]*[\u0590-\u05FF\uFB1D-\uFB4F]+)*/g;
@@ -1498,9 +1548,10 @@ function drawQ(){
       <div class="row"><button class="btn" id="vSubmit">Check (enter)</button>
         <button class="btn ghost" id="vSkip">Show answer</button></div>
       <div class="fb" id="vFb"></div>
-      <p class="hint" style="margin:12px 0 0">Any one of the listed meanings counts, and a single
-        slip of the finger is forgiven. Articles and ‘to’ are ignored, so <em>ground</em> and
-        <em>the ground</em> both pass.</p>
+      <p class="hint" style="margin:12px 0 0">Any one of the listed meanings counts, and a slip of
+        the finger is forgiven. Articles, ‘to’ and the subject pronoun are ignored — <em>hear</em>,
+        <em>I hear</em> and <em>the ground</em> all pass — and so are the labels in front of a
+        gloss, so <em>through</em> answers ‘gen: through’.</p>
       ${statusBar}</div>`;
     const inp = $("#vIn"); inp.focus();
     const answers = enSenses(item.g);
@@ -1516,10 +1567,9 @@ function drawQ(){
     const submit = ()=>{
       if(V.answered) return;
       const raw = inp.value.trim(); if(!raw) return;
-      const val = enNorm(raw);
-      if(answers.includes(val)) return finish(true, "Correct. " + full, 1500);
-      if(nearEnough(val, answers))
-        return finish(true, `Close enough — the spelling is “${item.g}”. ` + full, 2400);
+      const g = enGrade(raw, answers);
+      if(g === "hit")  return finish(true, "Correct. " + full, 1500);
+      if(g === "near") return finish(true, `Close enough — the spelling is “${item.g}”. ` + full, 2400);
       finish(false, full, 2800);
     };
     $("#vSubmit").onclick = submit;
