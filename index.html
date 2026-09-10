@@ -505,6 +505,57 @@ const PARADIGMS = {
       'The accents on the plural are all circumflex and all on the ending: <span class="gk">ἡμεῖς, ἡμᾶς, ἡμῶν, ἡμῖν</span>. Learn the shape once and the second person is the same word with a different vowel.'
     ]
   },
+  houtos: {
+    label: "οὗτος ‘this’",
+    title: 'The Demonstrative <span class="gk">οὗτος, αὕτη, τοῦτο</span>',
+    subtitle: "‘this’ / ‘these’ — familiar endings on a stem that will not sit still.",
+    rows: { Singular:["Nominative","Accusative","Genitive","Dative"],
+            Plural:["Nominative","Accusative","Genitive","Dative"] },
+    data: {
+      Singular:{
+        Nominative:["οὗτος","αὕτη","τοῦτο"],   Accusative:["τοῦτον","ταύτην","τοῦτο"],
+        Genitive:["τούτου","ταύτης","τούτου"], Dative:["τούτῳ","ταύτῃ","τούτῳ"] },
+      Plural:{
+        Nominative:["οὗτοι","αὗται","ταῦτα"],   Accusative:["τούτους","ταύτας","ταῦτα"],
+        Genitive:["τούτων","τούτων","τούτων"],  Dative:["τούτοις","ταύταις","τούτοις"] }
+    },
+    tips: [
+      'Only one thing here is new. The endings are <span class="gk">καλός</span>’s, unchanged — <span class="gk">-ος -η -ον</span>, <span class="gk">-ου -ης -ου</span>, <span class="gk">-ῳ -ῃ -ῳ</span> and the rest. What moves is the stem in front of them.',
+      'The stem alternates <span class="gk">ουτ-</span> / <span class="gk">αυτ-</span>, and the <em>ending</em> decides which: an ending containing <span class="gk">α</span> or <span class="gk">η</span> pulls the stem to <span class="gk">αυ-</span>; an ending containing <span class="gk">ο</span> or <span class="gk">ω</span> leaves it <span class="gk">ου-</span>. So <span class="gk">ταύτ-ην</span> and <span class="gk">ταῦτ-α</span>, but <span class="gk">τούτ-ῳ</span> and <span class="gk">τούτ-ων</span>. Read the ending first, then choose the vowel.',
+      'One slot breaks the rule, and it is worth memorising on its own: the feminine genitive plural is <span class="gk">τούτων</span>, not the <span class="gk">ταύτων</span> the rule predicts. All three genders share <span class="gk">τούτων</span>. The regularised form is common enough on printed charts that you should trust the texts over the table — Attic and Koine both have <span class="gk">τούτων</span>.',
+      'Every form begins with <span class="gk">τ-</span> except four, and they are the same four the article exempts: the masculine and feminine nominatives <span class="gk">οὗτος, οὗτοι, αὕτη, αὗται</span>. Set them beside <span class="gk">ὁ, οἱ, ἡ, αἱ</span> — no <span class="gk">τ-</span>, rough breathing instead. The parallel is exact.',
+      'Neuter nominative and accusative are the same, as in every neuter word: <span class="gk">τοῦτο / τοῦτο</span>, <span class="gk">ταῦτα / ταῦτα</span>.',
+      'The trap: <span class="gk">αὕτη</span> ‘this (woman)’ against <span class="gk">αὐτή</span> ‘she, the same’. Rough breathing and accent on the stem versus smooth breathing and accent on the ending — two letters’ worth of difference, two unrelated words.',
+      'With a noun, a demonstrative stands <em>outside</em> the article, in what is called the predicate position: <span class="gk">οὗτος ὁ ἄνθρωπος</span> or <span class="gk">ὁ ἄνθρωπος οὗτος</span>, both ‘this man’ — but never †<span class="gk">ὁ οὗτος ἄνθρωπος</span>. An adjective in that slot would be doing something quite different.',
+      'On its own it is simply a pronoun, and the neuter plural is everywhere: <span class="gk">ταῦτα</span> ‘these things’, ‘this’. Remember that neuter plural subjects take a singular verb — <span class="gk">ταῦτά ἐστι καλά</span>.',
+      'Count the repeats before you drill: <span class="gk">τούτων</span> ×3, and <span class="gk">τοῦτο, τούτου, τούτῳ, ταῦτα, τούτοις</span> ×2 each. Seventeen distinct forms fill twenty-four cells — exactly the article’s arithmetic.'
+    ]
+  },
+  ekeinos: {
+    label: "ἐκεῖνος ‘that’",
+    title: 'The Demonstrative <span class="gk">ἐκεῖνος, -η, -ο</span>',
+    subtitle: "‘that’ / ‘those’ — after οὗτος, a rest: one stem, no alternation.",
+    rows: { Singular:["Nominative","Accusative","Genitive","Dative"],
+            Plural:["Nominative","Accusative","Genitive","Dative"] },
+    data: {
+      Singular:{
+        Nominative:["ἐκεῖνος","ἐκείνη","ἐκεῖνο"],   Accusative:["ἐκεῖνον","ἐκείνην","ἐκεῖνο"],
+        Genitive:["ἐκείνου","ἐκείνης","ἐκείνου"],   Dative:["ἐκείνῳ","ἐκείνῃ","ἐκείνῳ"] },
+      Plural:{
+        Nominative:["ἐκεῖνοι","ἐκεῖναι","ἐκεῖνα"],   Accusative:["ἐκείνους","ἐκείνας","ἐκεῖνα"],
+        Genitive:["ἐκείνων","ἐκείνων","ἐκείνων"],    Dative:["ἐκείνοις","ἐκείναις","ἐκείνοις"] }
+    },
+    tips: [
+      'The stem is <span class="gk">ἐκειν-</span> and it never moves. Add <span class="gk">καλός</span>’s endings and you are finished — no <span class="gk">τ-</span>, no vowel alternation, nothing to decide.',
+      'The one irregularity is neuter nominative/accusative singular <span class="gk">ἐκεῖνο</span>, missing the <span class="gk">-ν</span> that <span class="gk">καλόν</span> has. That is the <em>pronominal</em> ending, and the other pronouns do the same: <span class="gk">τό</span>, <span class="gk">τοῦτο</span>, <span class="gk">αὐτό</span>. Learn the four together.',
+      'Accent sits on the <span class="gk">ει</span> and stays there, changing shape rather than place: circumflex when the last syllable is short (<span class="gk">ἐκεῖνος, ἐκεῖνον, ἐκεῖνα, ἐκεῖναι</span>), acute when it is long (<span class="gk">ἐκείνου, ἐκείνης, ἐκείνων, ἐκείνας</span>). <span class="gk">ἐκεῖνα</span> against <span class="gk">ἐκείνας</span> is the pair to feel.',
+      'Remember that final <span class="gk">-οι</span> and <span class="gk">-αι</span> count as <em>short</em> for accent, which is why <span class="gk">ἐκεῖνοι</span> and <span class="gk">ἐκεῖναι</span> keep the circumflex while <span class="gk">ἐκείνοις</span> and <span class="gk">ἐκείναις</span> do not.',
+      '<span class="gk">οὗτος</span> points near, <span class="gk">ἐκεῖνος</span> points away: ‘this one here’ against ‘that one over there’. The adverb <span class="gk">ἐκεῖ</span> ‘there’ is the same root, and is the easiest hook for the meaning.',
+      'When the two are paired in a sentence, Greek reverses the English habit: <span class="gk">ἐκεῖνος</span> refers to the <em>former</em> (the more distant in the text) and <span class="gk">οὗτος</span> to the <em>latter</em>.',
+      'Same syntax as <span class="gk">οὗτος</span>: with a noun it stands outside the article — <span class="gk">ἐκεῖνος ὁ ἄνθρωπος</span> or <span class="gk">ὁ ἄνθρωπος ἐκεῖνος</span>, ‘that man’.',
+      'And the same arithmetic: <span class="gk">ἐκείνων</span> ×3, <span class="gk">ἐκεῖνο, ἐκείνου, ἐκείνῳ, ἐκεῖνα, ἐκείνοις</span> ×2. Only the accents distinguish some near-neighbours, so drill with accents on.'
+    ]
+  },
   hemeteros: {
     label: "Adjective ἡμέτερος",
     title: 'The Adjective <span class="gk">ἡμέτερ-ος, -ᾱ, -ον</span>',
